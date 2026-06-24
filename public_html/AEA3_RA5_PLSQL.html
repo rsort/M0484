@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA3 · PL/SQL — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+      --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+      --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+      --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+      --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+      --yellow:#713f12; --yellow-bg:#fefce8; --yellow-bdr:#fef08a;
+      --purple:#5b21b6; --purple-bg:#f5f3ff; --purple-bdr:#ddd6fe;
+      --code-bg:#1e293b; --code-text:#e2e8f0; --r:10px; --r-sm:6px;
+    }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+    .wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+    /* HEADER */
+    .page-header { padding:48px 0 36px; border-bottom:1.5px solid var(--border); margin-bottom:52px; }
+    .meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+    .badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+    .b-course { background:var(--ink); color:#fff; }
+    .b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+    .b-act { background:var(--accent-mid); color:#fff; }
+    .b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(2rem,5vw,2.8rem); line-height:1.15; margin-bottom:10px; }
+    .page-sub { font-size:17px; color:var(--ink-2); margin-bottom:24px; }
+    .obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; }
+    .obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+    .obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+    .obj-text { font-size:14px; color:var(--ink-2); }
+    /* NAV INDEX */
+    .toc { background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:20px 24px; margin-bottom:52px; }
+    .toc-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-3); margin-bottom:14px; }
+    .toc-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px 24px; }
+    .toc-item { font-size:13px; color:var(--blue); text-decoration:none; padding:3px 0; display:flex; align-items:center; gap:6px; }
+    .toc-item:hover { color:var(--accent); }
+    .toc-num { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-3); min-width:20px; }
+    @media (max-width:600px){ .toc-grid { grid-template-columns:1fr; } }
+    /* PART DIVIDER */
+    .part-divider { background:var(--ink); color:#fff; border-radius:var(--r); padding:20px 28px; margin:60px 0 40px; display:flex; align-items:center; gap:16px; }
+    .part-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:#a8a29e; }
+    .part-title { font-family:'DM Serif Display',serif; font-size:1.4rem; margin-top:2px; }
+    .part-icon { font-size:2rem; }
+    /* SECTIONS */
+    .section { margin-bottom:60px; }
+    .sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+    .sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+    .sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+    .sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+    .lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+    .lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+    /* IBOXES */
+    .ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+    .ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+    .ibox-text { font-size:14px; line-height:1.65; }
+    .ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+    .ibox.green { background:var(--green-bg); border:1px solid var(--green-bdr); }
+    .ibox.yellow { background:var(--yellow-bg); border:1px solid var(--yellow-bdr); }
+    .ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+    .ibox.purple { background:var(--purple-bg); border:1px solid var(--purple-bdr); }
+    .ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+    .ibox.green .ibox-label, .ibox.green .ibox-text { color:var(--green); }
+    .ibox.yellow .ibox-label, .ibox.yellow .ibox-text { color:var(--yellow); }
+    .ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
+    .ibox.purple .ibox-label, .ibox.purple .ibox-text { color:var(--purple); }
+    .ibox code { background:#ffffffaa; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 6px; border-radius:3px; }
+    /* CODE */
+    .demo { margin-bottom:24px; }
+    .demo-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-bottom:8px; }
+    .sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.85; white-space:pre; margin:0; overflow-x:auto; }
+    .exp-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 16px; margin-top:10px; }
+    .exp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin-bottom:5px; }
+    .exp-text { font-size:13px; color:var(--ink-2); line-height:1.6; }
+    .exp-text code { background:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 5px; border-radius:3px; }
+    /* PL/SQL colors */
+    .kw  { color:#fbbf24; font-weight:500; }
+    .fn  { color:#a78bfa; }
+    .str { color:#4ade80; }
+    .num { color:#f472b6; }
+    .cmt { color:#64748b; font-style:italic; }
+    .typ { color:#38bdf8; }
+    /* TABLE */
+    .tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
+    .tbl { width:100%; border-collapse:collapse; font-size:13px; }
+    .tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
+    .tbl td { padding:9px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .tbl tr:last-child td { border-bottom:none; }
+    .tbl td.mono { font-family:'JetBrains Mono',monospace; font-size:12px; }
+    .tbl td.desc { font-size:13px; }
+    /* BLOCK DIAGRAM */
+    .block-diagram { display:grid; grid-template-columns:1fr; gap:0; margin:16px 0 20px; border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; }
+    .block-part { padding:10px 16px; font-family:'JetBrains Mono',monospace; font-size:12px; border-bottom:1px dashed var(--border); }
+    .block-part:last-child { border-bottom:none; }
+    .block-part.mandatory { background:var(--blue-bg); color:var(--blue); }
+    .block-part.optional { background:#fafaf8; color:var(--ink-2); }
+    .block-part .tag { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-bottom:2px; }
+    /* CMP GRID */
+    .cmp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+    .cmp { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:14px; }
+    .cmp h4 { font-size:12px; font-family:'JetBrains Mono',monospace; color:var(--accent); margin-bottom:8px; }
+    .cmp p { font-size:12px; color:var(--ink-2); line-height:1.5; }
+    @media (max-width:600px){ .cmp-grid { grid-template-columns:1fr; } }
+    /* EXERCICIS */
+    .ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
+    .ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+    .ex-block-sub { font-size:13px; color:#a8a29e; }
+    .ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+    .exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+    .exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+    .ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+    .ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+    .ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+    .ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
+    .ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
+    .qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
+    .qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
+    .qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
+    .qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
+    .qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+    .qi-btn:disabled { cursor:default; }
+    .qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
+    .qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
+    .qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
+    .qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
+    .ri { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-bottom:12px; }
+    .ri-q { padding:14px 18px; background:#fafaf9; }
+    .ri-q-text { font-size:14px; color:var(--ink); margin-bottom:4px; }
+    .ri-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 15px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); color:var(--accent); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; transition:background .12s,color .12s,border-color .12s; }
+    .ri-btn:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+    .ri-ans { display:none; padding:16px 18px; background:var(--accent-bg); border-top:1px solid var(--accent-bdr); }
+    .ri-ans.show { display:block; }
+    .ri-ans-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--accent-mid); margin-bottom:8px; }
+    .ri-note { font-size:13px; color:var(--ink-2); margin-top:10px; line-height:1.55; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="meta-row">
+      <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+      <span class="badge b-ra">AEA3 · RA5</span>
+      <span class="badge b-act">42 hores</span>
+      <span class="badge b-new">PL/SQL</span>
+    </div>
+    <h1 class="page-title">Extensió procedimental SQL</h1>
+    <p class="page-sub">PL/SQL: el llenguatge de programació d'Oracle per automatitzar tasques, encapsular lògica de negoci i respondre a esdeveniments de la base de dades.</p>
+    <div class="obj-box">
+      <div class="obj-icon">🎯</div>
+      <div>
+        <div class="obj-label">Criteris d'avaluació · RA5</div>
+        <div class="obj-text">
+          <strong>5.1</strong> Automatitzar tasques ·
+          <strong>5.2</strong> Mètodes d'execució de guions ·
+          <strong>5.3</strong> Eines per editar guions ·
+          <strong>5.4</strong> Guions per automatitzar ·
+          <strong>5.5</strong> Funcions del sistema gestor ·
+          <strong>5.6</strong> Procediments i funcions d'usuari ·
+          <strong>5.7</strong> Estructures de control de flux ·
+          <strong>5.8</strong> Esdeveniments i disparadors ·
+          <strong>5.9</strong> Cursors ·
+          <strong>5.10</strong> Excepcions
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <div class="toc-title">Contingut d'aquest document</div>
+    <div class="toc-grid">
+      <a class="toc-item" href="#s1"><span class="toc-num">1</span>Blocs PL/SQL i variables</a>
+      <a class="toc-item" href="#s2"><span class="toc-num">2</span>SQL dins de PL/SQL</a>
+      <a class="toc-item" href="#s3"><span class="toc-num">3</span>Estructures de control</a>
+      <a class="toc-item" href="#s4"><span class="toc-num">4</span>Cursors explícits</a>
+      <a class="toc-item" href="#s5"><span class="toc-num">5</span>Tipus composts: RECORD i TABLE</a>
+      <a class="toc-item" href="#s6"><span class="toc-num">6</span>Excepcions</a>
+      <a class="toc-item" href="#s7"><span class="toc-num">7</span>Procediments i funcions</a>
+      <a class="toc-item" href="#s8"><span class="toc-num">8</span>Paquets (PACKAGE)</a>
+      <a class="toc-item" href="#s9"><span class="toc-num">9</span>Disparadors (TRIGGER)</a>
+      <a class="toc-item" href="#ex"><span class="toc-num">★</span>Exercicis</a>
+    </div>
+  </nav>
+
+  <!-- PART 1 -->
+  <div class="part-divider" id="part1">
+    <div class="part-icon">🧱</div>
+    <div>
+      <div class="part-label">Part A · Conceptes fonamentals</div>
+      <div class="part-title">Blocs anònims, variables, control, cursors i excepcions</div>
+    </div>
+  </div>
+
+  <!-- SECCIÓ 1: BLOCS I VARIABLES -->
+  <section class="section" id="s1">
+    <div class="sec-head">
+      <span class="sec-num">1</span>
+      <div>
+        <h2 class="sec-title">Blocs PL/SQL i variables</h2>
+        <p class="sec-sub">Criteri 5.1 · 5.2 · 5.3 — L'estructura bàsica i la declaració de variables</p>
+      </div>
+    </div>
+    <p class="lead">PL/SQL (<em>Procedural Language/SQL</em>) és l'extensió procedimental d'Oracle que permet combinar SQL amb estructures de programació: variables, condicions, bucles i gestió d'errors. Tot codi PL/SQL s'organitza en <strong>blocs</strong>.</p>
+
+    <div class="block-diagram">
+      <div class="block-part optional"><div class="tag">Optional</div>DECLARE — declaració de variables, cursors, tipus, excepcions</div>
+      <div class="block-part mandatory"><div class="tag">Obligatori</div>BEGIN — sentències executables (SQL i lògica PL/SQL)</div>
+      <div class="block-part optional"><div class="tag">Optional</div>EXCEPTION — manejadors d'errors</div>
+      <div class="block-part mandatory"><div class="tag">Obligatori</div>END; — tancament del bloc (seguit de / per executar)</div>
+    </div>
+
+    <div class="ibox blue">
+      <div class="ibox-label">Blocs anònims vs. subprogrames</div>
+      <div class="ibox-text">Un <strong>bloc anònim</strong> no té nom, s'executa un cop i no es pot tornar a cridar. Els <strong>subprogrames</strong> (procediments i funcions) tenen nom, es guarden a la BD i es poden cridar moltes vegades. Per executar un bloc al client SQL: acaba amb <code>/</code> en una línia sola.</div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 1 · Declaració i ús de variables</div>
+      <pre class="sql-out" id="e1"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        Les variables es declaren a la secció <code>DECLARE</code> amb el format: <code>nom tipus [:= valor_inicial];</code><br>
+        <code>%TYPE</code> pren automàticament el tipus de la columna referenciada: si la columna canvia de tipus, el codi PL/SQL s'adapta sol.<br>
+        <code>%ROWTYPE</code> declara una variable que conté una fila sencera: cada camp és accessible com <code>variable.nom_columna</code>.<br>
+        <code>DBMS_OUTPUT.PUT_LINE</code> és el procediment de la biblioteca estàndard per escriure per pantalla. Cal activar-lo amb <code>SET SERVEROUTPUT ON</code>.
+      </div></div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 2 · Constants, NOT NULL i tipus booleans</div>
+      <pre class="sql-out" id="e2"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        <code>CONSTANT</code> impedeix que es modifiqui el valor. <code>NOT NULL</code> obliga a inicialitzar la variable. El tipus <code>BOOLEAN</code> és exclusiu de PL/SQL (no existeix a SQL d'Oracle). Pot prendre els valors <code>TRUE</code>, <code>FALSE</code> i <code>NULL</code>.
+      </div></div>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 2: SQL DINS PL/SQL -->
+  <section class="section" id="s2">
+    <div class="sec-head">
+      <span class="sec-num">2</span>
+      <div>
+        <h2 class="sec-title">SQL dins de PL/SQL</h2>
+        <p class="sec-sub">Criteri 5.4 · 5.5 — SELECT INTO, DML i cursors implícits</p>
+      </div>
+    </div>
+    <p class="lead">PL/SQL permet embeure sentències SQL directament al bloc. La diferència principal és que els <code>SELECT</code> han de retornar <strong>exactament una fila</strong> usant la clàusula <code>INTO</code>. Per a múltiples files s'han d'usar cursors.</p>
+
+    <div class="ibox yellow">
+      <div class="ibox-label">Atributs del cursor implícit SQL%</div>
+      <div class="ibox-text">
+        Després de qualsevol sentència DML (INSERT, UPDATE, DELETE) o SELECT INTO, PL/SQL emmagatzema informació al cursor implícit:<br>
+        <code>SQL%ROWCOUNT</code> — nombre de files afectades · <code>SQL%FOUND</code> — TRUE si n'hi ha ≥ 1 · <code>SQL%NOTFOUND</code> — TRUE si no n'hi ha cap · <code>SQL%ISOPEN</code> — sempre FALSE per a cursors implícits.
+      </div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 3 · SELECT INTO i DML dins de PL/SQL</div>
+      <pre class="sql-out" id="e3"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        <code>SELECT ... INTO variable</code> recupera exactament una fila. Si no en troba cap llança <code>NO_DATA_FOUND</code>; si en troba més d'una, llança <code>TOO_MANY_ROWS</code>. Les sentències INSERT, UPDATE i DELETE funcionen igual que en SQL pur, però tenim accés als atributs del cursor implícit per saber el resultat.
+      </div></div>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 3: ESTRUCTURES DE CONTROL -->
+  <section class="section" id="s3">
+    <div class="sec-head">
+      <span class="sec-num">3</span>
+      <div>
+        <h2 class="sec-title">Estructures de control</h2>
+        <p class="sec-sub">Criteri 5.7 — IF/ELSIF/ELSE, CASE, LOOP, WHILE, FOR</p>
+      </div>
+    </div>
+    <p class="lead">PL/SQL té les mateixes estructures de control que altres llenguatges procedimentals: condicionals i bucles. Tots els bucles es poden sortir amb <code>EXIT WHEN condició</code>.</p>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 4 · Condicionals IF i CASE</div>
+      <pre class="sql-out" id="e4"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        <code>IF ... ELSIF ... ELSE ... END IF</code> — les clàusules <code>ELSIF</code> (sense 'E' final) permeten encadenar condicions. Nota: si la condició és <code>NULL</code> el bloc no s'executa. <code>CASE</code> és l'alternativa més neta per a múltiples valors discrets: existeix en forma simple (compara un valor) i en forma cercada (avalua condicions independents).
+      </div></div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 5 · Bucles: LOOP, WHILE i FOR</div>
+      <pre class="sql-out" id="e5"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        <code>LOOP ... EXIT WHEN ... END LOOP</code> — bucle bàsic, surt quan es compleix la condició. <code>WHILE condicio LOOP</code> — avalua la condició abans de cada iteració. <code>FOR i IN 1..n LOOP</code> — la variable de control (aquí <code>i</code>) es declara implícitament, val de 1 a n i s'incrementa sol. <code>FOR i IN REVERSE</code> va de n a 1. <code>CONTINUE</code> salta a la propera iteració.
+      </div></div>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 4: CURSORS EXPLÍCITS -->
+  <section class="section" id="s4">
+    <div class="sec-head">
+      <span class="sec-num">4</span>
+      <div>
+        <h2 class="sec-title">Cursors explícits</h2>
+        <p class="sec-sub">Criteri 5.9 — Processar conjunts de files fila a fila</p>
+      </div>
+    </div>
+    <p class="lead">Quan una consulta pot retornar múltiples files, cal un <strong>cursor explícit</strong>. El programador controla manualment el seu cicle de vida: declarar, obrir, llegir i tancar.</p>
+
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Pas</th><th>Sentència</th><th>Descripció</th></tr></thead>
+        <tbody>
+          <tr><td>1. Declarar</td><td class="mono">CURSOR nom IS select;</td><td class="desc">Defineix el nom i la consulta associada. Es fa a la secció DECLARE.</td></tr>
+          <tr><td>2. Obrir</td><td class="mono">OPEN nom;</td><td class="desc">Executa la consulta i posiciona el punter abans de la primera fila.</td></tr>
+          <tr><td>3. Llegir</td><td class="mono">FETCH nom INTO variables;</td><td class="desc">Llegeix la fila actual i avança el punter a la següent.</td></tr>
+          <tr><td>4. Tancar</td><td class="mono">CLOSE nom;</td><td class="desc">Allibera els recursos. Sempre cal tancar el cursor.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 6 · Cursor explícit manual i atributs</div>
+      <pre class="sql-out" id="e6"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        <code>%NOTFOUND</code> es fa TRUE quan l'últim FETCH no ha retornat cap fila. S'usa per sortir del bucle. <code>%ROWCOUNT</code> compta les files llegides fins al moment. <code>%ISOPEN</code> és TRUE entre OPEN i CLOSE. El patró estàndard és: obrir, llegir en bucle fins a <code>%NOTFOUND</code>, tancar.
+      </div></div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 7 · Cursor FOR LOOP (forma simplificada)</div>
+      <pre class="sql-out" id="e7"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        El <code>FOR registro IN cursor LOOP</code> és la forma recomanada: gestiona automàticament el OPEN, FETCH i CLOSE. La variable <code>registro</code> és implícitament de tipus <code>%ROWTYPE</code> del cursor. Els cursors amb paràmetres permeten variar la consulta en cada execució passant valors a l'OPEN.
+      </div></div>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 5: TIPUS COMPOSTS -->
+  <section class="section" id="s5">
+    <div class="sec-head">
+      <span class="sec-num">5</span>
+      <div>
+        <h2 class="sec-title">Tipus de dades composts</h2>
+        <p class="sec-sub">Criteri 5.4 — RECORD i col·leccions INDEX BY</p>
+      </div>
+    </div>
+    <p class="lead">PL/SQL ofereix tipus de dades que poden contenir múltiples valors: els <strong>RECORD</strong> (similars als registres d'una taula) i les <strong>col·leccions</strong> (similars als arrays).</p>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 8 · RECORD i matrices associatives (INDEX BY)</div>
+      <pre class="sql-out" id="e8"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        Un <code>RECORD</code> definit per l'usuari agrupa camps de tipus heterogenis: ideal per representar una fila de dades sense usar <code>%ROWTYPE</code>. Una <strong>matriu associativa</strong> (<code>TABLE OF ... INDEX BY</code>) és com un diccionari: accés per clau numèrica o de text. Mètodes útils: <code>.COUNT</code>, <code>.FIRST</code>, <code>.LAST</code>, <code>.EXISTS(i)</code>, <code>.DELETE(i)</code>.
+      </div></div>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 6: EXCEPCIONS -->
+  <section class="section" id="s6">
+    <div class="sec-head">
+      <span class="sec-num">6</span>
+      <div>
+        <h2 class="sec-title">Gestió d'excepcions</h2>
+        <p class="sec-sub">Criteri 5.10 — Capturar i tractar errors en temps d'execució</p>
+      </div>
+    </div>
+    <p class="lead">Una <strong>excepció</strong> és un error o condició anormal que interromp l'execució normal. PL/SQL permet capturar-les i actuar en conseqüència sense que el programa acabi abruptament.</p>
+
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Excepció predefinida</th><th>Quan es llança</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">NO_DATA_FOUND</td><td class="desc">SELECT INTO no retorna cap fila</td></tr>
+          <tr><td class="mono">TOO_MANY_ROWS</td><td class="desc">SELECT INTO retorna més d'una fila</td></tr>
+          <tr><td class="mono">ZERO_DIVIDE</td><td class="desc">Divisió per zero</td></tr>
+          <tr><td class="mono">DUP_VAL_ON_INDEX</td><td class="desc">Violació de restricció UNIQUE o PK</td></tr>
+          <tr><td class="mono">VALUE_ERROR</td><td class="desc">Error de conversió o truncament de variable</td></tr>
+          <tr><td class="mono">OTHERS</td><td class="desc">Captura qualsevol excepció no tractada específicament</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 9 · Captura d'excepcions predefinides i pròpies</div>
+      <pre class="sql-out" id="e9"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        La secció <code>EXCEPTION</code> conté un o més manejadors <code>WHEN excepció THEN</code>. <code>WHEN OTHERS THEN</code> ha d'anar sempre al final i captura tot el que no s'ha tractat. <code>SQLERRM</code> retorna el missatge d'error i <code>SQLCODE</code> el número. Les <strong>excepcions d'usuari</strong> es declaren com a variable de tipus <code>EXCEPTION</code> i es llancen manualment amb <code>RAISE</code>. <code>PRAGMA EXCEPTION_INIT</code> associa una excepció de l'usuari a un codi d'error d'Oracle.
+      </div></div>
+    </div>
+  </section>
+
+  <!-- PART 2 -->
+  <div class="part-divider" id="part2">
+    <div class="part-icon">🏗️</div>
+    <div>
+      <div class="part-label">Part B · Unitats de programa</div>
+      <div class="part-title">Procediments, funcions, paquets i disparadors</div>
+    </div>
+  </div>
+
+  <!-- SECCIÓ 7: PROCEDIMENTS I FUNCIONS -->
+  <section class="section" id="s7">
+    <div class="sec-head">
+      <span class="sec-num">7</span>
+      <div>
+        <h2 class="sec-title">Procediments i funcions</h2>
+        <p class="sec-sub">Criteri 5.6 — Subprogrames emmagatzemats a la base de dades</p>
+      </div>
+    </div>
+    <p class="lead">Els <strong>subprogrames</strong> (procediments i funcions) són blocs PL/SQL amb nom, emmagatzemats a la BD i reutilitzables. La diferència fonamental: les funcions <strong>retornen un valor</strong>, els procediments no (o el fan via paràmetres OUT).</p>
+
+    <div class="cmp-grid">
+      <div class="cmp"><h4>PROCEDURE</h4><p>Executa una acció. Pot tenir paràmetres IN (entrada), OUT (sortida) i IN OUT (entrada i sortida). Es crida amb EXECUTE o des d'un bloc PL/SQL.</p></div>
+      <div class="cmp"><h4>FUNCTION</h4><p>Calcula i retorna un valor (clàusula RETURN obligatòria). Pot cridar-se dins d'una expressió SQL o PL/SQL. Ha d'evitar efectes secundaris si s'usa en SQL.</p></div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 10 · Procediment amb paràmetres IN, OUT i IN OUT</div>
+      <pre class="sql-out" id="e10"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        <code>IN</code> — el paràmetre entra però no es pot modificar dins el procediment (per defecte). <code>OUT</code> — el procediment hi escriu un valor de retorn; no cal llegir-lo a l'entrada. <code>IN OUT</code> — entra amb un valor i es pot modificar. <code>CREATE OR REPLACE</code> crea o substitueix si ja existia (evita haver de fer DROP primer). Per eliminar: <code>DROP PROCEDURE nom;</code>
+      </div></div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 11 · Funció emmagatzemada</div>
+      <pre class="sql-out" id="e11"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        La funció ha de tenir <code>RETURN tipus</code> a la capçalera i almenys un <code>RETURN valor;</code> al cos. Es pot cridar dins un <code>SELECT</code>, en una expressió d'un bloc PL/SQL o com a valor per defecte d'una columna. Si la funció genera efectes secundaris (DML, escritura de fitxers...) no es pot usar directament en SQL sense mesures addicionals.
+      </div></div>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 8: PAQUETS -->
+  <section class="section" id="s8">
+    <div class="sec-head">
+      <span class="sec-num">8</span>
+      <div>
+        <h2 class="sec-title">Paquets (PACKAGE)</h2>
+        <p class="sec-sub">Criteri 5.6 — Agrupar subprogrames, variables i tipus relacionats</p>
+      </div>
+    </div>
+    <p class="lead">Un <strong>paquet</strong> agrupa procediments, funcions, variables, cursors, constants i excepcions relacionades en una unitat lògica. Té dues parts: l'<strong>especificació</strong> (interfície pública) i el <strong>cos</strong> (implementació privada).</p>
+
+    <div class="ibox blue">
+      <div class="ibox-label">Avantatges dels paquets</div>
+      <div class="ibox-text">
+        <strong>Encapsulament:</strong> els detalls interns queden ocults al cos. <strong>Rendiment:</strong> Oracle carrega el paquet sencer a memòria en la primera crida, millorant l'accés posterior. <strong>Reutilització:</strong> les variables públiques del paquet persisteixen durant tota la sessió. <strong>Dependències:</strong> canviar el cos no invalida els objectes que depenen de l'especificació.
+      </div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 12 · Especificació i cos d'un paquet</div>
+      <pre class="sql-out" id="e12"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        L'especificació declara tot el que és accessible des de fora (<strong>públic</strong>). El cos implementa els subprogrames i pot declarar elements addicionals <strong>privats</strong> (variables, funcions auxiliars) que no apareixen a l'especificació. Per cridar un element del paquet: <code>nom_paquet.nom_element</code>. Per eliminar: <code>DROP PACKAGE nom;</code> (elimina especificació i cos). Oracle inclou paquets predefinits útils: <code>DBMS_OUTPUT</code>, <code>DBMS_SQL</code>, <code>UTL_FILE</code>, <code>DBMS_SCHEDULER</code>.
+      </div></div>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 9: DISPARADORS -->
+  <section class="section" id="s9">
+    <div class="sec-head">
+      <span class="sec-num">9</span>
+      <div>
+        <h2 class="sec-title">Disparadors (TRIGGER)</h2>
+        <p class="sec-sub">Criteri 5.8 — Codi que s'executa automàticament davant un event</p>
+      </div>
+    </div>
+    <p class="lead">Un <strong>disparador</strong> és un bloc PL/SQL associat a un event (INSERT, UPDATE, DELETE sobre una taula, o events DDL/de BD). S'executa automàticament sense que ningú el cridi explícitament.</p>
+
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Tipus</th><th>Moment</th><th>Granularitat</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">BEFORE</td><td class="desc">Abans de l'operació DML. Pot modificar :NEW per canviar les dades.</td><td class="mono">ROW o STATEMENT</td></tr>
+          <tr><td class="mono">AFTER</td><td class="desc">Després de l'operació DML. Ideal per auditoria.</td><td class="mono">ROW o STATEMENT</td></tr>
+          <tr><td class="mono">INSTEAD OF</td><td class="desc">Substitueix l'operació sobre una vista no actualitzable.</td><td class="mono">ROW</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ibox yellow">
+      <div class="ibox-label">:NEW i :OLD</div>
+      <div class="ibox-text">
+        Als disparadors de fila (<code>FOR EACH ROW</code>), <code>:NEW.columna</code> conté el valor nou (disponible a INSERT i UPDATE) i <code>:OLD.columna</code> el valor antic (disponible a UPDATE i DELETE). A un disparador de sentència no estan disponibles.
+      </div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 13 · Trigger BEFORE per validació i auditoria</div>
+      <pre class="sql-out" id="e13"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        El primer trigger valida que el salari nou no sigui inferior al mínim del càrrec: usa <code>RAISE_APPLICATION_ERROR(-20001, missatge)</code> per llançar un error de negoci (codis d'error d'usuari: entre -20000 i -20999). El segon trigger guarda un registre de cada canvi salarial a una taula d'auditoria. Per deshabilitar/habilitar: <code>ALTER TRIGGER nom DISABLE / ENABLE;</code> Per eliminar: <code>DROP TRIGGER nom;</code>
+      </div></div>
+    </div>
+
+    <div class="demo">
+      <div class="demo-label">Exemple 14 · Trigger INSTEAD OF sobre vista</div>
+      <pre class="sql-out" id="e14"></pre>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        Les vistes que combinen múltiples taules (o que usen GROUP BY, DISTINCT, funcions d'agregació...) no es poden actualitzar directament. Un trigger <code>INSTEAD OF</code> substitueix la operació DML intentada sobre la vista i distribueix els canvis a les taules base correctes.
+      </div></div>
+    </div>
+  </section>
+
+  <!-- EXERCICIS -->
+  <div class="ex-block-head" id="ex">
+    <h2 class="ex-block-title">Exercicis de demostració</h2>
+    <p class="ex-block-sub">Quatre nivells · RA5 criteris 5.1–5.10</p>
+  </div>
+  <div class="ex-block-body">
+
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div>
+        <div class="ex-name">Estructura i sintaxi PL/SQL</div>
+        <div class="ex-level">Nivell bàsic · criteris 5.1, 5.4, 5.7</div>
+      </div></div>
+      <p class="ex-intro">Tria la resposta correcta per a cada pregunta sobre l'estructura i la sintaxi de PL/SQL.</p>
+      <div id="ex1-cont"></div>
+    </div>
+
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div>
+        <div class="ex-name">Cursors i excepcions</div>
+        <div class="ex-level">Nivell mitjà · criteris 5.9 i 5.10</div>
+      </div></div>
+      <p class="ex-intro">Analitza cada fragment i tria el comportament correcte.</p>
+      <div id="ex2-cont"></div>
+    </div>
+
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">3</div><div>
+        <div class="ex-name">Procediments, funcions i triggers</div>
+        <div class="ex-level">Nivell mitjà · criteris 5.6 i 5.8</div>
+      </div></div>
+      <p class="ex-intro">Tria el concepte correcte per a cada situació.</p>
+      <div id="ex3-cont"></div>
+    </div>
+
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">4</div><div>
+        <div class="ex-name">Escriu el codi PL/SQL</div>
+        <div class="ex-level">Nivell avançat · criteris 5.4, 5.6, 5.7, 5.8, 5.9, 5.10</div>
+      </div></div>
+      <p class="ex-intro">Escriu el bloc PL/SQL per a cada enunciat. Comprova la solució quan acabis.</p>
+      <div id="ex4-cont"></div>
+    </div>
+
+  </div>
+
+</div><!-- /wrap -->
+<script>
+/* ── Colorejador PL/SQL ── */
+function colorPL(t){
+  t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t=t.replace(/(--[^\n]*)/g,'<span class="cmt">$1</span>');
+  t=t.replace(/('[^']*')/g,'<span class="str">$1</span>');
+  t=t.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');
+  t=t.replace(/\b(DECLARE|BEGIN|END|EXCEPTION|IS|AS|RETURN|RETURNS|CREATE\s+OR\s+REPLACE|CREATE|REPLACE|PROCEDURE|FUNCTION|PACKAGE\s+BODY|PACKAGE|TRIGGER|CURSOR|TYPE|RECORD|TABLE|INDEX\s+BY|IF|THEN|ELSIF|ELSE|END\s+IF|CASE|WHEN|END\s+CASE|LOOP|EXIT\s+WHEN|EXIT|END\s+LOOP|WHILE|FOR|IN|REVERSE|CONTINUE|RAISE|RAISE_APPLICATION_ERROR|PRAGMA|EXCEPTION_INIT|SELECT|FROM|WHERE|AND|OR|NOT|INTO|INSERT|UPDATE|DELETE|SET|VALUES|COMMIT|ROLLBACK|SAVEPOINT|NULL|TRUE|FALSE|BEFORE|AFTER|INSTEAD\s+OF|FOR\s+EACH\s+ROW|OF|ON|OPEN|FETCH|CLOSE|EXECUTE|DROP|ALTER|ENABLE|DISABLE|CONSTANT|NOT\s+NULL|DEFAULT|OUT|IN\s+OUT)\b/gi,'<span class="kw">$1</span>');
+  t=t.replace(/\b(VARCHAR2|NUMBER|DATE|BOOLEAN|CHAR|INTEGER|PLS_INTEGER|BINARY_INTEGER|CLOB|BLOB|ROWTYPE|TYPE|%TYPE|%ROWTYPE|%FOUND|%NOTFOUND|%ROWCOUNT|%ISOPEN)\b/gi,'<span class="typ">$1</span>');
+  t=t.replace(/\b(DBMS_OUTPUT\.PUT_LINE|DBMS_OUTPUT\.PUT|DBMS_OUTPUT\.NEW_LINE|SQLERRM|SQLCODE|NVL|TO_CHAR|TO_DATE|TO_NUMBER|SYSDATE|ROUND|TRUNC|UPPER|LOWER|LENGTH|SUBSTR|MOD|COUNT|SUM|AVG|MAX|MIN|NEXT_DAY|ADD_MONTHS)\b/gi,'<span class="fn">$1</span>');
+  return t;
+}
+
+const CODES={
+e1:`DECLARE
+  v_nom        VARCHAR2(50);                   -- tipus escalar
+  v_salari     employees.salary%TYPE;          -- %TYPE: copia el tipus de la columna
+  v_emp_fila   employees%ROWTYPE;              -- %ROWTYPE: fila sencera
+  v_comptador  NUMBER := 0;                    -- inicialització directa
+BEGIN
+  -- Recuperar dades en variables individuals
+  SELECT last_name, salary
+  INTO   v_nom, v_salari
+  FROM   employees
+  WHERE  employee_id = 100;
+
+  -- Recuperar tota la fila
+  SELECT *
+  INTO   v_emp_fila
+  FROM   employees
+  WHERE  employee_id = 100;
+
+  DBMS_OUTPUT.PUT_LINE('Nom: '    || v_nom);
+  DBMS_OUTPUT.PUT_LINE('Salari: ' || v_salari);
+  DBMS_OUTPUT.PUT_LINE('Email: '  || v_emp_fila.email);
+END;
+/`,
+e2:`DECLARE
+  c_IVA    CONSTANT NUMBER := 0.21;    -- no es pot modificar
+  v_preu   NUMBER NOT NULL := 100;     -- ha de tenir valor inicial
+  v_actiu  BOOLEAN := TRUE;            -- tipus exclusiu de PL/SQL
+  v_msg    VARCHAR2(200);
+BEGIN
+  v_preu := v_preu * (1 + c_IVA);
+
+  IF v_actiu THEN
+    v_msg := 'Actiu. Preu amb IVA: ' || TO_CHAR(v_preu, '999.99');
+    DBMS_OUTPUT.PUT_LINE(v_msg);
+  END IF;
+  -- c_IVA := 0.10;  -- ERROR: no es pot modificar una constant
+END;
+/`,
+e3:`DECLARE
+  v_nom_dept  departments.department_name%TYPE;
+  v_nou_dept  NUMBER;
+BEGIN
+  -- SELECT INTO: exactament 1 fila
+  SELECT department_name
+  INTO   v_nom_dept
+  FROM   departments
+  WHERE  department_id = 90;
+
+  DBMS_OUTPUT.PUT_LINE('Dept: ' || v_nom_dept);
+
+  -- INSERT amb cursor implícit
+  INSERT INTO departments (department_id, department_name, location_id)
+  VALUES (300, 'Innovació', 1700);
+
+  DBMS_OUTPUT.PUT_LINE('Files inserides: ' || SQL%ROWCOUNT);
+
+  -- UPDATE amb cursor implícit
+  UPDATE employees
+  SET    salary = salary * 1.05
+  WHERE  department_id = 90;
+
+  DBMS_OUTPUT.PUT_LINE('Empleats actualitzats: ' || SQL%ROWCOUNT);
+
+  COMMIT;
+END;
+/`,
+e4:`DECLARE
+  v_nota    NUMBER := 7.5;
+  v_qualif  VARCHAR2(20);
+  v_grade   CHAR(1) := 'B';
+BEGIN
+  -- IF / ELSIF / ELSE
+  IF v_nota >= 9 THEN
+    v_qualif := 'Excel·lent';
+  ELSIF v_nota >= 7 THEN
+    v_qualif := 'Notable';
+  ELSIF v_nota >= 5 THEN
+    v_qualif := 'Aprovat';
+  ELSE
+    v_qualif := 'Suspès';
+  END IF;
+
+  DBMS_OUTPUT.PUT_LINE('Qualificació: ' || v_qualif);
+
+  -- CASE simple (compara un valor)
+  v_qualif := CASE v_grade
+                WHEN 'A' THEN 'Excellent'
+                WHEN 'B' THEN 'Very Good'
+                WHEN 'C' THEN 'Good'
+                ELSE          'Check grade'
+              END;
+
+  -- CASE cercat (condicions independents)
+  v_qualif := CASE
+                WHEN v_nota >= 9 THEN 'Excel·lent'
+                WHEN v_nota >= 7 THEN 'Notable'
+                ELSE 'Altres'
+              END;
+END;
+/`,
+e5:`DECLARE
+  v_i    NUMBER := 1;
+  v_sum  NUMBER := 0;
+BEGIN
+  -- LOOP bàsic amb EXIT WHEN
+  LOOP
+    v_sum := v_sum + v_i;
+    v_i   := v_i + 1;
+    EXIT WHEN v_i > 10;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Suma 1..10 (LOOP): ' || v_sum);
+
+  -- WHILE: comprova condició abans de cada volta
+  v_i := 1; v_sum := 0;
+  WHILE v_i <= 10 LOOP
+    v_sum := v_sum + v_i;
+    v_i   := v_i + 1;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Suma 1..10 (WHILE): ' || v_sum);
+
+  -- FOR: variable de control implícita, sempre entera
+  v_sum := 0;
+  FOR i IN 1..10 LOOP
+    v_sum := v_sum + i;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Suma 1..10 (FOR): ' || v_sum);
+
+  -- FOR invers
+  FOR i IN REVERSE 1..5 LOOP
+    DBMS_OUTPUT.PUT_LINE('Compte enrere: ' || i);
+  END LOOP;
+END;
+/`,
+e6:`DECLARE
+  CURSOR c_vendes IS
+    SELECT employee_id, last_name, salary
+    FROM   employees
+    WHERE  department_id = 80
+    ORDER BY salary DESC;
+
+  v_id    employees.employee_id%TYPE;
+  v_nom   employees.last_name%TYPE;
+  v_sal   employees.salary%TYPE;
+BEGIN
+  OPEN c_vendes;
+
+  LOOP
+    FETCH c_vendes INTO v_id, v_nom, v_sal;
+    EXIT WHEN c_vendes%NOTFOUND;           -- surt quan no hi ha més files
+
+    DBMS_OUTPUT.PUT_LINE(
+      c_vendes%ROWCOUNT || '. ' || v_nom || ' — ' || v_sal
+    );
+  END LOOP;
+
+  DBMS_OUTPUT.PUT_LINE('Total empleats: ' || c_vendes%ROWCOUNT);
+  CLOSE c_vendes;
+END;
+/`,
+e7:`DECLARE
+  -- Cursor amb paràmetre
+  CURSOR c_dept(p_dept_id NUMBER) IS
+    SELECT last_name, salary
+    FROM   employees
+    WHERE  department_id = p_dept_id;
+BEGIN
+  -- Cursor FOR LOOP: OPEN/FETCH/CLOSE automàtics
+  FOR reg IN c_dept(90) LOOP
+    DBMS_OUTPUT.PUT_LINE(reg.last_name || ' — ' || reg.salary);
+  END LOOP;
+
+  -- Cursor FOR LOOP amb subquery inline (sense declaració explícita)
+  FOR emp IN (SELECT last_name, hire_date FROM employees
+              WHERE  EXTRACT(YEAR FROM hire_date) = 2005) LOOP
+    DBMS_OUTPUT.PUT_LINE(emp.last_name || ' contractat: ' || emp.hire_date);
+  END LOOP;
+END;
+/`,
+e8:`DECLARE
+  -- Definir un tipus RECORD personalitzat
+  TYPE t_empleat IS RECORD (
+    nom       VARCHAR2(50),
+    salari    NUMBER,
+    dept_nom  VARCHAR2(50)
+  );
+
+  -- Variable del tipus RECORD
+  v_emp  t_empleat;
+
+  -- Matriu associativa: llista de noms indexada per NUMBER
+  TYPE t_llista IS TABLE OF VARCHAR2(100) INDEX BY PLS_INTEGER;
+  v_noms t_llista;
+BEGIN
+  -- Omplir el RECORD
+  SELECT e.last_name, e.salary, d.department_name
+  INTO   v_emp.nom, v_emp.salari, v_emp.dept_nom
+  FROM   employees e JOIN departments d
+         ON e.department_id = d.department_id
+  WHERE  e.employee_id = 100;
+
+  DBMS_OUTPUT.PUT_LINE(v_emp.nom || ' / ' || v_emp.dept_nom);
+
+  -- Omplir la matriu associativa
+  v_noms(1) := 'Anna';
+  v_noms(2) := 'Joan';
+  v_noms(3) := 'Maria';
+
+  -- Recórrer amb FOR
+  FOR i IN v_noms.FIRST .. v_noms.LAST LOOP
+    DBMS_OUTPUT.PUT_LINE(i || ': ' || v_noms(i));
+  END LOOP;
+
+  DBMS_OUTPUT.PUT_LINE('Total elements: ' || v_noms.COUNT);
+END;
+/`,
+e9:`DECLARE
+  v_lname   VARCHAR2(50);
+  v_sal     NUMBER;
+
+  -- Excepció d'usuari
+  e_salari_negatiu  EXCEPTION;
+
+  -- Associar excepció a codi d'error Oracle (ORA-00001 = DUP_VAL_ON_INDEX)
+  e_dup_key         EXCEPTION;
+  PRAGMA EXCEPTION_INIT(e_dup_key, -1);
+BEGIN
+  -- Pot llançar NO_DATA_FOUND o TOO_MANY_ROWS
+  SELECT last_name, salary
+  INTO   v_lname, v_sal
+  FROM   employees
+  WHERE  first_name = 'John';
+
+  IF v_sal < 0 THEN
+    RAISE e_salari_negatiu;               -- llancem excepció pròpia
+  END IF;
+
+  DBMS_OUTPUT.PUT_LINE(v_lname || ': ' || v_sal);
+
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('No s''ha trobat cap empleat "John".');
+  WHEN TOO_MANY_ROWS THEN
+    DBMS_OUTPUT.PUT_LINE('Hi ha més d''un "John". Useu employee_id.');
+  WHEN e_salari_negatiu THEN
+    DBMS_OUTPUT.PUT_LINE('Error: el salari no pot ser negatiu.');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Error inesperat: ' || SQLERRM);
+END;
+/`,
+e10:`-- Procediment: pujar salari d'un empleat
+CREATE OR REPLACE PROCEDURE puja_salari (
+  p_emp_id  IN  employees.employee_id%TYPE,  -- IN: sols lectura
+  p_pct     IN  NUMBER,
+  p_nou_sal OUT employees.salary%TYPE        -- OUT: retorn de valor
+) IS
+  v_sal_actual  employees.salary%TYPE;
+BEGIN
+  SELECT salary INTO v_sal_actual
+  FROM   employees
+  WHERE  employee_id = p_emp_id;
+
+  p_nou_sal := ROUND(v_sal_actual * (1 + p_pct / 100), 2);
+
+  UPDATE employees SET salary = p_nou_sal
+  WHERE  employee_id = p_emp_id;
+
+  COMMIT;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Empleat ' || p_emp_id || ' no trobat.');
+END puja_salari;
+/
+
+-- Cridar el procediment des d'un bloc anònim
+DECLARE
+  v_nou NUMBER;
+BEGIN
+  puja_salari(100, 10, v_nou);      -- notació posicional
+  DBMS_OUTPUT.PUT_LINE('Nou salari: ' || v_nou);
+
+  puja_salari(p_emp_id => 101,      -- notació amb nom (recomanada)
+              p_pct    => 5,
+              p_nou_sal => v_nou);
+  DBMS_OUTPUT.PUT_LINE('Nou salari 101: ' || v_nou);
+END;
+/`,
+e11:`-- Funció: retorna el salari anual amb comissió
+CREATE OR REPLACE FUNCTION salari_anual (
+  p_emp_id  IN employees.employee_id%TYPE
+) RETURN NUMBER IS
+  v_sal  employees.salary%TYPE;
+  v_com  employees.commission_pct%TYPE;
+BEGIN
+  SELECT salary, NVL(commission_pct, 0)
+  INTO   v_sal, v_com
+  FROM   employees
+  WHERE  employee_id = p_emp_id;
+
+  RETURN ROUND(v_sal * 12 * (1 + v_com), 2);
+
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    RETURN NULL;
+END salari_anual;
+/
+
+-- Cridar la funció en SQL
+SELECT last_name, salari_anual(employee_id) AS sal_anual
+FROM   employees
+WHERE  department_id = 90;
+
+-- Cridar la funció en PL/SQL
+DECLARE
+  v_total NUMBER;
+BEGIN
+  v_total := salari_anual(100);
+  DBMS_OUTPUT.PUT_LINE('Salari anual CEO: ' || v_total);
+END;
+/`,
+e12:`-- 1. ESPECIFICACIÓ: interfície pública (el que veuen els altres)
+CREATE OR REPLACE PACKAGE gestio_emp IS
+  -- Constant pública
+  c_AUMENT_MAX  CONSTANT NUMBER := 20;
+
+  -- Declaració de procediments i funcions
+  PROCEDURE puja_salari(p_emp_id IN NUMBER, p_pct IN NUMBER);
+  FUNCTION  salari_anual(p_emp_id IN NUMBER) RETURN NUMBER;
+  PROCEDURE mostra_dept(p_dept_id IN NUMBER);
+END gestio_emp;
+/
+
+-- 2. COS: implementació (pot tenir elements privats addicionals)
+CREATE OR REPLACE PACKAGE BODY gestio_emp IS
+
+  -- Funció privada (no declarada a l'especificació)
+  FUNCTION valida_pct(p_pct NUMBER) RETURN BOOLEAN IS
+  BEGIN
+    RETURN p_pct BETWEEN 0 AND c_AUMENT_MAX;
+  END valida_pct;
+
+  -- Implementació dels subprogrames públics
+  PROCEDURE puja_salari(p_emp_id IN NUMBER, p_pct IN NUMBER) IS
+  BEGIN
+    IF NOT valida_pct(p_pct) THEN
+      RAISE_APPLICATION_ERROR(-20010, 'Augment fora de rang.');
+    END IF;
+    UPDATE employees SET salary = salary * (1 + p_pct/100)
+    WHERE  employee_id = p_emp_id;
+    COMMIT;
+  END puja_salari;
+
+  FUNCTION salari_anual(p_emp_id IN NUMBER) RETURN NUMBER IS
+    v_sal NUMBER;
+  BEGIN
+    SELECT salary * 12 INTO v_sal FROM employees
+    WHERE  employee_id = p_emp_id;
+    RETURN v_sal;
+  END salari_anual;
+
+  PROCEDURE mostra_dept(p_dept_id IN NUMBER) IS
+  BEGIN
+    FOR emp IN (SELECT last_name, salary FROM employees
+                WHERE  department_id = p_dept_id) LOOP
+      DBMS_OUTPUT.PUT_LINE(emp.last_name || ': ' || emp.salary);
+    END LOOP;
+  END mostra_dept;
+
+END gestio_emp;
+/
+
+-- Cridar elements del paquet
+BEGIN
+  gestio_emp.puja_salari(100, 5);
+  gestio_emp.mostra_dept(90);
+  DBMS_OUTPUT.PUT_LINE(gestio_emp.salari_anual(100));
+END;
+/`,
+e13:`-- Primer: taula d'auditoria per guardar canvis salarials
+CREATE TABLE audit_salary (
+  audit_id    NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  employee_id NUMBER,
+  old_salary  NUMBER,
+  new_salary  NUMBER,
+  changed_by  VARCHAR2(50),
+  changed_at  DATE DEFAULT SYSDATE
+);
+
+-- Trigger BEFORE UPDATE: valida el nou salari
+CREATE OR REPLACE TRIGGER trg_val_salari
+BEFORE UPDATE OF salary ON employees
+FOR EACH ROW
+BEGIN
+  -- No permetre baixada de salari de més del 10%
+  IF :NEW.salary < :OLD.salary * 0.90 THEN
+    RAISE_APPLICATION_ERROR(-20020,
+      'No es pot reduir el salari més d''un 10%. ' ||
+      'Salari actual: ' || :OLD.salary ||
+      ', nou: ' || :NEW.salary);
+  END IF;
+END trg_val_salari;
+/
+
+-- Trigger AFTER UPDATE: registre d'auditoria
+CREATE OR REPLACE TRIGGER trg_audit_salari
+AFTER UPDATE OF salary ON employees
+FOR EACH ROW
+WHEN (NEW.salary != OLD.salary)    -- condició: només si canvia
+BEGIN
+  INSERT INTO audit_salary (employee_id, old_salary, new_salary, changed_by)
+  VALUES (:NEW.employee_id, :OLD.salary, :NEW.salary, USER);
+END trg_audit_salari;
+/`,
+e14:`-- Vista que combina employees i departments (no actualitzable directament)
+CREATE OR REPLACE VIEW v_emp_dept AS
+  SELECT e.employee_id, e.last_name, e.salary,
+         d.department_id, d.department_name
+  FROM   employees e JOIN departments d
+         ON e.department_id = d.department_id;
+
+-- Trigger INSTEAD OF per permetre INSERTs sobre la vista
+CREATE OR REPLACE TRIGGER trg_ins_emp_dept
+INSTEAD OF INSERT ON v_emp_dept
+FOR EACH ROW
+DECLARE
+  v_dept_id NUMBER;
+BEGIN
+  -- Verificar si el departament existeix, sinó crear-lo
+  BEGIN
+    SELECT department_id INTO v_dept_id
+    FROM   departments
+    WHERE  department_name = :NEW.department_name;
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      v_dept_id := :NEW.department_id;
+      INSERT INTO departments (department_id, department_name)
+      VALUES (v_dept_id, :NEW.department_name);
+  END;
+
+  -- Inserir l'empleat a la taula base
+  INSERT INTO employees (employee_id, last_name, salary,
+                          email, hire_date, job_id, department_id)
+  VALUES (:NEW.employee_id, :NEW.last_name, :NEW.salary,
+          UPPER(:NEW.last_name), SYSDATE, 'AD_ASST', v_dept_id);
+END trg_ins_emp_dept;
+/`
+};
+
+Object.keys(CODES).forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.innerHTML=colorPL(CODES[id]);
+});
+
+/* ── Exercici 1 ── */
+const E1=[
+  {t:'Quina secció d\'un bloc PL/SQL és OBLIGATÒRIA?', opts:['DECLARE','BEGIN ... END','EXCEPTION','Les tres'], ans:1,
+   exp:'Només BEGIN ... END és obligatòria. DECLARE i EXCEPTION són opcionals.'},
+  {t:'Quin és l\'efecte de %TYPE en la declaració d\'una variable?', opts:['Copia el valor de la columna','Hereta el tipus de dades de la columna referenciada','Declara la variable com a NOT NULL','Crea un registre de tipus taula'], ans:1,
+   exp:'%TYPE hereta automàticament el tipus de la columna. Si la columna canvia de VARCHAR2 a CHAR, la variable s\'adapta sense tocar el codi.'},
+  {t:'Quina diferència hi ha entre LOOP bàsic i WHILE LOOP?', opts:['No n\'hi ha cap','LOOP sempre s\'executa almenys una vegada; WHILE pot no executar-se mai','WHILE executa almenys una vegada; LOOP pot no executar-se mai','LOOP no admet EXIT WHEN'], ans:1,
+   exp:'LOOP s\'executa fins que es troba un EXIT WHEN (almenys una volta). WHILE avalua la condició ABANS: si és falsa des del principi, no s\'executa cap vegada.'},
+  {t:'Pots usar el tipus BOOLEAN d\'una variable PL/SQL directament en una clàusula WHERE d\'una sentència SQL?', opts:['Sí, directament','No, BOOLEAN no existeix a SQL d\'Oracle','Sí, amb TO_CHAR prèviament','Sí, però cal posar-lo entre cometes'], ans:1,
+   exp:'BOOLEAN és un tipus exclusiu de PL/SQL. SQL d\'Oracle no el reconeix. Per usar un valor booleà en SQL cal convertir-lo a CHAR o NUMBER prèviament.'},
+  {t:'Quan es fa el CLOSE automàtic d\'un cursor en un FOR cursor LOOP?', opts:['Mai, cal fer CLOSE manualment','Quan s\'han llegit totes les files (bucle acaba)','Quan es crida EXIT WHEN','Quan es fa COMMIT'], ans:1,
+   exp:'El FOR cursor LOOP gestiona OPEN, FETCH i CLOSE automàticament. El CLOSE es fa quan el bucle finalitza (totes les files llegides o EXIT).'}
+];
+
+/* ── Exercici 2 ── */
+const E2=[
+  {t:'Un SELECT INTO retorna 3 files. Quina excepció es llança automàticament?', opts:['NO_DATA_FOUND','TOO_MANY_ROWS','VALUE_ERROR','DUP_VAL_ON_INDEX'], ans:1,
+   exp:'SELECT INTO espera exactament 1 fila. Si en troba 0 → NO_DATA_FOUND. Si en troba > 1 → TOO_MANY_ROWS.'},
+  {t:'Tens un cursor explícit obert. Fas FETCH i %NOTFOUND retorna TRUE. Quantes files nous ha llegit aquest FETCH?', opts:['Una fila','Cap fila (no hi ha més)','Totes les pendents','Depèn de %ROWCOUNT'], ans:1,
+   exp:'%NOTFOUND = TRUE vol dir que l\'últim FETCH no ha recuperat cap nova fila: el cursor ha arribat al final del conjunt de resultats.'},
+  {t:'Quin és l\'ordre correcte del cicle de vida d\'un cursor explícit?', opts:['DECLARE → OPEN → FETCH → CLOSE','OPEN → DECLARE → FETCH → CLOSE','DECLARE → FETCH → OPEN → CLOSE','OPEN → FETCH → CLOSE (sense DECLARE)'], ans:0,
+   exp:'DECLARE (secció DECLARE del bloc) → OPEN (executar la query) → FETCH repetit fins %NOTFOUND → CLOSE (alliberar recursos).'},
+  {t:'Executes RAISE_APPLICATION_ERROR(-20005, \'Error de negoci\'). Quin codi d\'error rep el client?', opts:['ORA-20005','ORA-06512','ORA-00001','SQLCODE = 0'], ans:0,
+   exp:'RAISE_APPLICATION_ERROR llança un error amb el codi que li passes (ha d\'estar entre -20000 i -20999). El client veu ORA-20005 amb el missatge indicat.'}
+];
+
+/* ── Exercici 3 ── */
+const E3=[
+  {t:'Vols un codi PL/SQL reutilitzable que faci un càlcul i retorni el resultat. Quin tipus de subprograma tries?', opts:['Procediment (PROCEDURE)','Funció (FUNCTION)','Trigger (TRIGGER)','Paquet (PACKAGE)'], ans:1,
+   exp:'Una FUNCTION retorna un valor i es pot cridar dins d\'expressions SQL o PL/SQL. Ideal per a càlculs reutilitzables.'},
+  {t:'Vols que cada INSERT sobre la taula ORDERS actualitzi automàticament el stock de la taula PRODUCTS. Quin objecte PL/SQL uses?', opts:['Funció','Procediment','Trigger AFTER INSERT','Paquet'], ans:2,
+   exp:'Un TRIGGER s\'executa automàticament com a resposta a un event (INSERT en aquest cas). AFTER INSERT permet llegir els valors nous amb :NEW.'},
+  {t:'Tens 10 procediments i 5 funcions relacionades amb la gestió de factures. Com les organitzes millor?', opts:['Com a objectes independents a la BD','En un PACKAGE de facturació','En un bloc anònim gran','Com a triggers de la taula factures'], ans:1,
+   exp:'Un PACKAGE agrupa subprogrames relacionats, millora el rendiment (es carrega sencer a memòria) i permet elements privats no accessibles des de fora.'},
+  {t:'Vols permetre INSERTs sobre una vista que uneix employees i departments (que normalment no és actualitzable). Quin trigger uses?', opts:['BEFORE UPDATE','AFTER INSERT FOR EACH ROW','INSTEAD OF INSERT','BEFORE INSERT ON cada taula'], ans:2,
+   exp:'INSTEAD OF substititueix l\'operació DML sobre la vista per codi PL/SQL que tu controles, distribuint els canvis a les taules base.'}
+];
+
+/* ── Exercici 4 ── */
+const E4=[
+  {ctx:'Escriu un bloc anònim que recorri tots els empleats del departament 60 amb un cursor explícit i mostri el nom i salari de cadascun. Calcula i mostra la suma total de salaris.',
+   code:`DECLARE
+  CURSOR c_it IS
+    SELECT last_name, salary
+    FROM   employees
+    WHERE  department_id = 60
+    ORDER BY salary DESC;
+
+  v_total NUMBER := 0;
+BEGIN
+  FOR emp IN c_it LOOP
+    DBMS_OUTPUT.PUT_LINE(emp.last_name || ' — ' || emp.salary);
+    v_total := v_total + emp.salary;
+  END LOOP;
+
+  DBMS_OUTPUT.PUT_LINE('Suma total: ' || v_total);
+END;
+/`,
+   note:'Criteri 5.9 — Cursor FOR LOOP: gestiona OPEN/FETCH/CLOSE automàticament. La variable emp és implícitament de tipus c_it%ROWTYPE. La suma s\'acumula fora del LOOP.'},
+  {ctx:'Crea una funció RANG_SALARIAL que, donat un EMPLOYEE_ID, retorni el text "Baix", "Mig" o "Alt" en funció del salari (< 5000 = Baix, 5000–10000 = Mig, > 10000 = Alt). Si l\'empleat no existeix, retorna NULL.',
+   code:`CREATE OR REPLACE FUNCTION rang_salarial(
+  p_emp_id IN employees.employee_id%TYPE
+) RETURN VARCHAR2 IS
+  v_sal  employees.salary%TYPE;
+BEGIN
+  SELECT salary INTO v_sal
+  FROM   employees
+  WHERE  employee_id = p_emp_id;
+
+  RETURN CASE
+           WHEN v_sal < 5000  THEN 'Baix'
+           WHEN v_sal <= 10000 THEN 'Mig'
+           ELSE                     'Alt'
+         END;
+
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN RETURN NULL;
+END rang_salarial;
+/
+
+-- Verificació
+SELECT last_name, salary, rang_salarial(employee_id) rang
+FROM   employees WHERE department_id = 90;`,
+   note:'Criteri 5.6, 5.10 — Funció amb RETURN i gestió d\'excepcions. Es pot cridar directament en un SELECT SQL. CASE expression dins RETURN és una pràctica elegant.'},
+  {ctx:'Crea un trigger AFTER INSERT OR UPDATE OR DELETE sobre la taula DEPARTMENTS que registri a la taula LOG_DEPTS (dept_id, operacio, usuari, data_op) cada canvi. Usa INSERTING, UPDATING, DELETING per distingir l\'operació.',
+   code:`CREATE TABLE log_depts (
+  log_id     NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  dept_id    NUMBER,
+  operacio   VARCHAR2(10),
+  usuari     VARCHAR2(50),
+  data_op    DATE DEFAULT SYSDATE
+);
+/
+
+CREATE OR REPLACE TRIGGER trg_log_depts
+AFTER INSERT OR UPDATE OR DELETE ON departments
+FOR EACH ROW
+DECLARE
+  v_op VARCHAR2(10);
+BEGIN
+  IF    INSERTING THEN v_op := 'INSERT';
+  ELSIF UPDATING  THEN v_op := 'UPDATE';
+  ELSE                 v_op := 'DELETE';
+  END IF;
+
+  INSERT INTO log_depts (dept_id, operacio, usuari)
+  VALUES (
+    CASE WHEN DELETING THEN :OLD.department_id
+         ELSE               :NEW.department_id
+    END,
+    v_op, USER
+  );
+END trg_log_depts;
+/`,
+   note:'Criteri 5.8 — Trigger amb predicats condicionals INSERTING/UPDATING/DELETING. :OLD s\'usa per DELETE (el valor nou no existeix), :NEW per INSERT/UPDATE. USER retorna l\'usuari de la sessió actual.'},
+  {ctx:'Crea un procediment INFORME_DEPT que, donat un DEPARTMENT_ID, mostri per pantalla el nom del departament i la llista d\'empleats (nom i salari). Tracta l\'excepció si el departament no existeix.',
+   code:`CREATE OR REPLACE PROCEDURE informe_dept(
+  p_dept_id IN departments.department_id%TYPE
+) IS
+  v_dept_nom  departments.department_name%TYPE;
+  v_count     NUMBER := 0;
+BEGIN
+  -- Capçalera: nom del departament
+  SELECT department_name INTO v_dept_nom
+  FROM   departments
+  WHERE  department_id = p_dept_id;
+
+  DBMS_OUTPUT.PUT_LINE('=== ' || v_dept_nom || ' ===');
+
+  -- Llistat d'empleats
+  FOR emp IN (SELECT last_name, salary FROM employees
+              WHERE  department_id = p_dept_id
+              ORDER BY salary DESC) LOOP
+    DBMS_OUTPUT.PUT_LINE('  ' || emp.last_name || ' — ' || emp.salary);
+    v_count := v_count + 1;
+  END LOOP;
+
+  DBMS_OUTPUT.PUT_LINE('Total empleats: ' || v_count);
+
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    RAISE_APPLICATION_ERROR(-20030,
+      'El departament ' || p_dept_id || ' no existeix.');
+END informe_dept;
+/
+
+-- Execució
+BEGIN
+  informe_dept(90);
+  informe_dept(999);  -- llançarà error -20030
+END;
+/`,
+   note:'Criteri 5.6, 5.9, 5.10 — Combina: procediment, cursor FOR implícit, gestió d\'excepcions i RAISE_APPLICATION_ERROR per errors de negoci. El comptador permet saber si el departament és buit.'}
+];
+
+function buildQI(data, contId, prefix){
+  const c=document.getElementById(contId);
+  data.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('${prefix}',this,${i},${j})">${o.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="${prefix}f${i}"></div>`;
+    c.appendChild(div);
+  });
+}
+buildQI(E1,'ex1-cont','G1');
+buildQI(E2,'ex2-cont','G2');
+buildQI(E3,'ex3-cont','G3');
+
+const ALL={G1:E1,G2:E2,G3:E3};
+function checkQ(grp,btn,i,choice){
+  const d=ALL[grp][i],fb=document.getElementById(grp+'f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+
+(function(){
+  const c=document.getElementById('ex4-cont');
+  E4.forEach((d,i)=>{
+    const div=document.createElement('div'); div.className='ri';
+    div.innerHTML=`<div class="ri-q"><div class="ri-q-text"><strong>${i+1}.</strong> ${d.ctx}</div><button class="ri-btn" onclick="reveal(this,'E4a${i}')">▶ Veure solució PL/SQL</button></div><div class="ri-ans" id="E4a${i}"><div class="ri-ans-label">Solució</div><pre class="sql-out">${colorPL(d.code)}</pre><div class="ri-note">${d.note}</div></div>`;
+    c.appendChild(div);
+  });
+})();
+function reveal(btn,id){document.getElementById(id).classList.add('show');btn.style.display='none';}
+</script>
+</body>
+</html>

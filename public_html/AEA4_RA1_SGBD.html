@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA4 · RA1 · SGBD — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+      --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+      --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+      --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+      --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+      --yellow:#713f12; --yellow-bg:#fefce8; --yellow-bdr:#fef08a;
+      --purple:#5b21b6; --purple-bg:#f5f3ff; --purple-bdr:#ddd6fe;
+      --r:10px; --r-sm:6px;
+    }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+    .wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+    .page-header { padding:48px 0 36px; border-bottom:1.5px solid var(--border); margin-bottom:52px; }
+    .meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+    .badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+    .b-course { background:var(--ink); color:#fff; }
+    .b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+    .b-act { background:var(--accent-mid); color:#fff; }
+    .b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(2rem,5vw,2.8rem); line-height:1.15; margin-bottom:10px; }
+    .page-sub { font-size:17px; color:var(--ink-2); margin-bottom:24px; }
+    .obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; }
+    .obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+    .obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+    .obj-text { font-size:14px; color:var(--ink-2); }
+    .section { margin-bottom:60px; }
+    .sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+    .sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+    .sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+    .sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+    .lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+    .lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+    .ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+    .ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+    .ibox-text { font-size:14px; line-height:1.65; }
+    .ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+    .ibox.green { background:var(--green-bg); border:1px solid var(--green-bdr); }
+    .ibox.yellow { background:var(--yellow-bg); border:1px solid var(--yellow-bdr); }
+    .ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+    .ibox.purple { background:var(--purple-bg); border:1px solid var(--purple-bdr); }
+    .ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+    .ibox.green .ibox-label, .ibox.green .ibox-text { color:var(--green); }
+    .ibox.yellow .ibox-label, .ibox.yellow .ibox-text { color:var(--yellow); }
+    .ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
+    .ibox.purple .ibox-label, .ibox.purple .ibox-text { color:var(--purple); }
+    .tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
+    .tbl { width:100%; border-collapse:collapse; font-size:13px; }
+    .tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
+    .tbl td { padding:9px 14px; border-bottom:1px solid var(--border); vertical-align:top; font-size:13px; }
+    .tbl tr:last-child td { border-bottom:none; }
+    .tbl td strong { color:var(--ink); }
+    .cmp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+    .cmp-grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:20px; }
+    .cmp { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:16px; }
+    .cmp h4 { font-size:13px; font-weight:700; color:var(--accent); margin-bottom:6px; }
+    .cmp p { font-size:12px; color:var(--ink-2); line-height:1.6; }
+    .cmp ul { font-size:12px; color:var(--ink-2); padding-left:16px; line-height:1.7; }
+    @media (max-width:600px){ .cmp-grid, .cmp-grid-3 { grid-template-columns:1fr; } }
+    /* arq. diagram */
+    .arq { display:flex; flex-direction:column; gap:0; border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-bottom:20px; }
+    .arq-layer { padding:11px 18px; font-size:13px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+    .arq-layer:last-child { border-bottom:none; }
+    .arq-layer.ext { background:var(--blue-bg); color:var(--blue); }
+    .arq-layer.con { background:var(--accent-bg); color:var(--accent); }
+    .arq-layer.int { background:var(--green-bg); color:var(--green); }
+    .arq-badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; min-width:90px; }
+    /* EXERCICIS */
+    .ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
+    .ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+    .ex-block-sub { font-size:13px; color:#a8a29e; }
+    .ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+    .exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+    .exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+    .ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+    .ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+    .ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+    .ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
+    .ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
+    .qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
+    .qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
+    .qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
+    .qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
+    .qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+    .qi-btn:disabled { cursor:default; }
+    .qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
+    .qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
+    .qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
+    .qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-header">
+    <div class="meta-row">
+      <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+      <span class="badge b-ra">AEA4 · RA1</span>
+      <span class="badge b-act">2 hores</span>
+      <span class="badge b-new">Introducció als SGBD</span>
+    </div>
+    <h1 class="page-title">Sistemes gestors de bases de dades</h1>
+    <p class="page-sub">De l'emmagatzematge en fitxers a les bases de dades distribuïdes: fonaments, classificació, arquitectura i legislació.</p>
+    <div class="obj-box">
+      <div class="obj-icon">🎯</div>
+      <div>
+        <div class="obj-label">Criteris d'avaluació · RA1</div>
+        <div class="obj-text">
+          <strong>1.1</strong> Sistemes lògics d'emmagatzematge ·
+          <strong>1.2</strong> Tipus de BD segons el model de dades ·
+          <strong>1.3</strong> Tipus de BD segons la ubicació ·
+          <strong>1.4</strong> Utilitat d'un SGBD ·
+          <strong>1.5</strong> Elements d'un SGBD ·
+          <strong>1.6</strong> Classificació dels SGBD ·
+          <strong>1.7</strong> BD distribuïdes ·
+          <strong>1.8</strong> Polítiques de fragmentació ·
+          <strong>1.9</strong> Legislació de protecció de dades ·
+          <strong>1.10</strong> Big Data i intel·ligència de negocis
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECCIÓ 1: EMMAGATZEMATGE -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">1</span>
+      <div>
+        <h2 class="sec-title">Sistemes d'emmagatzematge de la informació</h2>
+        <p class="sec-sub">Criteri 1.1 — De fitxers a bases de dades</p>
+      </div>
+    </div>
+    <p class="lead">Abans de les bases de dades, la informació es guardava en <strong>fitxers</strong>. Cada aplicació tenia els seus propis fitxers, cosa que generava redundància, inconsistència i dificultat per compartir dades. Les bases de dades van sorgir per resoldre aquests problemes.</p>
+
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Tipus de fitxer</th><th>Accés</th><th>Característiques</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Seqüencial (pla)</strong></td><td>D'inici a fi</td><td>Simple, però lent per a cerques. Cal llegir tot el fitxer per trobar un registre.</td></tr>
+          <tr><td><strong>Indexat</strong></td><td>Per índex + seqüencial</td><td>Un índex separat accelera les cerques. Exemple: ISAM (Indexed Sequential Access Method).</td></tr>
+          <tr><td><strong>Accés directe (hash)</strong></td><td>Per adreça calculada</td><td>Accés molt ràpid per clau. Una funció hash transforma la clau en una adreça física.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ibox red">
+      <div class="ibox-label">Problemes dels sistemes de fitxers</div>
+      <div class="ibox-text">
+        <strong>Redundància:</strong> les mateixes dades es guarden en múltiples fitxers de departaments diferents.<br>
+        <strong>Inconsistència:</strong> les còpies divergeixen (un departament actualitza el telèfon d'un client i l'altre no).<br>
+        <strong>Dificultat de consulta:</strong> cal programar cada consulta específica, no hi ha un llenguatge estàndard.<br>
+        <strong>Aïllament:</strong> les dades estan disperses en formats heterogenis, difícils de combinar.<br>
+        <strong>Problemes de concurrència:</strong> dos usuaris modificant el mateix fitxer simultàniament poden corrompre les dades.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 2: TIPUS BD -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">2</span>
+      <div>
+        <h2 class="sec-title">Tipus de bases de dades</h2>
+        <p class="sec-sub">Criteri 1.2 · 1.3 — Classificació per model i per ubicació</p>
+      </div>
+    </div>
+    <p class="lead">Les bases de dades es poden classificar des de dues perspectives: el <strong>model de dades</strong> que utilitzen (com s'organitza la informació internament) i la seva <strong>ubicació física</strong> (on resideix la informació).</p>
+
+    <p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-bottom:12px;">Classificació per model de dades · Criteri 1.2</p>
+    <div class="cmp-grid">
+      <div class="cmp">
+        <h4>Relacional (SQL)</h4>
+        <p>Organitza les dades en <strong>taules</strong> (relacions) amb files i columnes. Les taules s'interrelacionen mitjançant claus foranes. Exemple: Oracle, MySQL, PostgreSQL, SQL Server. El model predominant en sistemes transaccionals.</p>
+      </div>
+      <div class="cmp">
+        <h4>Orientada a objectes</h4>
+        <p>Les dades s'emmagatzemen com a <strong>objectes</strong>, igual que en la programació orientada a objectes. Inclou herència, encapsulament i polimorfisme. Exemples: db4o, ObjectDB. Útil quan les dades tenen estructura complexa.</p>
+      </div>
+      <div class="cmp">
+        <h4>Jeràrquica</h4>
+        <p>Les dades s'organitzen en una estructura d'<strong>arbre</strong> (pare-fill). Molt ràpida per a relacions 1:N predefinides, però rígida. Exemple: IMS d'IBM. Poc usada avui, però present en sistemes legacy.</p>
+      </div>
+      <div class="cmp">
+        <h4>En xarxa</h4>
+        <p>Extensió del model jeràrquic: cada node pot tenir <strong>múltiples pares</strong> (grafs). Permet relacions M:N sense taules intermèdies. Exemple: CODASYL. Gairebé obsoleta avui.</p>
+      </div>
+      <div class="cmp">
+        <h4>NoSQL (no relacionals)</h4>
+        <p>Família de models alternatius al relacional: <strong>clau-valor</strong> (Redis), <strong>documentals</strong> (MongoDB), <strong>columnars</strong> (Cassandra), <strong>grafs</strong> (Neo4j). Prioritzen escalabilitat i flexibilitat sobre la consistència estricta.</p>
+      </div>
+      <div class="cmp">
+        <h4>Relacional-objecte</h4>
+        <p>Híbrid que afegeix al model relacional capacitats orientades a objectes: tipus definits per l'usuari, herència de taules, mètodes. Exemple: PostgreSQL en mode avançat, Oracle amb objectes.</p>
+      </div>
+    </div>
+
+    <p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-bottom:12px;margin-top:8px;">Classificació per ubicació · Criteri 1.3</p>
+    <div class="cmp-grid">
+      <div class="cmp">
+        <h4>Centralitzada</h4>
+        <p>Totes les dades resideixen en un <strong>únic servidor</strong> i s'hi accedeix de forma remota. Fàcil d'administrar i mantenir la consistència, però crea un únic punt de fallada i pot saturar-se amb molta càrrega.</p>
+      </div>
+      <div class="cmp">
+        <h4>Distribuïda</h4>
+        <p>Les dades es reparteixen entre <strong>múltiples nodes</strong> interconnectats per xarxa. L'usuari la veu com una sola BD. Major disponibilitat i rendiment, però major complexitat de gestió i consistència.</p>
+      </div>
+      <div class="cmp">
+        <h4>En el núvol (Cloud)</h4>
+        <p>La BD s'executa sobre infraestructura cloud (AWS RDS, Azure SQL, Google Cloud Spanner). Ofereix escalabilitat elàstica, alta disponibilitat i pagament per ús, sense gestionar el maquinari físic.</p>
+      </div>
+      <div class="cmp">
+        <h4>Paral·lela</h4>
+        <p>Múltiples processadors treballen simultàniament sobre la mateixa BD en un sol sistema físic (shared-memory o shared-disk). Molt alt rendiment per a grans volums de dades. Exemple: Oracle RAC.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 3: SGBD -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">3</span>
+      <div>
+        <h2 class="sec-title">El Sistema Gestor de Bases de Dades</h2>
+        <p class="sec-sub">Criteri 1.4 · 1.5 · 1.6 — Funcions, components i classificació dels SGBD</p>
+      </div>
+    </div>
+    <p class="lead">Un <strong>SGBD</strong> (Sistema Gestor de Bases de Dades) és el programari que permet crear, mantenir i accedir a una base de dades de forma eficient, segura i multiusuari. Actua com a intermediari entre les aplicacions i les dades físiques.</p>
+
+    <div class="ibox green">
+      <div class="ibox-label">Funcions principals d'un SGBD · Criteri 1.4</div>
+      <div class="ibox-text">
+        <strong>Definició:</strong> permet crear i modificar l'estructura (DDL). <strong>Manipulació:</strong> consultar, inserir, actualitzar i esborrar dades (DML). <strong>Control:</strong> gestió de permisos i privilegis (DCL). <strong>Integritat:</strong> imposa restriccions que garanteixen la validesa de les dades. <strong>Seguretat:</strong> controla qui pot fer què. <strong>Concurrència:</strong> permet l'accés simultani de múltiples usuaris sense conflictes. <strong>Recuperació:</strong> restaura la BD a un estat consistent després d'un error.
+      </div>
+    </div>
+
+    <p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-bottom:12px;">Arquitectura ANSI/SPARC — tres nivells · Criteri 1.5</p>
+    <div class="arq">
+      <div class="arq-layer ext"><span class="arq-badge">Extern (vistes)</span>Com cada usuari o aplicació veu les dades. Cada grup té la seva pròpia vista parcial de la BD.</div>
+      <div class="arq-layer con"><span class="arq-badge">Conceptual</span>Descripció global de tota la BD: entitats, atributs, relacions, restriccions. Independitza les vistes dels detalls físics.</div>
+      <div class="arq-layer int"><span class="arq-badge">Intern (físic)</span>Com s'emmagatzemen realment les dades al disc: estructures de fitxers, índexos, compressió. Transparent per a l'usuari.</div>
+    </div>
+
+    <p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-bottom:12px;margin-top:8px;">Components d'un SGBD · Criteri 1.5</p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Component</th><th>Funció</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Motor de consultes</strong></td><td>Analitza, optimitza i executa les sentències SQL.</td></tr>
+          <tr><td><strong>Gestor de transaccions</strong></td><td>Garanteix les propietats ACID (Atomicitat, Consistència, Aïllament, Durabilitat).</td></tr>
+          <tr><td><strong>Gestor de buffer</strong></td><td>Gestiona la memòria cau de pàgines de dades entre disc i memòria RAM.</td></tr>
+          <tr><td><strong>Gestor de fitxers</strong></td><td>Controla l'organització física de les dades al disc.</td></tr>
+          <tr><td><strong>Gestor de seguretat</strong></td><td>Autenticació d'usuaris i control d'accés (privilegis, rols).</td></tr>
+          <tr><td><strong>Catàleg / Diccionari de dades</strong></td><td>Metadades: descripció de totes les taules, columnes, índexos, restriccions i usuaris.</td></tr>
+          <tr><td><strong>Gestor de recuperació</strong></td><td>Diari de transaccions (redo/undo log) per restaurar la BD després d'un error.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-bottom:12px;margin-top:8px;">Classificació dels SGBD · Criteri 1.6</p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Criteri</th><th>Tipus</th><th>Exemples</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Model de dades</strong></td><td>Relacional, NoSQL, orientat a objectes…</td><td>Oracle, MongoDB, db4o</td></tr>
+          <tr><td><strong>Nombre d'usuaris</strong></td><td>Monousuari / Multiusuari</td><td>SQLite vs Oracle</td></tr>
+          <tr><td><strong>Nombre de llocs</strong></td><td>Centralitzat / Distribuït</td><td>MySQL vs CockroachDB</td></tr>
+          <tr><td><strong>Cost i llicència</strong></td><td>Comercial / Codi obert</td><td>Oracle, SQL Server vs PostgreSQL, MariaDB</td></tr>
+          <tr><td><strong>Ús principal</strong></td><td>OLTP (transaccional) / OLAP (analític)</td><td>MySQL vs Snowflake</td></tr>
+          <tr><td><strong>Mida</strong></td><td>Embegut / Escriptori / Servidor / Cloud</td><td>SQLite / Access / Oracle / AWS Aurora</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 4: BD DISTRIBUÏDES -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">4</span>
+      <div>
+        <h2 class="sec-title">Bases de dades distribuïdes i fragmentació</h2>
+        <p class="sec-sub">Criteri 1.7 · 1.8 — Com es distribueixen les dades entre nodes</p>
+      </div>
+    </div>
+    <p class="lead">En una <strong>BD distribuïda</strong>, les dades es reparteixen físicament entre múltiples nodes, però el sistema ofereix una <strong>transparència de distribució</strong>: l'usuari interactua com si fos una única BD local.</p>
+
+    <div class="ibox blue">
+      <div class="ibox-label">Propietats desitjables · Criteri 1.7</div>
+      <div class="ibox-text">
+        <strong>Autonomia local:</strong> cada node pot operar de forma independent.<br>
+        <strong>No dependència d'un node central:</strong> cap node és imprescindible per al funcionament global.<br>
+        <strong>Operació contínua:</strong> el sistema segueix disponible si alguns nodes fallen.<br>
+        <strong>Independència de localització:</strong> l'usuari no sap on resideix cada dada.<br>
+        <strong>Independència de fragmentació:</strong> l'usuari no sap com s'han dividit les dades.
+      </div>
+    </div>
+
+    <p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-bottom:12px;">Tècniques de fragmentació · Criteri 1.8</p>
+    <div class="cmp-grid-3">
+      <div class="cmp">
+        <h4>Fragmentació horitzontal</h4>
+        <p>Es divideix la taula per <strong>files</strong> (tuples). Cada fragment conté un subconjunt de les files que compleix una condició. Exemple: clients europeus al node de París, clients americans al de Nova York.</p>
+      </div>
+      <div class="cmp">
+        <h4>Fragmentació vertical</h4>
+        <p>Es divideix la taula per <strong>columnes</strong>. Cada fragment conté totes les files però només alguns atributs (+ la clau primària per poder reconstruir). Útil per separar dades sensibles.</p>
+      </div>
+      <div class="cmp">
+        <h4>Fragmentació mixta</h4>
+        <p>Combina les dues anteriors: primer es fragmenta verticalment i després cadascuna es fragmenta horitzontalment (o al revés). Permet una distribució molt flexible.</p>
+      </div>
+    </div>
+
+    <div class="ibox yellow">
+      <div class="ibox-label">Replicació</div>
+      <div class="ibox-text">A més de la fragmentació, es poden fer <strong>rèpliques</strong>: còpies d'un fragment en múltiples nodes. Augmenta la disponibilitat (si un node falla, un altre té la còpia) i el rendiment de lectura, però complica les actualitzacions (cal sincronitzar totes les còpies).
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 5: LEGISLACIÓ -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">5</span>
+      <div>
+        <h2 class="sec-title">Legislació sobre protecció de dades</h2>
+        <p class="sec-sub">Criteri 1.9 — RGPD i LOPDGDD</p>
+      </div>
+    </div>
+    <p class="lead">Qualsevol sistema d'informació que emmagatzemi dades de persones físiques ha de complir la normativa vigent de protecció de dades. A Europa, el marc legal principal és el <strong>RGPD</strong> (Reglament General de Protecció de Dades).</p>
+
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Norma</th><th>Àmbit</th><th>Punts clau</th></tr></thead>
+        <tbody>
+          <tr><td><strong>RGPD</strong><br><small>(UE 2016/679)</small></td><td>Tota la UE. Des de 2018.</td><td>Principis: minimització, limitació de finalitat, exactitud, integritat. Drets: accés, rectificació, supressió (oblit), portabilitat, oposició. Multes fins a 20 M€ o el 4% de la facturació anual global.</td></tr>
+          <tr><td><strong>LOPDGDD</strong><br><small>(LO 3/2018)</small></td><td>Espanya. Adapta el RGPD.</td><td>Concreta i amplia el RGPD per a l'ordenament jurídic espanyol. Regula la delegat de protecció de dades (DPD), el tractament de dades de menors (edat mínima 14 anys per consentir), drets digitals dels treballadors.</td></tr>
+          <tr><td><strong>LSSI</strong><br><small>(Llei 34/2002)</small></td><td>Serveis de la societat de la informació.</td><td>Regula el comerç electrònic, les comunicacions comercials per email (spam), les cookies i les obligacions dels prestadors de serveis.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ibox blue">
+      <div class="ibox-label">Implicacions pràctiques per a un dissenyador de BD</div>
+      <div class="ibox-text">
+        No emmagatzemar més dades personals de les estrictament necessàries (<strong>principi de minimització</strong>).<br>
+        Definir períodes de retenció: quan s'han de suprimir les dades.<br>
+        Implementar mesures tècniques: xifrat, control d'accés, pseudonimització.<br>
+        Documentar el registre d'activitats de tractament.<br>
+        Fer una avaluació d'impacte (EIPD) per a tractaments d'alt risc.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 6: BIG DATA -->
+  <section class="section">
+    <div class="sec-head">
+      <span class="sec-num">6</span>
+      <div>
+        <h2 class="sec-title">Big Data i intel·ligència de negocis</h2>
+        <p class="sec-sub">Criteri 1.10 — Quan les dades es fan massa grans per al model tradicional</p>
+      </div>
+    </div>
+    <p class="lead">El terme <strong>Big Data</strong> fa referència a conjunts de dades tan grans, variats o generats tan ràpidament que les eines tradicionals de bases de dades no poden gestionar-los eficientment. Es caracteritza per les <strong>5 V</strong>:</p>
+
+    <div class="cmp-grid">
+      <div class="cmp"><h4>Volum</h4><p>Quantitat massiva de dades (terabytes, petabytes). Exemple: logs de servidor, dades de sensors IoT.</p></div>
+      <div class="cmp"><h4>Velocitat</h4><p>Generació i processament en temps real o gairebé real. Exemple: transaccions bancàries, streaming de sensors.</p></div>
+      <div class="cmp"><h4>Varietat</h4><p>Dades estructurades (taules), semiestructurades (JSON, XML) i no estructurades (imatges, vídeos, text lliure).</p></div>
+      <div class="cmp"><h4>Veracitat</h4><p>Qualitat i fiabilitat de les dades: les dades massives contenen soroll, errors i incertesa que cal gestionar.</p></div>
+      <div class="cmp"><h4>Valor</h4><p>L'objectiu final: extreure coneixement útil i presa de decisions a partir de totes les dades recollides.</p></div>
+      <div class="cmp"><h4>Eines típiques</h4><p>Hadoop (HDFS + MapReduce), Apache Spark, Hive, Kafka. Plataformes cloud: AWS EMR, Azure HDInsight, Google BigQuery.</p></div>
+    </div>
+
+    <div class="ibox purple">
+      <div class="ibox-label">Intel·ligència de negocis (BI)</div>
+      <div class="ibox-text">
+        La <strong>Business Intelligence</strong> agrupa tecnologies i processos per transformar dades en informació accionable. L'arquitectura típica és: <strong>Fonts de dades → ETL → Data Warehouse → OLAP → Informes i Dashboards</strong>.<br><br>
+        <strong>ETL</strong> (Extract, Transform, Load): extreu dades de fonts heterogènies, les transforma i les carrega al DW.<br>
+        <strong>Data Warehouse:</strong> base de dades optimitzada per a consultes analítiques (desnormalitzada, orientada a tema, variant en el temps).<br>
+        <strong>OLAP</strong> (Online Analytical Processing): permet analitzar dades multidimensionalment (cubs de dades, drill-down, roll-up).<br>
+        <strong>Data Lake:</strong> repositori de dades en brut en qualsevol format, que es processa quan es necessita (schema-on-read).
+      </div>
+    </div>
+  </section>
+
+  <!-- EXERCICIS -->
+  <div class="ex-block-head">
+    <h2 class="ex-block-title">Exercicis de demostració</h2>
+    <p class="ex-block-sub">Tres nivells · RA1 criteris 1.1–1.10</p>
+  </div>
+  <div class="ex-block-body">
+
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div>
+        <div class="ex-name">Conceptes i classificació</div>
+        <div class="ex-level">Nivell bàsic · criteris 1.1–1.6</div>
+      </div></div>
+      <p class="ex-intro">Tria la resposta correcta per a cada pregunta.</p>
+      <div id="ex1-cont"></div>
+    </div>
+
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div>
+        <div class="ex-name">BD distribuïdes, legislació i Big Data</div>
+        <div class="ex-level">Nivell mitjà · criteris 1.7–1.10</div>
+      </div></div>
+      <p class="ex-intro">Tria la resposta correcta per a cada pregunta.</p>
+      <div id="ex2-cont"></div>
+    </div>
+
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">3</div><div>
+        <div class="ex-name">Identifica el SGBD adequat</div>
+        <div class="ex-level">Nivell aplicat · criteris 1.2, 1.4, 1.6</div>
+      </div></div>
+      <p class="ex-intro">Per a cada escenari, tria el tipus de SGBD més adequat.</p>
+      <div id="ex3-cont"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const E1=[
+  {t:'Quin problema principal tenien els sistemes d\'emmagatzematge basats en fitxers?',
+   opts:['Velocitat excessiva','Redundància i inconsistència de dades','Massa seguretat','No permetien accés directe'],
+   ans:1, exp:'Cada aplicació guardava les seves pròpies còpies de les dades, cosa que generava redundància i, en actualitzar-les, inconsistència entre departaments.'},
+  {t:'Un fitxer on la posició física d\'un registre es calcula aplicant una funció matemàtica a la seva clau es diu:',
+   opts:['Fitxer seqüencial','Fitxer indexat','Fitxer d\'accés directe (hash)','Fitxer ISAM'],
+   ans:2, exp:'En el fitxer d\'accés directe (hash), una funció hash transforma la clau en una adreça física, permetent un accés molt ràpid sense recórrer el fitxer.'},
+  {t:'Quina arquitectura de SGBD té tres nivells: extern, conceptual i intern?',
+   opts:['Arquitectura cliente-servidor','Arquitectura ANSI/SPARC','Arquitectura peer-to-peer','Arquitectura monolítica'],
+   ans:1, exp:'L\'arquitectura ANSI/SPARC (1975) defineix els tres nivells que proporcionen independència entre com l\'usuari veu les dades i com s\'emmagatzemen físicament.'},
+  {t:'Quin component d\'un SGBD emmagatzema les metadades (descripció de taules, columnes, índexos)?',
+   opts:['Gestor de buffer','Gestor de transaccions','Catàleg o diccionari de dades','Motor de consultes'],
+   ans:2, exp:'El catàleg (diccionari de dades) conté les metadades del sistema: descripció de totes les taules, columnes, restriccions, índexos, usuaris i privilegis.'},
+  {t:'Quin tipus de BD organitza les dades en taules relacionades entre elles per claus foranes?',
+   opts:['BD jeràrquica','BD relacional','BD en xarxa','BD orientada a objectes'],
+   ans:1, exp:'La BD relacional (model de Codd, 1970) organitza la informació en taules (relacions), amb files (tuples) i columnes (atributs), usant claus foranes per relacionar-les.'},
+  {t:'Quina de les següents és una BD NoSQL de tipus documental?',
+   opts:['Oracle','MongoDB','Redis','Neo4j'],
+   ans:1, exp:'MongoDB és una BD documental: emmagatzema documents JSON/BSON. Redis és clau-valor, Neo4j és de grafs, i Oracle és relacional.'}
+];
+const E2=[
+  {t:'En una BD distribuïda es divideix la taula CLIENTS per files: clients europeus a París, americans a Nova York. Quin tipus de fragmentació és?',
+   opts:['Vertical','Horitzontal','Mixta','Replicació'],
+   ans:1, exp:'La fragmentació horitzontal divideix la taula per files (tuples) aplicant una condició. Cada fragment conté un subconjunt de files amb totes les columnes.'},
+  {t:'La "transparència de distribució" en una BD distribuïda significa que:',
+   opts:['Les dades estan xifrades','L\'usuari no sap on resideix cada dada físicament','Només els administradors veuen les dades','Les dades no es repliquen'],
+   ans:1, exp:'L\'usuari treballa amb la BD distribuïda com si fos una única BD local: no necessita saber en quin node estan les dades que consulta.'},
+  {t:'Quin reglament europeu regula el tractament de dades personals i va entrar en vigor el 2018?',
+   opts:['LOPDGDD','LSSI','RGPD (GDPR)','ISO 27001'],
+   ans:2, exp:'El RGPD (Reglament General de Protecció de Dades, UE 2016/679) és d\'aplicació directa a tota la UE des del 25 de maig de 2018.'},
+  {t:'Segons el RGPD, el "principi de minimització de dades" significa que:',
+   opts:['Les dades s\'han de comprimir al màxim','Només s\'han de recollir les dades estrictament necessàries per a la finalitat declarada','Cada usuari veu el mínim de dades possible','Les dades s\'han de suprimir cada any'],
+   ans:1, exp:'La minimització implica recollir únicament les dades personals adequades, pertinents i limitades al que és necessari per a la finalitat del tractament.'},
+  {t:'En una arquitectura BI, quin procés extreu dades de fonts heterogènies, les transforma i les carrega al Data Warehouse?',
+   opts:['OLAP','Data Mining','ETL','NoSQL'],
+   ans:2, exp:'ETL (Extract, Transform, Load) és el procés que alimenta el Data Warehouse: extreu dades de diverses fonts, les neteja i transforma, i les carrega al DW.'},
+  {t:'Quina de les 5 V del Big Data fa referència a la qualitat i fiabilitat de les dades?',
+   opts:['Volum','Velocitat','Varietat','Veracitat'],
+   ans:3, exp:'Veracitat fa referència al grau de confiança i qualitat de les dades: el soroll, la incertesa i els errors inherents en grans volums de dades heterogènies.'}
+];
+const E3=[
+  {t:'Una botiga en línia amb milers de comandes diàries, necessita transaccions ACID garantides i consultes SQL complexes.',
+   opts:['SGBD relacional (MySQL/PostgreSQL)','BD documental (MongoDB)','BD clau-valor (Redis)','Data Warehouse (Snowflake)'],
+   ans:0, exp:'Els sistemes OLTP amb necessitat de transaccions ACID i consultes SQL complexes sobre dades estructurades s\'ajusten perfectament a un SGBD relacional.'},
+  {t:'Una xarxa social vol emmagatzemar perfils d\'usuaris amb estructura variable: alguns amb foto, altres amb múltiples adreces, altres amb preferències arbitràries.',
+   opts:['Oracle Database','MongoDB','Redis','Apache Hive'],
+   ans:1, exp:'Una BD documental com MongoDB és ideal per a dades amb estructura variable: cada document pot tenir camps diferents sense necessitat de definir un esquema fix.'},
+  {t:'Un sistema de caché web necessita emmagatzemar sessions d\'usuaris com a parells clau-valor amb expiració automàtica i accés en microsegons.',
+   opts:['PostgreSQL','Cassandra','Redis','Neo4j'],
+   ans:2, exp:'Redis és una BD clau-valor en memòria RAM, optimitzada per a accés ultraràpid. Suporta expiració automàtica de claus (TTL), ideal per a caché i sessions.'},
+  {t:'Una empresa vol analitzar 5 anys de vendes per regions, productes i categories, generant informes i tendències. Les dades s\'actualitzen setmanalment.',
+   opts:['MySQL transaccional','Data Warehouse (Redshift/BigQuery)','MongoDB','SQLite'],
+   ans:1, exp:'Un Data Warehouse és òptim per a càrregues OLAP: consultes analítiques sobre grans volums de dades històriques, optimitzat per a lectura (no per a moltes escriptures).'}
+];
+
+function buildQI(data, contId, prefix){
+  const c=document.getElementById(contId);
+  data.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('${prefix}',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="${prefix}f${i}"></div>`;
+    c.appendChild(div);
+  });
+}
+buildQI(E1,'ex1-cont','G1');
+buildQI(E2,'ex2-cont','G2');
+buildQI(E3,'ex3-cont','G3');
+
+const ALL={G1:E1,G2:E2,G3:E3};
+function checkQ(grp,btn,i,choice){
+  const d=ALL[grp][i],fb=document.getElementById(grp+'f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+</script>
+</body>
+</html>

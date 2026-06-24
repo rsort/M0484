@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MP0484 Bases de dades · Institut La Mercè</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+      --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+      --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+    }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+    .merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+    .site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 32px; }
+    .head-inner { max-width:960px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:60px; }
+    .brand { text-decoration:none; display:flex; flex-direction:column; }
+    .brand-mark { font-family:'DM Serif Display',serif; font-size:1.2rem; color:var(--ink); }
+    .brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+    .head-course { font-size:13px; color:var(--ink-2); }
+    .hero { background:var(--ink); color:#fff; padding:56px 32px 48px; }
+    .hero-inner { max-width:960px; margin:0 auto; }
+    .hero-eyebrow { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:#a8a29e; margin-bottom:12px; }
+    .hero-title { font-family:'DM Serif Display',serif; font-size:clamp(2rem,5vw,3rem); line-height:1.15; margin-bottom:14px; }
+    .hero-lead { font-size:16px; color:#d6d3d1; max-width:640px; }
+    .wrap { max-width:960px; margin:0 auto; padding:0 32px 80px; }
+    .aea { margin-top:56px; }
+    .aea-head { margin-bottom:28px; }
+    .aea-title { font-family:'DM Serif Display',serif; font-size:1.6rem; color:var(--ink); margin-bottom:8px; }
+    .aea-desc { font-size:14px; color:var(--ink-2); max-width:680px; }
+    .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+    .card { background:var(--card); border:1.5px solid var(--border); border-radius:10px; padding:20px 22px 16px; text-decoration:none; color:var(--ink); display:flex; flex-direction:column; transition:border-color .15s,box-shadow .15s; }
+    .card:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(0,0,0,.08); }
+    .card.wip { opacity:.55; pointer-events:none; }
+    .card-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .card-num { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent-bdr); padding:2px 8px; border-radius:4px; letter-spacing:.04em; white-space:nowrap; }
+    .card-ra { font-size:11px; color:var(--ink-3); background:#f5f5f4; padding:2px 8px; border-radius:4px; font-weight:500; }
+    .card-title { font-weight:600; font-size:15px; color:var(--ink); margin-bottom:6px; }
+    .card-text { font-size:13px; color:var(--ink-2); flex:1; line-height:1.5; margin-bottom:14px; }
+    .card-text code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); padding:1px 5px; border-radius:3px; color:var(--accent); }
+    .card-foot { display:flex; align-items:center; justify-content:space-between; font-size:12px; }
+    .crit { color:var(--ink-3); }
+    .go { color:var(--accent); font-weight:600; }
+    .card.wip .go { display:none; }
+    .card.wip::after { content:'Pròximament'; font-size:11px; font-weight:600; color:var(--ink-3); }
+    .site-foot { border-top:1px solid var(--border); padding:24px 32px; margin-top:80px; }
+    .foot-inner { max-width:960px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+    /* HORES BADGE */
+    .card-hours { font-size:11px; background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); padding:2px 7px; border-radius:4px; font-weight:500; }
+    @media (max-width:600px) { .hero { padding:40px 20px; } .wrap { padding:0 20px 60px; } .head-inner { padding:0; } .site-head { padding:0 20px; } }
+  </style>
+</head>
+<body>
+
+  <div class="merce-top"></div>
+
+  <header class="site-head">
+    <div class="head-inner">
+      <a class="brand" href="index_bd.html">
+        <span class="brand-mark">La Mercè</span>
+        <span class="brand-sub">Formació Professional</span>
+      </a>
+      <div class="head-course">MP0484 · Bases de dades · DAW</div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">Cicle DAW · Mòdul Professional 0484</p>
+      <h1 class="hero-title">Bases de dades</h1>
+      <p class="hero-lead">Materials interactius per aprendre a dissenyar, consultar i gestionar bases de dades relacionals i no relacionals amb Oracle SQL i PL/SQL.</p>
+    </div>
+  </section>
+
+  <main class="wrap">
+
+    <!-- AEA1 -->
+    <section class="aea">
+      <div class="aea-head">
+        <h2 class="aea-title">AEA1 — Llenguatge de consulta SQL</h2>
+        <p class="aea-desc">Consultar la informació emmagatzemada fent servir el llenguatge SQL: des de seleccions simples fins a subconsultes i operadors de conjunt, amb l'esquema HR d'Oracle.</p>
+      </div>
+      <div class="cards">
+        <a class="card" href="AEA1_RA3_consultes_SQL.html">
+          <div class="card-header">
+            <span class="card-num">AEA1 · RA3</span>
+            <span class="card-hours">36 h</span>
+          </div>
+          <h3 class="card-title">Consultes SQL</h3>
+          <p class="card-text">SELECT, WHERE, ORDER BY, funcions d'una fila, GROUP BY / HAVING, JOINs, subconsultes i operadors de conjunt (UNION, INTERSECT, MINUS).</p>
+          <span class="card-foot"><span class="crit">Criteris 3.1–3.8</span><span class="go">Obrir →</span></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- AEA2 -->
+    <section class="aea">
+      <div class="aea-head">
+        <h2 class="aea-title">AEA2 — Llenguatge SQL: DDL, DML i DCL</h2>
+        <p class="aea-desc">Crear i modificar l'estructura de la base de dades, gestionar les dades amb transaccions i controlar l'accés d'usuaris mitjançant privilegis i rols.</p>
+      </div>
+      <div class="cards">
+        <a class="card" href="AEA2_RA2_RA4_DDL_DML.html">
+          <div class="card-header">
+            <span class="card-num">AEA2 · RA2 · RA4</span>
+            <span class="card-hours">18 h</span>
+          </div>
+          <h3 class="card-title">DDL, DML i DCL</h3>
+          <p class="card-text">Tipus de dades, <code>CREATE/ALTER/DROP TABLE</code>, restriccions, vistes, seqüències. <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, transaccions, <code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code>. Usuaris, privilegis i rols.</p>
+          <span class="card-foot"><span class="crit">Criteris 2.1–2.8 · 4.1–4.8</span><span class="go">Obrir →</span></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- AEA3 -->
+    <section class="aea">
+      <div class="aea-head">
+        <h2 class="aea-title">AEA3 — Llenguatge SQL: extensió procedimental</h2>
+        <p class="aea-desc">Programació de bases de dades amb PL/SQL: blocs anònims, cursors, excepcions, procediments, funcions i disparadors.</p>
+      </div>
+      <div class="cards">
+        <a class="card" href="AEA3_RA5_PLSQL.html">
+          <div class="card-header">
+            <span class="card-num">AEA3 · RA5</span>
+            <span class="card-hours">42 h</span>
+          </div>
+          <h3 class="card-title">PL/SQL: extensió procedimental</h3>
+          <p class="card-text">Blocs anònims, variables, estructures de control, cursors, excepcions, procediments, funcions, <code>PACKAGE</code> i <code>TRIGGER</code>.</p>
+          <span class="card-foot"><span class="crit">Criteris 5.1–5.10</span><span class="go">Obrir →</span></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- AEA4 -->
+    <section class="aea">
+      <div class="aea-head">
+        <h2 class="aea-title">AEA4 — Model relacional</h2>
+        <p class="aea-desc">Dissenyar bases de dades relacionals a partir de diagrames entitat-relació i aplicar les formes normals per garantir la qualitat del disseny.</p>
+      </div>
+      <div class="cards">
+        <a class="card" href="AEA4_RA1_SGBD.html">
+          <div class="card-header">
+            <span class="card-num">AEA4 · RA1</span>
+            <span class="card-hours">2 h</span>
+          </div>
+          <h3 class="card-title">Introducció als SGBD</h3>
+          <p class="card-text">Fitxers vs bases de dades, tipus de BD, arquitectura ANSI/SPARC, BD distribuïdes, legislació RGPD i Big Data.</p>
+          <span class="card-foot"><span class="crit">Criteris 1.1–1.10</span><span class="go">Obrir →</span></span>
+        </a>
+        <a class="card" href="AEA4_RA6_ER_Normalitzacio.html">
+          <div class="card-header">
+            <span class="card-num">AEA4 · RA6</span>
+            <span class="card-hours">15 h</span>
+          </div>
+          <h3 class="card-title">Model E/R i normalització</h3>
+          <p class="card-text">Notació E/R, cardinalitats, traducció al model relacional, restriccions d'integritat i formes normals fins a BCNF.</p>
+          <span class="card-foot"><span class="crit">Criteris 6.1–6.8</span><span class="go">Obrir →</span></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- AEA5 -->
+    <section class="aea">
+      <div class="aea-head">
+        <h2 class="aea-title">AEA5 — Bases de dades no relacionals</h2>
+        <p class="aea-desc">Conèixer els tipus principals de bases de dades NoSQL i treballar pràcticament amb MongoDB i Redis.</p>
+      </div>
+      <div class="cards">
+        <a class="card wip" href="#">
+          <div class="card-header">
+            <span class="card-num">AEA5 · RA7</span>
+            <span class="card-hours">7 h</span>
+          </div>
+          <h3 class="card-title">MongoDB</h3>
+          <p class="card-text">Models documentals, col·leccions, documents i consultes bàsiques amb MongoDB Compass.</p>
+          <span class="card-foot"><span class="crit">Criteris 7.1–7.5</span></span>
+        </a>
+        <a class="card wip" href="#">
+          <div class="card-header">
+            <span class="card-num">AEA5 · RA7</span>
+            <span class="card-hours">4 h</span>
+          </div>
+          <h3 class="card-title">Redis</h3>
+          <p class="card-text">Bases de dades clau-valor amb Redis: tipus de dades (strings, hashes, lists, sets) i operacions bàsiques.</p>
+          <span class="card-foot"><span class="crit">Criteris 7.3–7.5</span></span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap foot-inner">
+      <span>Institut La Mercè · Formació Professional</span>
+      <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+    </div>
+  </footer>
+
+</body>
+</html>
