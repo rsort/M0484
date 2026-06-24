@@ -85,14 +85,23 @@
         <p class="aea-desc">Consultar la informació emmagatzemada fent servir el llenguatge SQL: des de seleccions simples fins a subconsultes i operadors de conjunt, amb l'esquema HR d'Oracle.</p>
       </div>
       <div class="cards">
-        <a class="card" href="AEA1_RA3_consultes_SQL.html">
+        <a class="card" href="AEA1_RA3_consultes_simples.html">
           <div class="card-header">
             <span class="card-num">AEA1 · RA3</span>
-            <span class="card-hours">36 h</span>
+            <span class="card-hours">18 h</span>
           </div>
-          <h3 class="card-title">Consultes SQL</h3>
-          <p class="card-text">SELECT, WHERE, ORDER BY, funcions d'una fila, GROUP BY / HAVING, JOINs, subconsultes i operadors de conjunt (UNION, INTERSECT, MINUS).</p>
-          <span class="card-foot"><span class="crit">Criteris 3.1–3.8</span><span class="go">Obrir →</span></span>
+          <h3 class="card-title">Consultes simples SQL</h3>
+          <p class="card-text">Esquema HR, <code>SELECT</code>, <code>WHERE</code>, <code>ORDER BY</code>, funcions d'una fila, <code>GROUP BY</code> / <code>HAVING</code>.</p>
+          <span class="card-foot"><span class="crit">Criteris 3.1, 3.2, 3.5</span><span class="go">Obrir →</span></span>
+        </a>
+        <a class="card" href="AEA1_RA3_consultes_complexes.html">
+          <div class="card-header">
+            <span class="card-num">AEA1 · RA3</span>
+            <span class="card-hours">18 h</span>
+          </div>
+          <h3 class="card-title">Consultes complexes SQL</h3>
+          <p class="card-text">JOINs (INNER / OUTER / self-join), subconsultes (<code>IN</code>, <code>EXISTS</code>, <code>ANY</code>, <code>ALL</code>), <code>UNION</code>, <code>INTERSECT</code>, <code>MINUS</code> i optimització.</p>
+          <span class="card-foot"><span class="crit">Criteris 3.3, 3.4, 3.6–3.8</span><span class="go">Obrir →</span></span>
         </a>
       </div>
     </section>
@@ -104,14 +113,32 @@
         <p class="aea-desc">Crear i modificar l'estructura de la base de dades, gestionar les dades amb transaccions i controlar l'accés d'usuaris mitjançant privilegis i rols.</p>
       </div>
       <div class="cards">
-        <a class="card" href="AEA2_RA2_RA4_DDL_DML.html">
+        <a class="card" href="AEA2_RA2_DDL.html">
           <div class="card-header">
-            <span class="card-num">AEA2 · RA2 · RA4</span>
-            <span class="card-hours">18 h</span>
+            <span class="card-num">AEA2 · RA2</span>
+            <span class="card-hours">8 h</span>
           </div>
-          <h3 class="card-title">DDL, DML i DCL</h3>
-          <p class="card-text">Tipus de dades, <code>CREATE/ALTER/DROP TABLE</code>, restriccions, vistes, seqüències. <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, transaccions, <code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code>. Usuaris, privilegis i rols.</p>
-          <span class="card-foot"><span class="crit">Criteris 2.1–2.8 · 4.1–4.8</span><span class="go">Obrir →</span></span>
+          <h3 class="card-title">DDL — Definició de dades</h3>
+          <p class="card-text">Tipus de dades Oracle, <code>CREATE/ALTER/DROP TABLE</code>, restriccions, CTAS, vistes i seqüències.</p>
+          <span class="card-foot"><span class="crit">Criteris 2.1–2.6, 2.8</span><span class="go">Obrir →</span></span>
+        </a>
+        <a class="card" href="AEA2_RA4_DML.html">
+          <div class="card-header">
+            <span class="card-num">AEA2 · RA4</span>
+            <span class="card-hours">7 h</span>
+          </div>
+          <h3 class="card-title">DML — Manipulació i transaccions</h3>
+          <p class="card-text"><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>TRUNCATE</code>. Transaccions ACID, <code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code> i bloqueig <code>FOR UPDATE</code>.</p>
+          <span class="card-foot"><span class="crit">Criteris 4.1–4.8</span><span class="go">Obrir →</span></span>
+        </a>
+        <a class="card" href="AEA2_RA4_DCL.html">
+          <div class="card-header">
+            <span class="card-num">AEA2 · RA2</span>
+            <span class="card-hours">3 h</span>
+          </div>
+          <h3 class="card-title">DCL — Control d'accés</h3>
+          <p class="card-text">Crear usuaris, privilegis de sistema i d'objecte, rols, <code>GRANT</code> i <code>REVOKE</code>.</p>
+          <span class="card-foot"><span class="crit">Criteris 2.7, 2.8</span><span class="go">Obrir →</span></span>
         </a>
       </div>
     </section>
@@ -151,14 +178,32 @@
           <p class="card-text">Fitxers vs bases de dades, tipus de BD, arquitectura ANSI/SPARC, BD distribuïdes, legislació RGPD i Big Data.</p>
           <span class="card-foot"><span class="crit">Criteris 1.1–1.10</span><span class="go">Obrir →</span></span>
         </a>
-        <a class="card" href="AEA4_RA6_ER_Normalitzacio.html">
+        <a class="card" href="AEA4_RA6_Model_ER.html">
           <div class="card-header">
             <span class="card-num">AEA4 · RA6</span>
-            <span class="card-hours">15 h</span>
+            <span class="card-hours">5 h</span>
           </div>
-          <h3 class="card-title">Model E/R i normalització</h3>
-          <p class="card-text">Notació E/R, cardinalitats, traducció al model relacional, restriccions d'integritat i formes normals fins a BCNF.</p>
-          <span class="card-foot"><span class="crit">Criteris 6.1–6.8</span><span class="go">Obrir →</span></span>
+          <h3 class="card-title">Model Entitat-Relació</h3>
+          <p class="card-text">Notació E/R, entitats, atributs, relacions, cardinalitats <code>(mín,màx)</code>, relacions reflexives, ternàries i l'entitat DATE.</p>
+          <span class="card-foot"><span class="crit">Criteris 6.1–6.5</span><span class="go">Obrir →</span></span>
+        </a>
+        <a class="card" href="AEA4_RA6_Model_Relacional.html">
+          <div class="card-header">
+            <span class="card-num">AEA4 · RA6</span>
+            <span class="card-hours">6 h</span>
+          </div>
+          <h3 class="card-title">Model Relacional</h3>
+          <p class="card-text">Regles de traducció E/R → MR (1:1, 1:N, M:N, reflexives), entitats febles, generalitzacions i restriccions d'integritat.</p>
+          <span class="card-foot"><span class="crit">Criteris 6.2–6.6 · 6.8</span><span class="go">Obrir →</span></span>
+        </a>
+        <a class="card" href="AEA4_RA6_Normalitzacio.html">
+          <div class="card-header">
+            <span class="card-num">AEA4 · RA6</span>
+            <span class="card-hours">4 h</span>
+          </div>
+          <h3 class="card-title">Normalització</h3>
+          <p class="card-text">Dependències funcionals, 1FN, 2FN, 3FN i BCNF. Eliminació de redundàncies i desnormalització controlada.</p>
+          <span class="card-foot"><span class="crit">Criteri 6.7</span><span class="go">Obrir →</span></span>
         </a>
       </div>
     </section>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA2 · RA2 · DCL — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+      --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+      --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+      --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+      --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+      --yellow:#713f12; --yellow-bg:#fefce8; --yellow-bdr:#fef08a;
+      --code-bg:#1e293b; --code-text:#e2e8f0; --r:10px; --r-sm:6px;
+    }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+    .merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+    .site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 24px; }
+    .head-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+    .brand { text-decoration:none; display:flex; flex-direction:column; }
+    .brand-mark { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); }
+    .brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+    .head-course { font-size:13px; color:var(--ink-2); }
+    .wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+    .breadcrumb { font-size:13px; color:var(--ink-3); padding:14px 0 0; }
+    .breadcrumb a { color:var(--ink-2); text-decoration:none; }
+    .breadcrumb a:hover { color:var(--accent); }
+    .breadcrumb span { margin:0 5px; }
+    .page-header { padding:40px 0 32px; border-bottom:1.5px solid var(--border); margin-bottom:48px; }
+    .meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+    .badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+    .b-course { background:var(--ink); color:#fff; }
+    .b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+    .b-act { background:var(--accent-mid); color:#fff; }
+    .b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:10px; }
+    .page-sub { font-size:16px; color:var(--ink-2); margin-bottom:24px; }
+    .obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; margin-bottom:12px; }
+    .obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+    .obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+    .obj-text { font-size:14px; color:var(--ink-2); }
+    .section { margin-bottom:60px; }
+    .sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+    .sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+    .sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+    .sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+    .lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+    .lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+    .ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+    .ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+    .ibox-text { font-size:14px; line-height:1.65; }
+    .ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+    .ibox.yellow { background:var(--yellow-bg); border:1px solid var(--yellow-bdr); }
+    .ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+    .ibox.yellow .ibox-label, .ibox.yellow .ibox-text { color:var(--yellow); }
+    .ibox code { background:#ffffffaa; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 6px; border-radius:3px; }
+    .demo { margin-bottom:24px; }
+    .demo-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-bottom:8px; }
+    .sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.8; white-space:pre; margin:0; overflow-x:auto; }
+    .exp-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 16px; margin-top:10px; }
+    .exp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin-bottom:5px; }
+    .exp-text { font-size:13px; color:var(--ink-2); line-height:1.6; }
+    .exp-text code { background:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 5px; border-radius:3px; }
+    .kw { color:#fbbf24; font-weight:500; }
+    .fn { color:#a78bfa; }
+    .str { color:#4ade80; }
+    .num { color:#f472b6; }
+    .cmt { color:#64748b; font-style:italic; }
+    .tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
+    .tbl { width:100%; border-collapse:collapse; font-size:13px; }
+    .tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
+    .tbl td { padding:9px 14px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:12px; vertical-align:top; }
+    .tbl td.desc { font-family:'DM Sans',sans-serif; font-size:13px; }
+    .tbl tr:last-child td { border-bottom:none; }
+    .ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
+    .ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+    .ex-block-sub { font-size:13px; color:#a8a29e; }
+    .ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+    .exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+    .exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+    .ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+    .ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+    .ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+    .ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
+    .ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
+    .qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
+    .qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
+    .qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
+    .qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
+    .qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+    .qi-btn:disabled { cursor:default; }
+    .qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
+    .qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
+    .qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
+    .qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
+    .ri { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-bottom:12px; }
+    .ri-q { padding:14px 18px; background:#fafaf9; }
+    .ri-q-text { font-size:14px; color:var(--ink); margin-bottom:4px; }
+    .ri-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 15px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); color:var(--accent); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; transition:background .12s,color .12s,border-color .12s; }
+    .ri-btn:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+    .ri-ans { display:none; padding:16px 18px; background:var(--accent-bg); border-top:1px solid var(--accent-bdr); }
+    .ri-ans.show { display:block; }
+    .ri-ans-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--accent-mid); margin-bottom:8px; }
+    .ri-note { font-size:13px; color:var(--ink-2); margin-top:10px; line-height:1.55; }
+    .doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; }
+    .doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
+    .doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+    .doc-nav .back { color:var(--ink-2); background:#fafaf9; border-color:var(--border); }
+    .doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+    .site-foot { border-top:1px solid var(--border); padding:20px 24px; }
+    .foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+  </style>
+</head>
+<body>
+<div class="merce-top"></div>
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">La Mercè</span><span class="brand-sub">Formació Professional</span></a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="breadcrumb">
+    <a href="index.html">MP0484 Bases de dades</a><span>›</span>
+    <a href="index.html#aea2">AEA2 — DDL, DML i DCL</a><span>›</span>
+    DCL
+  </div>
+
+  <header class="page-header">
+    <div class="meta-row">
+      <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+      <span class="badge b-ra">AEA2 · RA2 · Part 3/3</span>
+      <span class="badge b-act">3 hores</span>
+      <span class="badge b-new">DCL</span>
+    </div>
+    <h1 class="page-title">DCL — Control d'accés i privilegis</h1>
+    <p class="page-sub">Crear usuaris, atorgar i revocar privilegis, i gestionar rols amb <strong>GRANT</strong> i <strong>REVOKE</strong>.</p>
+    <div class="obj-box">
+      <div class="obj-icon">🎯</div>
+      <div>
+        <div class="obj-label">Criteris RA2 — DCL</div>
+        <div class="obj-text">
+          <strong>2.7</strong> Crear usuaris i assignar privilegis ·
+          <strong>2.8</strong> Usar DCL
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECCIÓ: DCL -->
+  <section class="section">
+    <div class="sec-head"><span class="sec-num">1</span><div><h2 class="sec-title">Gestió d'usuaris i privilegis</h2><p class="sec-sub">Criteri 2.7 · 2.8 — GRANT, REVOKE, perfils i rols</p></div></div>
+    <p class="lead">El <strong>DCL (Data Control Language)</strong> gestiona qui pot fer què a la base de dades. Oracle distingeix entre <strong>privilegis de sistema</strong> (CREATE TABLE, CREATE USER...) i <strong>privilegis d'objecte</strong> (SELECT, INSERT, UPDATE sobre una taula concreta).</p>
+
+    <div class="ibox blue">
+      <div class="ibox-label">Privilegis de sistema vs. privilegis d'objecte</div>
+      <div class="ibox-text">
+        <strong>Privilegis de sistema:</strong> controlen el que un usuari pot fer dins la BD (crear taules, crear usuaris, connectar-se...). Exemple: <code>CREATE SESSION</code>, <code>CREATE TABLE</code>.<br>
+        <strong>Privilegis d'objecte:</strong> controlen l'accés a un objecte concret (taula, vista, seqüència...). Exemple: <code>SELECT ON hr.employees</code>, <code>INSERT ON hr.departments</code>.
+      </div>
+    </div>
+
+    <div class="demo"><div class="demo-label">Exemple 11 · Crear usuaris, atorgar i revocar privilegis</div><pre class="sql-out" id="d11"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>GRANT privilegi ON objecte TO usuari</code> atorga permisos. <code>WITH GRANT OPTION</code> permet que l'usuari delegui el privilegi a d'altres. <code>REVOKE</code> retira el privilegi. Els <strong>rols</strong> agrupen privilegis per facilitar l'administració: en lloc de donar privilegis individualment a cada usuari, es crea un rol i s'assigna. Oracle inclou rols predefinits com <code>CONNECT</code>, <code>RESOURCE</code> i <code>DBA</code>.</div></div></div>
+  </section>
+
+  <section class="section">
+    <div class="sec-head"><span class="sec-num">2</span><div><h2 class="sec-title">Taula de privilegis principals</h2><p class="sec-sub">Criteri 2.7 — Referència ràpida</p></div></div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Tipus</th><th>Privilegi</th><th>Descripció</th></tr></thead>
+        <tbody>
+          <tr><td>Sistema</td><td>CREATE SESSION</td><td class="desc">Permet connectar-se a la base de dades.</td></tr>
+          <tr><td>Sistema</td><td>CREATE TABLE</td><td class="desc">Permet crear taules al propi esquema.</td></tr>
+          <tr><td>Sistema</td><td>CREATE VIEW</td><td class="desc">Permet crear vistes.</td></tr>
+          <tr><td>Sistema</td><td>CREATE SEQUENCE</td><td class="desc">Permet crear seqüències.</td></tr>
+          <tr><td>Sistema</td><td>CREATE USER</td><td class="desc">Permet crear nous usuaris (normalment reservat al DBA).</td></tr>
+          <tr><td>Objecte</td><td>SELECT ON taula</td><td class="desc">Permet consultar les dades d'una taula o vista.</td></tr>
+          <tr><td>Objecte</td><td>INSERT ON taula</td><td class="desc">Permet inserir files a la taula.</td></tr>
+          <tr><td>Objecte</td><td>UPDATE ON taula</td><td class="desc">Permet actualitzar files de la taula.</td></tr>
+          <tr><td>Objecte</td><td>DELETE ON taula</td><td class="desc">Permet eliminar files de la taula.</td></tr>
+          <tr><td>Objecte</td><td>EXECUTE ON proc</td><td class="desc">Permet executar un procediment o funció.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ibox yellow">
+      <div class="ibox-label">Rols predefinits d'Oracle</div>
+      <div class="ibox-text">
+        <strong>CONNECT:</strong> permet connectar-se i crear taules bàsiques. <strong>RESOURCE:</strong> inclou els privilegis de CONNECT i permet crear procediments, triggers, etc. <strong>DBA:</strong> rol d'administrador amb tots els privilegis del sistema. En producció s'aconsella crear rols personalitzats amb només els privilegis necessaris (principi del mínim privilegi).
+      </div>
+    </div>
+  </section>
+
+  <!-- EXERCICIS -->
+  <div class="ex-block-head"><h2 class="ex-block-title">Exercicis — DCL</h2><p class="ex-block-sub">Criteris 2.7 i 2.8</p></div>
+  <div class="ex-block-body">
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Privilegis i rols</div><div class="ex-level">Nivell bàsic · criteri 2.7</div></div></div>
+      <p class="ex-intro">Tria la resposta correcta sobre la gestió de privilegis a Oracle.</p>
+      <div id="ex1-cont"></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Crea usuari i gestiona accés</div><div class="ex-level">Nivell avançat · criteri 2.7, 2.8</div></div></div>
+      <p class="ex-intro">Escriu el DCL per a cada enunciat i comprova amb la solució.</p>
+      <div id="ex2-cont"></div>
+    </div>
+  </div>
+
+  <nav class="doc-nav">
+    <a class="back" href="AEA2_RA4_DML.html">← DML</a>
+    <a href="index.html">Índex del mòdul →</a>
+  </nav>
+</div>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+
+<script>
+function colorSQL(t){
+  t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t=t.replace(/(--[^\n]*)/g,'<span class="cmt">$1</span>');
+  t=t.replace(/('[^']*')/g,'<span class="str">$1</span>');
+  t=t.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');
+  t=t.replace(/\b(CREATE|GRANT|REVOKE|ON|TO|FROM|WITH|GRANT\s+OPTION|IDENTIFIED\s+BY|DEFAULT\s+TABLESPACE|TEMPORARY\s+TABLESPACE|ROLE|USER|CONNECT|RESOURCE|SELECT|INSERT|UPDATE|DELETE|EXECUTE|ALL|CASCADE\s+CONSTRAINTS)\b/gi,'<span class="kw">$1</span>');
+  return t;
+}
+const SQLS={
+d11:`-- CREAR UN NOU USUARI (necessita privilegi DBA)
+CREATE USER alumne_daw
+IDENTIFIED BY password123
+DEFAULT TABLESPACE users
+TEMPORARY TABLESPACE temp;
+
+-- ATORGAR privilegis de sistema
+GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW TO alumne_daw;
+
+-- ATORGAR privilegi sobre un objecte específic
+GRANT SELECT, INSERT ON hr.employees TO alumne_daw;
+
+-- Permetre que alumne_daw pugui delegar el SELECT
+GRANT SELECT ON hr.departments TO alumne_daw WITH GRANT OPTION;
+
+-- CREAR UN ROL i assignar-li privilegis
+CREATE ROLE rol_consultes;
+GRANT SELECT ON hr.employees    TO rol_consultes;
+GRANT SELECT ON hr.departments  TO rol_consultes;
+GRANT SELECT ON hr.jobs         TO rol_consultes;
+
+-- Assignar el rol a un usuari
+GRANT rol_consultes TO alumne_daw;
+
+-- REVOCAR un privilegi
+REVOKE INSERT ON hr.employees FROM alumne_daw;`
+};
+Object.keys(SQLS).forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=colorSQL(SQLS[id]); });
+
+const E1=[
+  {t:'Quin privilegi mínim necessita un usuari per poder connectar-se a Oracle?',opts:['CREATE TABLE','CREATE SESSION','DBA','RESOURCE'],ans:1,exp:'CREATE SESSION permet la connexió a la BD. Sense ell, l\'usuari no pot ni entrar, independentment dels altres privilegis.'},
+  {t:'Vols que l\'usuari "app_web" pugui fer SELECT a la taula CLIENTS i delegar aquest permís a altres usuaris. Quina sentència uses?',opts:['GRANT SELECT ON clients TO app_web','GRANT SELECT ON clients TO app_web WITH GRANT OPTION','GRANT ALL ON clients TO app_web','GRANT SELECT ON clients TO PUBLIC'],ans:1,exp:'WITH GRANT OPTION permet que l\'usuari que rep el privilegi el pugui atorgar a d\'altres. Sense aquesta opció, no pot delegar.'},
+  {t:'Revokes el SELECT d\'un usuari que havia rebut el permís amb WITH GRANT OPTION i l\'havia delegat a un tercer. Què passa al tercer?',opts:['Conserva el permís','Perd el permís automàticament (CASCADE)','Necessites fer REVOKE explícit al tercer','Cal reiniciar el servidor'],ans:1,exp:'En Oracle, REVOKE propaga automàticament: si revokes el privilegi a un usuari que l\'havia delegat, els usuaris que l\'havien rebut d\'ell també el perden (CASCADE implícit).'},
+  {t:'Quin és l\'avantatge principal d\'usar ROLS en lloc de donar privilegis individuals?',opts:['Els rols permeten privilegis de sistema','Faciliten l\'administració: un rol s\'assigna a molts usuaris a la vegada','Els rols no caduquen mai','Els rols permeten BY PASS de privilegis'],ans:1,exp:'Amb rols, quan cal modificar permisos d\'un grup d\'usuaris, sols cal modificar el rol, i tots els usuaris que el tenen queden actualitzats automàticament.'}
+];
+const E2sol=[
+  {ctx:'Crea un usuari "app_vendes" amb contrasenya "Vendes2025". Dona-li permís per connectar-se, i accés de SELECT i INSERT a la taula clients, però no a la taula base sinó a la vista v_clients_actius.',code:`CREATE USER app_vendes IDENTIFIED BY Vendes2025;\n\nGRANT CREATE SESSION TO app_vendes;\n\n-- Accés SOLS a la vista, no a la taula base\nGRANT SELECT, INSERT ON v_clients_actius TO app_vendes;`,note:'Criteri 2.7 — Bones pràctiques: donar accés a les vistes en lloc de les taules base permet controlar exactament quines dades veu i modifica cada usuari.'},
+  {ctx:'Crea un rol "rol_lectura_hr" amb accés de SELECT a les taules employees, departments i jobs d\'HR. Assigna\'l a l\'usuari alumne_daw.',code:`CREATE ROLE rol_lectura_hr;\n\nGRANT SELECT ON hr.employees   TO rol_lectura_hr;\nGRANT SELECT ON hr.departments TO rol_lectura_hr;\nGRANT SELECT ON hr.jobs        TO rol_lectura_hr;\n\nGRANT rol_lectura_hr TO alumne_daw;`,note:'Criteri 2.7 — Ús de rols: si afegim noves taules, sols cal afegir GRANT al rol i tots els usuaris que el tinguin l\'hereten automàticament.'},
+  {ctx:'Revoca l\'accés INSERT de l\'usuari app_vendes a la vista v_clients_actius. Després elimina l\'usuari app_vendes i tots els seus objectes.',code:`REVOKE INSERT ON v_clients_actius FROM app_vendes;\n\n-- Eliminar l'usuari i tots els objectes del seu esquema\nDROP USER app_vendes CASCADE;`,note:'Criteri 2.8 — CASCADE elimina tots els objectes de l\'esquema de l\'usuari (taules, vistes, seqüències...). Sense CASCADE dona error si l\'usuari té objectes.'}
+];
+(function(){
+  const c=document.getElementById('ex1-cont');
+  E1.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkE1(this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="E1f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+function checkE1(btn,i,choice){
+  const d=E1[i],fb=document.getElementById('E1f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+(function(){
+  const c=document.getElementById('ex2-cont');
+  E2sol.forEach((d,i)=>{
+    const div=document.createElement('div'); div.className='ri';
+    div.innerHTML=`<div class="ri-q"><div class="ri-q-text"><strong>${i+1}.</strong> ${d.ctx}</div><button class="ri-btn" onclick="reveal(this,'E2a${i}')">▶ Veure solució SQL</button></div><div class="ri-ans" id="E2a${i}"><div class="ri-ans-label">Solució</div><pre class="sql-out">${colorSQL(d.code)}</pre><div class="ri-note">${d.note}</div></div>`;
+    c.appendChild(div);
+  });
+})();
+function reveal(btn,id){document.getElementById(id).classList.add('show');btn.style.display='none';}
+</script>
+</body>
+</html>

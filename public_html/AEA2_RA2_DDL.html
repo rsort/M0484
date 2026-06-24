@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA2 · RA2 · DDL — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+      --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+      --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+      --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+      --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+      --yellow:#713f12; --yellow-bg:#fefce8; --yellow-bdr:#fef08a;
+      --code-bg:#1e293b; --code-text:#e2e8f0; --r:10px; --r-sm:6px;
+    }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+    .merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+    .site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 24px; }
+    .head-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+    .brand { text-decoration:none; display:flex; flex-direction:column; }
+    .brand-mark { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); }
+    .brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+    .head-course { font-size:13px; color:var(--ink-2); }
+    .wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+    .breadcrumb { font-size:13px; color:var(--ink-3); padding:14px 0 0; }
+    .breadcrumb a { color:var(--ink-2); text-decoration:none; }
+    .breadcrumb a:hover { color:var(--accent); }
+    .breadcrumb span { margin:0 5px; }
+    .page-header { padding:40px 0 32px; border-bottom:1.5px solid var(--border); margin-bottom:48px; }
+    .meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+    .badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+    .b-course { background:var(--ink); color:#fff; }
+    .b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+    .b-act { background:var(--accent-mid); color:#fff; }
+    .b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:10px; }
+    .page-sub { font-size:16px; color:var(--ink-2); margin-bottom:24px; }
+    .obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; margin-bottom:12px; }
+    .obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+    .obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+    .obj-text { font-size:14px; color:var(--ink-2); }
+    .section { margin-bottom:60px; }
+    .sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+    .sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+    .sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+    .sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+    .lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+    .lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+    .ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+    .ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+    .ibox-text { font-size:14px; line-height:1.65; }
+    .ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+    .ibox.green { background:var(--green-bg); border:1px solid var(--green-bdr); }
+    .ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+    .ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+    .ibox.green .ibox-label, .ibox.green .ibox-text { color:var(--green); }
+    .ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
+    .ibox code { background:#ffffffaa; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 6px; border-radius:3px; }
+    .demo { margin-bottom:24px; }
+    .demo-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-bottom:8px; }
+    .sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.8; white-space:pre; margin:0; overflow-x:auto; }
+    .exp-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 16px; margin-top:10px; }
+    .exp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin-bottom:5px; }
+    .exp-text { font-size:13px; color:var(--ink-2); line-height:1.6; }
+    .exp-text code { background:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 5px; border-radius:3px; }
+    .kw { color:#fbbf24; font-weight:500; }
+    .fn { color:#a78bfa; }
+    .str { color:#4ade80; }
+    .num { color:#f472b6; }
+    .cmt { color:#64748b; font-style:italic; }
+    .tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
+    .tbl { width:100%; border-collapse:collapse; font-size:13px; }
+    .tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
+    .tbl td { padding:9px 14px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:12px; vertical-align:top; }
+    .tbl td.desc { font-family:'DM Sans',sans-serif; font-size:13px; }
+    .tbl tr:last-child td { border-bottom:none; }
+    .ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
+    .ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+    .ex-block-sub { font-size:13px; color:#a8a29e; }
+    .ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+    .exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+    .exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+    .ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+    .ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+    .ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+    .ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
+    .ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
+    .qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
+    .qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
+    .qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
+    .qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
+    .qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+    .qi-btn:disabled { cursor:default; }
+    .qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
+    .qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
+    .qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
+    .qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
+    .ri { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-bottom:12px; }
+    .ri-q { padding:14px 18px; background:#fafaf9; }
+    .ri-q-text { font-size:14px; color:var(--ink); margin-bottom:4px; }
+    .ri-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 15px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); color:var(--accent); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; transition:background .12s,color .12s,border-color .12s; }
+    .ri-btn:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+    .ri-ans { display:none; padding:16px 18px; background:var(--accent-bg); border-top:1px solid var(--accent-bdr); }
+    .ri-ans.show { display:block; }
+    .ri-ans-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--accent-mid); margin-bottom:8px; }
+    .ri-note { font-size:13px; color:var(--ink-2); margin-top:10px; line-height:1.55; }
+    .doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; }
+    .doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
+    .doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+    .doc-nav .back { color:var(--ink-2); background:#fafaf9; border-color:var(--border); }
+    .doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+    .site-foot { border-top:1px solid var(--border); padding:20px 24px; }
+    .foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+  </style>
+</head>
+<body>
+<div class="merce-top"></div>
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">La Mercè</span><span class="brand-sub">Formació Professional</span></a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="breadcrumb">
+    <a href="index.html">MP0484 Bases de dades</a><span>›</span>
+    <a href="index.html#aea2">AEA2 — DDL, DML i DCL</a><span>›</span>
+    DDL
+  </div>
+
+  <header class="page-header">
+    <div class="meta-row">
+      <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+      <span class="badge b-ra">AEA2 · RA2 · Part 1/3</span>
+      <span class="badge b-act">8 hores</span>
+      <span class="badge b-new">DDL</span>
+    </div>
+    <h1 class="page-title">DDL — Definició de dades</h1>
+    <p class="page-sub">Crear i modificar l'estructura de la base de dades: tipus de dades, taules, restriccions, vistes i seqüències.</p>
+    <div class="obj-box">
+      <div class="obj-icon">🎯</div>
+      <div>
+        <div class="obj-label">Criteris RA2 — DDL</div>
+        <div class="obj-text">
+          <strong>2.1</strong> Analitzar el format d'emmagatzematge ·
+          <strong>2.2</strong> Crear taules i relacions ·
+          <strong>2.3</strong> Seleccionar tipus de dades ·
+          <strong>2.4</strong> Definir claus primàries ·
+          <strong>2.5</strong> Implantar restriccions ·
+          <strong>2.6</strong> Crear vistes ·
+          <strong>2.8</strong> Usar DDL
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECCIÓ 1: TIPUS DE DADES -->
+  <section class="section">
+    <div class="sec-head"><span class="sec-num">1</span><div><h2 class="sec-title">Tipus de dades a Oracle</h2><p class="sec-sub">Criteri 2.1 · 2.3 — Triar el tipus adequat per a cada columna</p></div></div>
+    <p class="lead">Triar el tipus de dada correcte és fonamental: afecta l'espai d'emmagatzematge, el rendiment i la integritat de les dades. Oracle té una nomenclatura pròpia que difereix lleugerament de l'estàndard SQL.</p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Tipus Oracle</th><th>Descripció</th><th>Exemple d'ús</th></tr></thead>
+        <tbody>
+          <tr><td>VARCHAR2(n)</td><td class="desc">Cadena de longitud variable, màx. n caràcters (fins 4000). <strong>Recomanat</strong> per text.</td><td>nom, email, descripcions</td></tr>
+          <tr><td>CHAR(n)</td><td class="desc">Cadena de longitud fixa. Omple amb espais. Útil per codis fixos.</td><td>codi_país (2), estat (1)</td></tr>
+          <tr><td>NUMBER(p,s)</td><td class="desc">Número amb p dígits totals i s decimals. NUMBER sense paràmetres = float.</td><td>salari NUMBER(8,2), id NUMBER(6)</td></tr>
+          <tr><td>DATE</td><td class="desc">Data i hora (dia, mes, any, hora, minuts, segons). No inclou fracció de segon.</td><td>data_contractació, data_naix</td></tr>
+          <tr><td>TIMESTAMP</td><td class="desc">Com DATE però amb fraccions de segon i zona horària opcional.</td><td>timestamp_transacció</td></tr>
+          <tr><td>CLOB</td><td class="desc">Caràcter Large Object: text de fins a 4 GB.</td><td>descripcions llargues, articles</td></tr>
+          <tr><td>BLOB</td><td class="desc">Binary Large Object: dades binàries de fins a 4 GB.</td><td>imatges, documents, fitxers</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 2: CREATE TABLE -->
+  <section class="section">
+    <div class="sec-head"><span class="sec-num">2</span><div><h2 class="sec-title">Crear taules i restriccions</h2><p class="sec-sub">Criteri 2.2 · 2.4 · 2.5 · 2.8 — CREATE TABLE, ALTER TABLE, DROP TABLE</p></div></div>
+    <p class="lead">El <strong>DDL (Data Definition Language)</strong> defineix l'estructura de la base de dades: crear, modificar i eliminar taules, índexs, vistes i altres objectes. Les sentències DDL fan un <code>COMMIT</code> implícit automàtic.</p>
+    <div class="ibox blue"><div class="ibox-label">Restriccions (CONSTRAINTS)</div><div class="ibox-text">Les restriccions garanteixen la integritat de les dades. Poden definir-se al nivell de columna (inline) o al nivell de taula (out-of-line). Es recomana donar-los un nom descriptiu per facilitar els missatges d'error.</div></div>
+    <div class="demo"><div class="demo-label">Exemple 1 · CREATE TABLE amb restriccions</div><pre class="sql-out" id="d1"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>PRIMARY KEY</code> identifica de forma única cada fila i implica <code>NOT NULL + UNIQUE</code>.<br><code>NOT NULL</code> impedeix valors buits.<br><code>UNIQUE</code> garanteix que no hi ha valors repetits (permet un NULL).<br><code>CHECK</code> valida que el valor compleixi una condició.<br><code>FOREIGN KEY ... REFERENCES</code> estableix la integritat referencial.<br><code>DEFAULT</code> estableix un valor quan no s'especifica cap a l'INSERT.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 2 · ALTER TABLE: afegir, modificar i eliminar</div><pre class="sql-out" id="d2"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>ALTER TABLE ADD</code> afegeix nous elements.<br><code>ALTER TABLE MODIFY</code> canvia el tipus o les propietats d'una columna existent.<br><code>ALTER TABLE DROP COLUMN</code> elimina una columna (irreversible).<br><code>DROP TABLE nom PURGE</code> elimina la taula sense passar per la paperera de reciclatge d'Oracle.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 3 · CREATE TABLE AS SELECT (CTAS)</div><pre class="sql-out" id="d3"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>CREATE TABLE ... AS SELECT</code> crea una nova taula a partir del resultat d'una consulta. Copia les dades i l'estructura de columnes però <strong>no</strong> copia les restriccions (PRIMARY KEY, FOREIGN KEY, etc.). Molt útil per crear còpies de seguretat o taules temporals.</div></div></div>
+  </section>
+
+  <!-- SECCIÓ 3: VISTES I SEQÜÈNCIES -->
+  <section class="section">
+    <div class="sec-head"><span class="sec-num">3</span><div><h2 class="sec-title">Vistes, seqüències i índexos</h2><p class="sec-sub">Criteri 2.6 · 2.8 — Objectes addicionals de l'esquema</p></div></div>
+    <p class="lead">A més de les taules, Oracle permet crear altres objectes d'esquema: les <strong>vistes</strong> simplifiquen l'accés a dades complexes, les <strong>seqüències</strong> generen valors únics automàtics i els <strong>índexos</strong> acceleren les consultes.</p>
+    <div class="demo"><div class="demo-label">Exemple 4 · Crear i usar vistes</div><pre class="sql-out" id="d4"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Una vista és una consulta emmagatzemada que s'usa com si fos una taula. <strong>No</strong> emmagatzema dades, sinó la definició de la consulta. <code>CREATE OR REPLACE</code> actualitza la vista si ja existeix. <code>WITH CHECK OPTION</code> impedeix modificar files que quedarien fora de la vista. <code>WITH READ ONLY</code> impedeix qualsevol DML a través de la vista.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 5 · Seqüències per generar IDs únics</div><pre class="sql-out" id="d5"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>NEXTVAL</code> retorna el proper valor de la seqüència i l'incrementa (irreversible). <code>CURRVAL</code> retorna el darrer valor obtingut per la sessió actual. En Oracle 12c+ es pot usar la sintaxi <code>columna NUMBER GENERATED ALWAYS AS IDENTITY</code>.</div></div></div>
+  </section>
+
+  <!-- EXERCICIS -->
+  <div class="ex-block-head"><h2 class="ex-block-title">Exercicis — DDL</h2><p class="ex-block-sub">Criteris 2.1–2.6 · 2.8</p></div>
+  <div class="ex-block-body">
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Tipus de dades i restriccions</div><div class="ex-level">Nivell bàsic · criteris 2.3 i 2.5</div></div></div>
+      <p class="ex-intro">Tria el tipus de dada o restricció adequada per a cada situació.</p>
+      <div id="ex1-cont"></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">DDL: efectes i comportaments</div><div class="ex-level">Nivell mitjà · criteri 2.2 i 2.4</div></div></div>
+      <p class="ex-intro">Analitza l'efecte de cada sentència DDL.</p>
+      <div id="ex2-cont"></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Crea l'estructura de la taula</div><div class="ex-level">Nivell avançat · criteris 2.2, 2.4, 2.5, 2.6</div></div></div>
+      <p class="ex-intro">Escriu el DDL per a cada enunciat i comprova amb la solució.</p>
+      <div id="ex3-cont"></div>
+    </div>
+  </div>
+
+  <nav class="doc-nav">
+    <a class="back" href="index.html">← Índex del mòdul</a>
+    <a href="AEA2_RA4_DML.html">DML →</a>
+  </nav>
+</div>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+
+<script>
+function colorSQL(t){
+  t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t=t.replace(/(--[^\n]*)/g,'<span class="cmt">$1</span>');
+  t=t.replace(/('[^']*')/g,'<span class="str">$1</span>');
+  t=t.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');
+  t=t.replace(/\b(SELECT|FROM|WHERE|AND|OR|CREATE|ALTER|DROP|TABLE|VIEW|INDEX|SEQUENCE|CONSTRAINT|PRIMARY\s+KEY|FOREIGN\s+KEY|REFERENCES|NOT\s+NULL|UNIQUE|CHECK|DEFAULT|ADD|MODIFY|RENAME|PURGE|OR\s+REPLACE|READ\s+ONLY|CHECK\s+OPTION|CASCADE|NEXTVAL|CURRVAL|INCREMENT\s+BY|START\s+WITH|MAXVALUE|NOCACHE|NOCYCLE|AS|ON\s+DELETE|SET\s+NULL|WITH)\b/gi,'<span class="kw">$1</span>');
+  t=t.replace(/\b(NUMBER|VARCHAR2|CHAR|DATE|TIMESTAMP|CLOB|BLOB|SYSDATE|TO_DATE|COUNT|AVG|ROUND|LEFT\s+JOIN|JOIN)\b/gi,'<span class="fn">$1</span>');
+  return t;
+}
+const SQLS={
+d1:`CREATE TABLE productes (
+    prod_id       NUMBER(6)       CONSTRAINT pk_prod PRIMARY KEY,
+    nom           VARCHAR2(100)   CONSTRAINT nn_prod_nom NOT NULL,
+    categoria     VARCHAR2(50)    NOT NULL,
+    preu          NUMBER(8,2)     CONSTRAINT ck_preu CHECK (preu > 0),
+    stock         NUMBER(6)       DEFAULT 0,
+    email_prov    VARCHAR2(200)   CONSTRAINT uq_email UNIQUE,
+    data_alta     DATE            DEFAULT SYSDATE,
+    dept_id       NUMBER(4)       CONSTRAINT fk_dept
+                                    REFERENCES departments(department_id)
+                                    ON DELETE SET NULL
+);`,
+d2:`-- Afegir una nova columna
+ALTER TABLE productes ADD (descripcio CLOB);
+
+-- Modificar el tipus d'una columna existent
+ALTER TABLE productes MODIFY (nom VARCHAR2(200));
+
+-- Afegir una restricció nova
+ALTER TABLE productes
+    ADD CONSTRAINT ck_stock CHECK (stock >= 0);
+
+-- Deshabilitar temporalment una restricció
+ALTER TABLE productes DISABLE CONSTRAINT ck_stock;
+
+-- Eliminar una columna
+ALTER TABLE productes DROP COLUMN descripcio;
+
+-- Reanomenar la taula
+ALTER TABLE productes RENAME TO articles;
+
+-- Eliminar la taula completament (irreversible)
+DROP TABLE articles PURGE;`,
+d3:`-- Crear còpia de la taula d'empleats del dept 90
+CREATE TABLE emp_directius AS
+    SELECT employee_id, last_name, salary, hire_date
+    FROM   employees
+    WHERE  department_id = 90;
+
+-- La nova taula té les dades però NO les restriccions
+-- Cal afegir la PK manualment si es necessita:
+ALTER TABLE emp_directius
+    ADD CONSTRAINT pk_emp_dir PRIMARY KEY (employee_id);`,
+d4:`-- Vista simple: empleats del departament de vendes
+CREATE OR REPLACE VIEW v_vendes AS
+    SELECT e.employee_id, e.last_name, e.salary,
+           e.commission_pct, d.department_name
+    FROM   employees e
+           JOIN departments d ON e.department_id = d.department_id
+    WHERE  d.department_name = 'Sales'
+    WITH CHECK OPTION CONSTRAINT ck_v_vendes;
+
+-- Consultar la vista com si fos una taula
+SELECT * FROM v_vendes WHERE salary > 8000;
+
+-- Vista de resum (de solo lectura)
+CREATE OR REPLACE VIEW v_resum_dept AS
+    SELECT d.department_name,
+           COUNT(e.employee_id)    AS num_emp,
+           ROUND(AVG(e.salary), 2) AS avg_sal
+    FROM   departments d
+           LEFT JOIN employees e USING (department_id)
+    GROUP BY d.department_name
+    WITH READ ONLY;
+
+-- Eliminar una vista
+DROP VIEW v_vendes;`,
+d5:`-- Crear una seqüència
+CREATE SEQUENCE seq_prod_id
+    START WITH 1000
+    INCREMENT BY 1
+    MAXVALUE 9999999
+    NOCACHE
+    NOCYCLE;
+
+-- Usar la seqüència a un INSERT
+INSERT INTO productes (prod_id, nom, categoria, preu)
+VALUES (seq_prod_id.NEXTVAL, 'Teclat mecànic', 'Perifèrics', 89.99);
+
+-- Veure el darrer valor generat (dins la mateixa sessió)
+SELECT seq_prod_id.CURRVAL FROM dual;`
+};
+Object.keys(SQLS).forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=colorSQL(SQLS[id]); });
+
+const E1=[
+  {t:'Necessites emmagatzemar el NIF d\'un client (format fix "12345678A"). Quin tipus tries?',opts:['VARCHAR2(9)','CHAR(9)','NUMBER(9)','NVARCHAR2(9)'],ans:1,exp:'CHAR(9) és adequat per cadenes de longitud fixa. VARCHAR2 funcionaria però reserva menys espai per a CHAR.'},
+  {t:'Vols assegurar que la columna "edat" sempre sigui entre 18 i 65. Quina restricció uses?',opts:['NOT NULL','UNIQUE','CHECK (edat BETWEEN 18 AND 65)','FOREIGN KEY'],ans:2,exp:'CHECK permet definir una condició de validació arbitrària per als valors de la columna.'},
+  {t:'Una columna és PRIMARY KEY. Quines restriccions implica automàticament?',opts:['Només UNIQUE','Nomes NOT NULL','NOT NULL + UNIQUE','NOT NULL + CHECK'],ans:2,exp:'La PRIMARY KEY implica NOT NULL (la clau no pot ser buida) i UNIQUE (no pot haver duplicats).'},
+  {t:'Vols emmagatzemar el logotip d\'una empresa (arxiu d\'imatge). Quin tipus tries?',opts:['VARCHAR2','CLOB','BLOB','DATE'],ans:2,exp:'BLOB (Binary Large Object) és per a dades binàries com imatges, PDF, fitxers. CLOB és per a text llarg.'},
+  {t:'Vols que una columna SALARI no pugui tenir valors negatius. Quina restricció poses?',opts:['NOT NULL','PRIMARY KEY','CHECK (SALARI >= 0)','UNIQUE'],ans:2,exp:'CHECK amb la condició adequada valida el rang del valor.'}
+];
+const E2=[
+  {t:'Executes: CREATE TABLE test AS SELECT * FROM employees WHERE 1=2. Quantes files té la nova taula?',opts:['107 files','0 files','Error','1 fila'],ans:1,exp:'WHERE 1=2 és sempre fals, per tant no selecciona cap fila. Es crea la taula buida però amb l\'estructura de columnes.'},
+  {t:'Una sentència ALTER TABLE ADD PRIMARY KEY fa COMMIT de la transacció activa?',opts:['No, és DML','Sí, DDL fa COMMIT implícit','Depèn del SO','No, cal fer-lo manualment'],ans:1,exp:'Qualsevol sentència DDL (CREATE, ALTER, DROP, TRUNCATE) fa COMMIT implícit, finalitzant qualsevol transacció DML oberta.'},
+  {t:'Tens una columna amb FOREIGN KEY i ON DELETE SET NULL. Elimines la fila pare. Què passa a les files filles?',opts:['Error: no es pot eliminar','Les files filles s\'eliminen','La FK es posa a NULL','La transacció fa ROLLBACK'],ans:2,exp:'ON DELETE SET NULL posa la columna FK a NULL a les files filles quan s\'elimina la fila referenciada al pare. ON DELETE CASCADE les eliminaria.'},
+  {t:'Intentes inserir dues files amb el mateix valor a una columna UNIQUE. Quin és el resultat del segon INSERT?',opts:['S\'inserta igualment','Error de violació de restricció','Es fa ROLLBACK de tota la transacció','La columna es posa a NULL'],ans:1,exp:'Oracle llença un error de violació de restricció UNIQUE. Només es desfà la sentència que causa l\'error, no tota la transacció.'}
+];
+const E3sol=[
+  {ctx:'Crea una taula CLIENTS amb: id (PK, autonumèric amb seqüència), nom (NOT NULL, màx 100 car.), email (únic, NOT NULL), data_alta (per defecte avui), saldo NUMBER(10,2) (no negatiu).',code:`CREATE SEQUENCE seq_client_id START WITH 1 INCREMENT BY 1;\n\nCREATE TABLE clients (\n    client_id  NUMBER(8)     CONSTRAINT pk_clients PRIMARY KEY,\n    nom        VARCHAR2(100) CONSTRAINT nn_cli_nom NOT NULL,\n    email      VARCHAR2(200) CONSTRAINT nn_cli_email NOT NULL\n                              CONSTRAINT uq_cli_email UNIQUE,\n    data_alta  DATE          DEFAULT SYSDATE,\n    saldo      NUMBER(10,2)  DEFAULT 0\n                              CONSTRAINT ck_saldo CHECK (saldo >= 0)\n);`,note:'Criteri 2.2, 2.4, 2.5 — Combina PK, NOT NULL, UNIQUE, DEFAULT i CHECK en una sola taula.'},
+  {ctx:'Crea una vista V_CLIENTS_ACTIUS que mostri clients amb saldo > 0.',code:`CREATE OR REPLACE VIEW v_clients_actius AS\n    SELECT client_id, nom, email, saldo, data_alta\n    FROM   clients\n    WHERE  saldo > 0\n    WITH CHECK OPTION;`,note:'Criteri 2.6 — Vista amb WITH CHECK OPTION: impedeix modificar files que quedarien fora del filtre de la vista.'}
+];
+function buildQI(data,contId,prefix){
+  const c=document.getElementById(contId);
+  data.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('${prefix}',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="${prefix}f${i}"></div>`;
+    c.appendChild(div);
+  });
+}
+buildQI(E1,'ex1-cont','G1');
+buildQI(E2,'ex2-cont','G2');
+const ALL={G1:E1,G2:E2};
+function checkQ(grp,btn,i,choice){
+  const d=ALL[grp][i],fb=document.getElementById(grp+'f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+(function(){
+  const c=document.getElementById('ex3-cont');
+  E3sol.forEach((d,i)=>{
+    const div=document.createElement('div'); div.className='ri';
+    div.innerHTML=`<div class="ri-q"><div class="ri-q-text"><strong>${i+1}.</strong> ${d.ctx}</div><button class="ri-btn" onclick="reveal(this,'E3a${i}')">▶ Veure solució SQL</button></div><div class="ri-ans" id="E3a${i}"><div class="ri-ans-label">Solució</div><pre class="sql-out">${colorSQL(d.code)}</pre><div class="ri-note">${d.note}</div></div>`;
+    c.appendChild(div);
+  });
+})();
+function reveal(btn,id){document.getElementById(id).classList.add('show');btn.style.display='none';}
+</script>
+</body>
+</html>

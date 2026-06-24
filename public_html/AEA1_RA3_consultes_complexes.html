@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA1 · Consultes complexes SQL — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+      --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+      --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+      --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+      --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+      --yellow:#713f12; --yellow-bg:#fefce8; --yellow-bdr:#fef08a;
+      --code-bg:#1e293b; --code-text:#e2e8f0; --r:10px; --r-sm:6px;
+    }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+    .merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+    .site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 24px; }
+    .head-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+    .brand { text-decoration:none; display:flex; flex-direction:column; }
+    .brand-mark { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); }
+    .brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+    .head-course { font-size:13px; color:var(--ink-2); }
+    .wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+    .breadcrumb { font-size:13px; color:var(--ink-3); padding:14px 0 0; }
+    .breadcrumb a { color:var(--ink-2); text-decoration:none; }
+    .breadcrumb a:hover { color:var(--accent); }
+    .breadcrumb span { margin:0 5px; }
+    .page-header { padding:40px 0 32px; border-bottom:1.5px solid var(--border); margin-bottom:48px; }
+    .meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+    .badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+    .b-course { background:var(--ink); color:#fff; }
+    .b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+    .b-act { background:var(--accent-mid); color:#fff; }
+    .b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:10px; }
+    .page-sub { font-size:16px; color:var(--ink-2); margin-bottom:24px; }
+    .obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; }
+    .obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+    .obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+    .obj-text { font-size:14px; color:var(--ink-2); }
+    .section { margin-bottom:60px; }
+    .sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+    .sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+    .sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+    .sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+    .lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+    .lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+    .ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+    .ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+    .ibox-text { font-size:14px; line-height:1.65; }
+    .ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+    .ibox.green { background:var(--green-bg); border:1px solid var(--green-bdr); }
+    .ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+    .ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+    .ibox.green .ibox-label, .ibox.green .ibox-text { color:var(--green); }
+    .ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
+    .ibox code { background:#ffffffaa; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 6px; border-radius:3px; }
+    .demo { margin-bottom:24px; }
+    .demo-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-bottom:8px; }
+    .sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.8; white-space:pre; margin:0; overflow-x:auto; }
+    .exp-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 16px; margin-top:10px; }
+    .exp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin-bottom:5px; }
+    .exp-text { font-size:13px; color:var(--ink-2); line-height:1.6; }
+    .exp-text code { background:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 5px; border-radius:3px; }
+    .kw { color:#fbbf24; font-weight:500; }
+    .fn { color:#a78bfa; }
+    .str { color:#4ade80; }
+    .num { color:#f472b6; }
+    .cmt { color:#64748b; font-style:italic; }
+    .tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
+    .tbl { width:100%; border-collapse:collapse; font-size:13px; }
+    .tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
+    .tbl td { padding:9px 14px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:12px; vertical-align:middle; }
+    .tbl tr:last-child td { border-bottom:none; }
+    .cmp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+    .cmp { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:14px; }
+    .cmp h4 { font-size:12px; font-family:'JetBrains Mono',monospace; color:var(--accent); margin-bottom:8px; }
+    .cmp p { font-size:12px; color:var(--ink-2); line-height:1.5; }
+    .ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
+    .ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+    .ex-block-sub { font-size:13px; color:#a8a29e; }
+    .ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+    .exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+    .exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+    .ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+    .ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+    .ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+    .ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
+    .ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
+    .qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
+    .qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
+    .qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
+    .qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
+    .qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+    .qi-btn:disabled { cursor:default; }
+    .qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
+    .qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
+    .qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
+    .qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
+    .ri { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-bottom:12px; }
+    .ri-q { padding:14px 18px; background:#fafaf9; }
+    .ri-q-text { font-size:14px; color:var(--ink); margin-bottom:4px; }
+    .ri-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 15px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); color:var(--accent); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; transition:background .12s,color .12s,border-color .12s; }
+    .ri-btn:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+    .ri-ans { display:none; padding:16px 18px; background:var(--accent-bg); border-top:1px solid var(--accent-bdr); }
+    .ri-ans.show { display:block; }
+    .ri-ans-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--accent-mid); margin-bottom:8px; }
+    .ri-note { font-size:13px; color:var(--ink-2); margin-top:10px; line-height:1.55; }
+    .doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; }
+    .doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
+    .doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+    .doc-nav .back { color:var(--ink-2); background:#fafaf9; border-color:var(--border); }
+    .doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+    .site-foot { border-top:1px solid var(--border); padding:20px 24px; }
+    .foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+    @media (max-width:600px){ .cmp-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<div class="merce-top"></div>
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">La Mercè</span><span class="brand-sub">Formació Professional</span></a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="breadcrumb">
+    <a href="index.html">MP0484 Bases de dades</a><span>›</span>
+    <a href="index.html#aea1">AEA1 — Consultes SQL</a><span>›</span>
+    Consultes complexes
+  </div>
+
+  <header class="page-header">
+    <div class="meta-row">
+      <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+      <span class="badge b-ra">AEA1 · RA3 · Part 2/2</span>
+      <span class="badge b-act">18 hores</span>
+      <span class="badge b-new">Consultes complexes</span>
+    </div>
+    <h1 class="page-title">Consultes complexes SQL</h1>
+    <p class="page-sub">Unions entre taules (<strong>JOINs</strong>), subconsultes, operadors de conjunt i bones pràctiques d'optimització. Base de dades <strong>HR</strong> d'Oracle.</p>
+    <div class="obj-box">
+      <div class="obj-icon">🎯</div>
+      <div>
+        <div class="obj-label">Criteris d'avaluació · RA3</div>
+        <div class="obj-text">
+          <strong>3.3</strong> Composicions internes (JOIN) ·
+          <strong>3.4</strong> Composicions externes (OUTER JOIN) ·
+          <strong>3.6</strong> Subconsultes ·
+          <strong>3.7</strong> Múltiples seleccions (UNION, INTERSECT, MINUS) ·
+          <strong>3.8</strong> Optimització de consultes
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECCIÓ 4: JOINS -->
+  <section class="section">
+    <div class="sec-head"><span class="sec-num">1</span><div><h2 class="sec-title">Unions entre taules (JOINs)</h2><p class="sec-sub">Criteri 3.3 · 3.4 — Combinar informació de diverses taules</p></div></div>
+    <p class="lead">Quan la informació que necessitem es troba repartida en diverses taules, hem d'unir-les. Oracle SQL segueix l'estàndard <strong>SQL:1999</strong> amb les clàusules <code>JOIN ... ON</code>, <code>JOIN ... USING</code> i <code>NATURAL JOIN</code>.</p>
+    <div class="cmp-grid">
+      <div class="cmp"><h4>INNER JOIN</h4><p>Retorna només les files que tenen coincidència en les dues taules. Les files sense parella queden fora.</p></div>
+      <div class="cmp"><h4>LEFT OUTER JOIN</h4><p>Retorna totes les files de la taula esquerra, amb NULL on no hi ha coincidència a la dreta.</p></div>
+      <div class="cmp"><h4>RIGHT OUTER JOIN</h4><p>Retorna totes les files de la taula dreta, amb NULL on no hi ha coincidència a l'esquerra.</p></div>
+      <div class="cmp"><h4>FULL OUTER JOIN</h4><p>Retorna totes les files de les dues taules, amb NULL on no hi ha coincidència en cap dels dos costats.</p></div>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 12 · INNER JOIN amb ON i USING</div><pre class="sql-out" id="s4e12"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>JOIN ... ON</code> permet especificar qualsevol condició d'unió. <code>JOIN ... USING(col)</code> s'usa quan la columna d'unió té el mateix nom a les dues taules. En Oracle, quan uses <code>USING</code>, no pots qualificar la columna d'unió amb l'àlies de taula.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 13 · JOIN de 3 taules i autounió (self-join)</div><pre class="sql-out" id="s4e13"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Podem encadenar tants JOINs com calgui. L'autounió (<em>self-join</em>) uneix la taula amb ella mateixa: imprescindible per a relacions jeràrquiques com <code>MANAGER_ID</code> que referencia <code>EMPLOYEE_ID</code> de la mateixa taula. Cada instància necessita un àlies diferent.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 14 · LEFT OUTER JOIN i FULL OUTER JOIN</div><pre class="sql-out" id="s4e14"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>LEFT OUTER JOIN</code> inclou els empleats que no tenen departament assignat (DEPARTMENT_ID = NULL). Si usem <code>INNER JOIN</code> aquests empleats desapareixerien. Útil per detectar dades orfes o incompletes.</div></div></div>
+  </section>
+
+  <!-- SECCIÓ 5: SUBCONSULTES -->
+  <section class="section">
+    <div class="sec-head"><span class="sec-num">2</span><div><h2 class="sec-title">Subconsultes</h2><p class="sec-sub">Criteri 3.6 — Consultes dins de consultes</p></div></div>
+    <p class="lead">Una subconsulta és una sentència <code>SELECT</code> dins d'una altra sentència SQL. S'executa primer i el seu resultat s'usa com a valor o conjunt de valors per a la consulta externa.</p>
+    <div class="cmp-grid">
+      <div class="cmp"><h4>Subconsulta d'una fila</h4><p>Retorna exactament un valor. S'usa amb operadors comparatius: <code>=</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>.</p></div>
+      <div class="cmp"><h4>Subconsulta de múltiples files</h4><p>Retorna diverses files. S'usa amb <code>IN</code>, <code>ANY</code>, <code>ALL</code>, <code>EXISTS</code>.</p></div>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 15 · Subconsulta d'una sola fila</div><pre class="sql-out" id="s5e15"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">La subconsulta interna s'executa primer i retorna el salari de l'empleat 'Abel'. La consulta externa usa aquest valor per trobar tots els empleats amb salari superior. Si la subconsulta retornés més d'una fila, Oracle donaria error amb l'operador <code>=</code>.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 16 · Subconsulta de múltiples files amb IN i EXISTS</div><pre class="sql-out" id="s5e16"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>IN</code> comprova si el valor és a la llista retornada per la subconsulta. <code>EXISTS</code> comprova si la subconsulta retorna alguna fila (més eficient quan la taula interior és gran). <code>NOT EXISTS</code> s'usa per trobar files que <strong>no</strong> tenen correspondència.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 17 · Subconsultes amb ANY i ALL</div><pre class="sql-out" id="s5e17"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>&gt; ANY(subconsulta)</code> significa "major que com a mínim un valor" (equivalent al mínim). <code>&gt; ALL(subconsulta)</code> significa "major que tots els valors" (equivalent al màxim). <code>= ANY</code> és equivalent a <code>IN</code>.</div></div></div>
+  </section>
+
+  <!-- SECCIÓ 6: OPERADORS DE CONJUNT -->
+  <section class="section">
+    <div class="sec-head"><span class="sec-num">3</span><div><h2 class="sec-title">Operadors de conjunt</h2><p class="sec-sub">Criteri 3.7 — UNION, INTERSECT i MINUS</p></div></div>
+    <p class="lead">Els operadors de conjunt combinen els resultats de dues o més sentències <code>SELECT</code>. Les dues consultes han de tenir el <strong>mateix nombre de columnes</strong> amb <strong>tipus de dades compatibles</strong>.</p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Operador</th><th>Descripció</th><th>Elimina duplicats?</th></tr></thead>
+        <tbody>
+          <tr><td><code>UNION</code></td><td>Totes les files d'ambdues consultes</td><td>Sí</td></tr>
+          <tr><td><code>UNION ALL</code></td><td>Totes les files d'ambdues consultes</td><td>No</td></tr>
+          <tr><td><code>INTERSECT</code></td><td>Només les files presents a les dues consultes</td><td>Sí</td></tr>
+          <tr><td><code>MINUS</code></td><td>Files de la primera que no estan a la segona</td><td>Sí</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 18 · UNION, INTERSECT i MINUS</div><pre class="sql-out" id="s6e18"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>UNION</code> és útil per combinar dades de taules amb la mateixa estructura (per exemple, dades actuals i històriques). <code>INTERSECT</code> troba elements comuns. <code>MINUS</code> troba diferències. L'<code>ORDER BY</code> al final s'aplica al resultat final i ha de fer referència a la posició o al nom de la primera consulta.</div></div></div>
+  </section>
+
+  <!-- SECCIÓ 7: OPTIMITZACIÓ -->
+  <section class="section">
+    <div class="sec-head"><span class="sec-num">4</span><div><h2 class="sec-title">Bones pràctiques i optimització</h2><p class="sec-sub">Criteri 3.8 — Escriure consultes eficients</p></div></div>
+    <p class="lead">Una consulta correcta i una consulta eficient no sempre és el mateix. Quan les taules creixen, el rendiment pot degradar-se dràsticament si no s'apliquen bones pràctiques.</p>
+    <div class="ibox green"><div class="ibox-label">✅ Bones pràctiques</div><div class="ibox-text">Evita <code>SELECT *</code> en producció — tria sempre les columnes que necessites.<br>Filtra amb <code>WHERE</code> tan aviat com puguis per reduir el nombre de files processades.<br>Usa <code>EXISTS</code> en lloc de <code>IN</code> amb subconsultes grans.<br>Afegeix índexs a les columnes usades freqüentment a <code>WHERE</code> i <code>JOIN</code>.<br>Evita funcions sobre columnes indexades al <code>WHERE</code>: <code>WHERE UPPER(last_name) = 'KING'</code> no usarà l'índex de <code>last_name</code>.</div></div>
+    <div class="ibox red"><div class="ibox-label">⚠️ Errors freqüents</div><div class="ibox-text">Usar <code>= NULL</code> en lloc de <code>IS NULL</code>.<br>Posar al <code>WHERE</code> una funció d'agregació (<code>AVG</code>, <code>SUM</code>...) — usar <code>HAVING</code>.<br>Oblidar que <code>WHERE</code> s'executa abans que <code>GROUP BY</code>.<br>Columnes al <code>SELECT</code> no agregades ni al <code>GROUP BY</code>.</div></div>
+  </section>
+
+  <!-- EXERCICIS -->
+  <div class="ex-block-head"><h2 class="ex-block-title">Exercicis — Consultes complexes</h2><p class="ex-block-sub">Criteris 3.3, 3.4, 3.6, 3.7 i 3.8 · BD HR d'Oracle</p></div>
+  <div class="ex-block-body">
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Quin tipus de JOIN?</div><div class="ex-level">Nivell mitjà · criteris 3.3 i 3.4</div></div></div>
+      <p class="ex-intro">Tria el tipus de JOIN adequat per a cada cas.</p>
+      <div id="ex3-cont"></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Escriu la consulta SQL</div><div class="ex-level">Nivell avançat · criteris 3.3–3.7</div></div></div>
+      <p class="ex-intro">Escriu la consulta SQL per a cada enunciat i comprova-la amb la solució.</p>
+      <div id="ex4-cont"></div>
+    </div>
+  </div>
+
+  <nav class="doc-nav">
+    <a class="back" href="AEA1_RA3_consultes_simples.html">← Consultes simples</a>
+    <a href="index.html">Índex del mòdul →</a>
+  </nav>
+</div>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+
+<script>
+function colorSQL(t){
+  t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t=t.replace(/(--[^\n]*)/g,'<span class="cmt">$1</span>');
+  t=t.replace(/('[^']*')/g,'<span class="str">$1</span>');
+  t=t.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');
+  t=t.replace(/\b(SELECT|FROM|WHERE|AND|OR|NOT|IN|LIKE|BETWEEN|IS|NULL|ORDER\s+BY|GROUP\s+BY|HAVING|DISTINCT|JOIN|INNER\s+JOIN|LEFT\s+OUTER\s+JOIN|LEFT\s+JOIN|RIGHT\s+OUTER\s+JOIN|RIGHT\s+JOIN|FULL\s+OUTER\s+JOIN|NATURAL\s+JOIN|ON|USING|AS|UNION|UNION\s+ALL|INTERSECT|MINUS|EXISTS|ANY|ALL|CASE|WHEN|THEN|ELSE|END|ASC|DESC|NULLS\s+LAST)\b/gi,'<span class="kw">$1</span>');
+  t=t.replace(/\b(COUNT|SUM|AVG|MAX|MIN|ROUND|TRUNC|NVL|TO_CHAR|TO_DATE|SYSDATE|MONTHS_BETWEEN)\b/gi,'<span class="fn">$1</span>');
+  return t;
+}
+const SQLS={
+  s4e12:`-- INNER JOIN amb ON\nSELECT e.last_name, e.salary, d.department_name\nFROM   employees   e\n       INNER JOIN departments d ON e.department_id = d.department_id\nWHERE  e.salary > 8000\nORDER BY d.department_name, e.last_name;\n\n-- JOIN amb USING (columna de mateix nom)\nSELECT e.last_name, department_id, d.department_name, l.city\nFROM   employees   e\n       JOIN departments d USING (department_id)\n       JOIN locations   l USING (location_id);`,
+  s4e13:`-- JOIN de 3 taules: empleat → departament → ubicació → país\nSELECT e.last_name, d.department_name, l.city, c.country_name\nFROM   employees   e\n       JOIN departments d ON  e.department_id  = d.department_id\n       JOIN locations   l ON  d.location_id    = l.location_id\n       JOIN countries   c ON  l.country_id     = c.country_id\nORDER BY c.country_name, l.city;\n\n-- Self-join: nom de l'empleat i del seu cap\nSELECT emp.last_name        AS empleat,\n       mgr.last_name        AS cap\nFROM   employees emp\n       JOIN employees mgr ON emp.manager_id = mgr.employee_id\nORDER BY mgr.last_name, emp.last_name;`,
+  s4e14:`-- LEFT OUTER JOIN: tots els empleats, fins i tot sense departament\nSELECT e.last_name, e.department_id, d.department_name\nFROM   employees   e\n       LEFT OUTER JOIN departments d ON e.department_id = d.department_id\nORDER BY d.department_name NULLS LAST;\n\n-- FULL OUTER JOIN: tots els empleats I tots els departaments\nSELECT e.last_name, d.department_name\nFROM   employees   e\n       FULL OUTER JOIN departments d ON e.department_id = d.department_id\nORDER BY d.department_name NULLS LAST;`,
+  s5e15:`-- Empleats amb salari superior al d'Abel\nSELECT last_name, salary\nFROM   employees\nWHERE  salary > (SELECT salary\n                 FROM   employees\n                 WHERE  last_name = 'Abel')\nORDER BY salary DESC;\n\n-- Empleat que guanya el salari mínim\nSELECT last_name, salary\nFROM   employees\nWHERE  salary = (SELECT MIN(salary) FROM employees);`,
+  s5e16:`-- IN: empleats als depts de Seattle\nSELECT last_name, department_id\nFROM   employees\nWHERE  department_id IN (SELECT department_id\n                          FROM   departments\n                          WHERE  location_id IN (SELECT location_id\n                                                  FROM   locations\n                                                  WHERE  city = 'Seattle'));\n\n-- EXISTS: empleats que han tingut càrrec anterior\nSELECT e.last_name, e.job_id\nFROM   employees e\nWHERE  EXISTS (SELECT 1\n               FROM   job_history jh\n               WHERE  jh.employee_id = e.employee_id);`,
+  s5e17:`-- > ANY: salari superior al mínim del dept 20\nSELECT last_name, salary\nFROM   employees\nWHERE  salary > ANY (SELECT salary\n                     FROM   employees\n                     WHERE  department_id = 20);\n\n-- > ALL: salari superior al màxim del dept 20\nSELECT last_name, salary\nFROM   employees\nWHERE  salary > ALL  (SELECT salary\n                      FROM   employees\n                      WHERE  department_id = 20);`,
+  s6e18:`-- UNION: càrrecs actuals i antics (sense repeticions)\nSELECT job_id FROM employees\nUNION\nSELECT job_id FROM job_history\nORDER BY 1;\n\n-- UNION ALL: inclou repeticions (més ràpid)\nSELECT job_id FROM employees\nUNION ALL\nSELECT job_id FROM job_history;\n\n-- INTERSECT: càrrecs que han tingut empleats actuals I antics\nSELECT job_id FROM employees\nINTERSECT\nSELECT job_id FROM job_history;\n\n-- MINUS: càrrecs actuals que MAI han estat en historial\nSELECT job_id FROM employees\nMINUS\nSELECT job_id FROM job_history;`
+};
+Object.keys(SQLS).forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=colorSQL(SQLS[id]); });
+
+const E3=[
+  {t:'Vols veure tots els empleats, fins i tot els que no tenen departament assignat.',opts:['INNER JOIN','LEFT OUTER JOIN','RIGHT OUTER JOIN','CROSS JOIN'],ans:1,exp:'LEFT OUTER JOIN inclou totes les files de la taula esquerra (employees) fins i tot si no tenen coincidència a la taula dreta (departments).'},
+  {t:'Vols veure la llista d\'empleats amb el nom del seu cap directe (MANAGER_ID = EMPLOYEE_ID).',opts:['JOIN amb USING','Self-join (autounió)','FULL OUTER JOIN','NATURAL JOIN'],ans:1,exp:'L\'autounió uneix la taula EMPLOYEES amb ella mateixa, donant àlies diferents a cada instància.'},
+  {t:'Vols veure tots els departaments, fins i tot els que no tenen cap empleat assignat.',opts:['LEFT OUTER JOIN employees','RIGHT OUTER JOIN employees','INNER JOIN','CROSS JOIN'],ans:1,exp:'RIGHT OUTER JOIN inclou totes les files de la taula dreta (departments). Alternativament, un LEFT OUTER JOIN posant departments com a taula principal.'},
+  {t:'Les dues taules tenen una columna LOCATION_ID del mateix nom. Vols una unió neta sense ambigüitat.',opts:['JOIN ... ON e.location_id = d.location_id','JOIN ... USING (location_id)','NATURAL JOIN','Les opcions A i B són vàlides'],ans:3,exp:'Tant ON com USING funcionen. USING és més concís quan la columna té el mateix nom; ON és més flexible per a condicions complexes.'}
+];
+const E4=[
+  {ctx:'Llista el cognom, salari i nom del departament de tots els empleats del departament "Sales", ordenats per salari descendent.',code:`SELECT   e.last_name, e.salary, d.department_name\nFROM     employees e\n         JOIN departments d ON e.department_id = d.department_id\nWHERE    d.department_name = 'Sales'\nORDER BY e.salary DESC;`,note:'Criteri 3.3 — INNER JOIN entre employees i departments, filtrant per nom de departament.'},
+  {ctx:'Mostra el nom de departament i el nombre d\'empleats de cada departament, però únicament dels departaments amb més de 5 empleats.',code:`SELECT   d.department_name, COUNT(e.employee_id) AS num_empleats\nFROM     departments d\n         JOIN employees e ON d.department_id = e.department_id\nGROUP BY d.department_name\nHAVING   COUNT(e.employee_id) > 5\nORDER BY num_empleats DESC;`,note:'Criteri 3.3 + 3.5 — GROUP BY + HAVING. INNER JOIN exclou departaments sense empleats. Caldria LEFT OUTER JOIN per incloure\'ls.'},
+  {ctx:'Mostra el cognom de l\'empleat i el cognom del seu cap directe. Mostra també els empleats sense cap (president).',code:`SELECT emp.last_name AS empleat,\n       NVL(mgr.last_name, '-- Sense cap --') AS cap\nFROM   employees emp\n       LEFT OUTER JOIN employees mgr ON emp.manager_id = mgr.employee_id\nORDER BY cap NULLS LAST, emp.last_name;`,note:'Criteri 3.4 — Self-join amb LEFT OUTER JOIN per incloure el president que no té cap. NVL mostra text significatiu quan manager_id és NULL.'},
+  {ctx:'Llista els empleats que guanyen més que el salari mig del seu departament, mostrant nom, salari i salari mig del departament.',code:`SELECT e.last_name, e.salary,\n       ROUND(dept_avg.avg_sal, 2) AS avg_dept\nFROM   employees e\n       JOIN (SELECT department_id, AVG(salary) avg_sal\n             FROM   employees\n             GROUP BY department_id) dept_avg\n         ON e.department_id = dept_avg.department_id\nWHERE  e.salary > dept_avg.avg_sal\nORDER BY e.department_id, e.salary DESC;`,note:'Criteri 3.6 — Subconsulta al FROM (inline view). La subconsulta calcula el salari mig per departament i la consulta externa la compara amb cada empleat.'},
+  {ctx:'Mostra els JOB_ID que apareixen a EMPLOYEES però no a JOB_HISTORY (càrrecs que mai s\'han abandonat).',code:`SELECT job_id FROM employees\nMINUS\nSELECT job_id FROM job_history\nORDER BY 1;`,note:'Criteri 3.7 — MINUS retorna files de la primera consulta que no estan a la segona. Equivalent a NOT IN però més net.'}
+];
+(function(){
+  const c=document.getElementById('ex3-cont');
+  E3.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkE3(this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="E3f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+function checkE3(btn,i,choice){
+  const d=E3[i],fb=document.getElementById('E3f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+(function(){
+  const c=document.getElementById('ex4-cont');
+  E4.forEach((d,i)=>{
+    const div=document.createElement('div'); div.className='ri';
+    div.innerHTML=`<div class="ri-q"><div class="ri-q-text"><strong>${i+1}.</strong> ${d.ctx}</div><button class="ri-btn" onclick="reveal(this,'E4a${i}')">▶ Veure solució SQL</button></div><div class="ri-ans" id="E4a${i}"><div class="ri-ans-label">Solució</div><pre class="sql-out">${colorSQL(d.code)}</pre><div class="ri-note">${d.note}</div></div>`;
+    c.appendChild(div);
+  });
+})();
+function reveal(btn,id){document.getElementById(id).classList.add('show');btn.style.display='none';}
+</script>
+</body>
+</html>

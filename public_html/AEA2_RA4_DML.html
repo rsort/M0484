@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA2 · RA4 · DML — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+      --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+      --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+      --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+      --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+      --code-bg:#1e293b; --code-text:#e2e8f0; --r:10px; --r-sm:6px;
+    }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+    .merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+    .site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 24px; }
+    .head-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+    .brand { text-decoration:none; display:flex; flex-direction:column; }
+    .brand-mark { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); }
+    .brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+    .head-course { font-size:13px; color:var(--ink-2); }
+    .wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+    .breadcrumb { font-size:13px; color:var(--ink-3); padding:14px 0 0; }
+    .breadcrumb a { color:var(--ink-2); text-decoration:none; }
+    .breadcrumb a:hover { color:var(--accent); }
+    .breadcrumb span { margin:0 5px; }
+    .page-header { padding:40px 0 32px; border-bottom:1.5px solid var(--border); margin-bottom:48px; }
+    .meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+    .badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+    .b-course { background:var(--ink); color:#fff; }
+    .b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+    .b-act { background:var(--accent-mid); color:#fff; }
+    .b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:10px; }
+    .page-sub { font-size:16px; color:var(--ink-2); margin-bottom:24px; }
+    .obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; margin-bottom:12px; }
+    .obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+    .obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+    .obj-text { font-size:14px; color:var(--ink-2); }
+    .section { margin-bottom:60px; }
+    .sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+    .sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+    .sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+    .sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+    .lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+    .lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+    .ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+    .ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+    .ibox-text { font-size:14px; line-height:1.65; }
+    .ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+    .ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+    .ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+    .ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
+    .ibox code { background:#ffffffaa; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 6px; border-radius:3px; }
+    .demo { margin-bottom:24px; }
+    .demo-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-bottom:8px; }
+    .sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.8; white-space:pre; margin:0; overflow-x:auto; }
+    .exp-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 16px; margin-top:10px; }
+    .exp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin-bottom:5px; }
+    .exp-text { font-size:13px; color:var(--ink-2); line-height:1.6; }
+    .exp-text code { background:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 5px; border-radius:3px; }
+    .kw { color:#fbbf24; font-weight:500; }
+    .fn { color:#a78bfa; }
+    .str { color:#4ade80; }
+    .num { color:#f472b6; }
+    .cmt { color:#64748b; font-style:italic; }
+    .txn-flow { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:16px 0; }
+    .txn-step { background:var(--card); border:1.5px solid var(--border); border-radius:var(--r-sm); padding:8px 14px; font-size:12px; font-family:'JetBrains Mono',monospace; color:var(--ink); }
+    .txn-arrow { color:var(--ink-3); font-size:18px; }
+    .txn-step.commit { border-color:var(--green-bdr); background:var(--green-bg); color:var(--green); }
+    .txn-step.rollback { border-color:var(--red-bdr); background:var(--red-bg); color:var(--red); }
+    .txn-step.save { border-color:var(--blue-bdr); background:var(--blue-bg); color:var(--blue); }
+    .ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
+    .ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+    .ex-block-sub { font-size:13px; color:#a8a29e; }
+    .ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+    .exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+    .exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+    .ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+    .ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+    .ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+    .ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
+    .ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
+    .qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
+    .qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
+    .qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
+    .qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
+    .qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+    .qi-btn:disabled { cursor:default; }
+    .qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
+    .qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
+    .qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
+    .qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
+    .ri { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-bottom:12px; }
+    .ri-q { padding:14px 18px; background:#fafaf9; }
+    .ri-q-text { font-size:14px; color:var(--ink); margin-bottom:4px; }
+    .ri-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 15px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); color:var(--accent); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; transition:background .12s,color .12s,border-color .12s; }
+    .ri-btn:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+    .ri-ans { display:none; padding:16px 18px; background:var(--accent-bg); border-top:1px solid var(--accent-bdr); }
+    .ri-ans.show { display:block; }
+    .ri-ans-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--accent-mid); margin-bottom:8px; }
+    .ri-note { font-size:13px; color:var(--ink-2); margin-top:10px; line-height:1.55; }
+    .doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; }
+    .doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
+    .doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+    .doc-nav .back { color:var(--ink-2); background:#fafaf9; border-color:var(--border); }
+    .doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+    .site-foot { border-top:1px solid var(--border); padding:20px 24px; }
+    .foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+  </style>
+</head>
+<body>
+<div class="merce-top"></div>
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">La Mercè</span><span class="brand-sub">Formació Professional</span></a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="breadcrumb">
+    <a href="index.html">MP0484 Bases de dades</a><span>›</span>
+    <a href="index.html#aea2">AEA2 — DDL, DML i DCL</a><span>›</span>
+    DML
+  </div>
+
+  <header class="page-header">
+    <div class="meta-row">
+      <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+      <span class="badge b-ra">AEA2 · RA4 · Part 2/3</span>
+      <span class="badge b-act">7 hores</span>
+      <span class="badge b-new">DML</span>
+    </div>
+    <h1 class="page-title">DML — Manipulació de dades i transaccions</h1>
+    <p class="page-sub">Inserir, actualitzar i eliminar dades amb <strong>INSERT</strong>, <strong>UPDATE</strong>, <strong>DELETE</strong>, i gestionar transaccions amb <strong>COMMIT</strong>, <strong>ROLLBACK</strong> i <strong>SAVEPOINT</strong>.</p>
+    <div class="obj-box">
+      <div class="obj-icon">🎯</div>
+      <div>
+        <div class="obj-label">Criteris RA4 — DML i Transaccions</div>
+        <div class="obj-text">
+          <strong>4.1</strong> Eines i sentències per modificar dades ·
+          <strong>4.2</strong> Inserir, esborrar i actualitzar ·
+          <strong>4.3</strong> Inserir des d'una consulta ·
+          <strong>4.4</strong> Guions de sentències ·
+          <strong>4.5</strong> Funcionament de transaccions ·
+          <strong>4.6</strong> ROLLBACK parcial o total ·
+          <strong>4.7</strong> Polítiques de bloqueig ·
+          <strong>4.8</strong> Integritat i consistència
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECCIÓ 4: DML -->
+  <section class="section">
+    <div class="sec-head"><span class="sec-num">1</span><div><h2 class="sec-title">Manipulació de dades (DML)</h2><p class="sec-sub">Criteri 4.1 · 4.2 · 4.3 — INSERT, UPDATE, DELETE</p></div></div>
+    <p class="lead">El <strong>DML (Data Manipulation Language)</strong> modifica el contingut de les taules. A diferència del DDL, les sentències DML <strong>no fan COMMIT automàtic</strong>: els canvis es poden desfer amb <code>ROLLBACK</code> fins que s'executi <code>COMMIT</code> o una sentència DDL.</p>
+    <div class="demo"><div class="demo-label">Exemple 6 · INSERT: diverses formes</div><pre class="sql-out" id="d6"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>INSERT INTO taula (col1, col2, ...) VALUES (...)</code> — forma explícita i recomanada.<br>Si no especifiques les columnes, has de proporcionar valors per a <strong>totes</strong> les columnes en l'ordre de la definició.<br><code>INSERT INTO taula SELECT ...</code> — insereix múltiples files a partir d'una consulta, molt eficient per carregar dades massivament.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 7 · UPDATE: actualitzar files</div><pre class="sql-out" id="d7"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><strong>Atenció!</strong> Un <code>UPDATE</code> sense <code>WHERE</code> actualitza <strong>totes les files</strong> de la taula. Sempre verifica el <code>WHERE</code> amb un <code>SELECT</code> previ. L'<code>UPDATE</code> pot usar una subconsulta per calcular el nou valor a partir d'una altra taula.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 8 · DELETE i TRUNCATE</div><pre class="sql-out" id="d8"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>DELETE FROM taula WHERE condició</code> elimina files específiques (es pot fer ROLLBACK).<br><code>TRUNCATE TABLE taula</code> elimina totes les files de forma ràpida, <strong>no es pot desfer</strong> (és DDL implícit). <code>TRUNCATE</code> és molt més ràpid que <code>DELETE</code> per buidar taules grans.</div></div></div>
+  </section>
+
+  <!-- SECCIÓ 5: TRANSACCIONS -->
+  <section class="section">
+    <div class="sec-head"><span class="sec-num">2</span><div><h2 class="sec-title">Transaccions</h2><p class="sec-sub">Criteri 4.5 · 4.6 · 4.7 · 4.8 — COMMIT, ROLLBACK, SAVEPOINT</p></div></div>
+    <p class="lead">Una <strong>transacció</strong> és un conjunt de sentències DML que s'han d'executar com una unitat atòmica: o totes s'apliquen o cap. Garanteix la consistència de la base de dades en cas d'error o operació concurrent.</p>
+    <div class="txn-flow">
+      <div class="txn-step">BEGIN (implícit)</div>
+      <span class="txn-arrow">→</span>
+      <div class="txn-step">INSERT / UPDATE / DELETE</div>
+      <span class="txn-arrow">→</span>
+      <div class="txn-step save">SAVEPOINT sp1</div>
+      <span class="txn-arrow">→</span>
+      <div class="txn-step">Més DML...</div>
+      <span class="txn-arrow">→</span>
+      <div class="txn-step commit">COMMIT</div>
+      <span class="txn-arrow">o</span>
+      <div class="txn-step rollback">ROLLBACK</div>
+    </div>
+    <div class="ibox blue"><div class="ibox-label">Propietats ACID</div><div class="ibox-text"><strong>A</strong>tomicitat: tot o res. <strong>C</strong>onsistència: l'estat queda consistent després. <strong>I</strong>solament: les transaccions no es veuen entre elles fins al COMMIT. <strong>D</strong>urabilitat: un COMMIT persiste fins i tot si el sistema falla.</div></div>
+    <div class="demo"><div class="demo-label">Exemple 9 · COMMIT, ROLLBACK i SAVEPOINT</div><pre class="sql-out" id="d9"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>SAVEPOINT nom</code> marca un punt dins la transacció al qual podem tornar parcialment.<br><code>ROLLBACK TO SAVEPOINT nom</code> desfà els canvis fins al savepoint però <strong>no</strong> acaba la transacció: cal un <code>COMMIT</code> o <code>ROLLBACK</code> final.<br>Les sentències DDL fan <code>COMMIT</code> implícit, finalitzant qualsevol transacció oberta.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 10 · Bloqueig i concurrència</div><pre class="sql-out" id="d10"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Oracle implementa la <strong>consistència de lectura</strong>: una consulta veu un instantani consistent de les dades en el moment que s'inicia. <code>SELECT ... FOR UPDATE</code> bloqueja les files seleccionades per a actualització. <code>NOWAIT</code> retorna error immediatament si les files ja estan bloquejades.</div></div></div>
+  </section>
+
+  <!-- EXERCICIS -->
+  <div class="ex-block-head"><h2 class="ex-block-title">Exercicis — DML i Transaccions</h2><p class="ex-block-sub">Criteris 4.1–4.8</p></div>
+  <div class="ex-block-body">
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Transaccions: COMMIT i ROLLBACK</div><div class="ex-level">Nivell mitjà · criteris 4.5 i 4.6</div></div></div>
+      <p class="ex-intro">Tria el resultat correcte de cada seqüència de transaccions.</p>
+      <div id="ex3-cont"></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Insereix i modifica les dades</div><div class="ex-level">Nivell avançat · criteris 4.2, 4.5, 4.6</div></div></div>
+      <p class="ex-intro">Escriu el DML per a cada enunciat i comprova amb la solució.</p>
+      <div id="ex4-cont"></div>
+    </div>
+  </div>
+
+  <nav class="doc-nav">
+    <a class="back" href="AEA2_RA2_DDL.html">← DDL</a>
+    <a href="AEA2_RA4_DCL.html">DCL →</a>
+  </nav>
+</div>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+
+<script>
+function colorSQL(t){
+  t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t=t.replace(/(--[^\n]*)/g,'<span class="cmt">$1</span>');
+  t=t.replace(/('[^']*')/g,'<span class="str">$1</span>');
+  t=t.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');
+  t=t.replace(/\b(SELECT|FROM|WHERE|AND|OR|NOT|IN|INSERT|INTO|VALUES|UPDATE|SET|DELETE|COMMIT|ROLLBACK|SAVEPOINT|TO|FOR\s+UPDATE|NOWAIT|TRUNCATE|TABLE|AS|LIKE)\b/gi,'<span class="kw">$1</span>');
+  t=t.replace(/\b(SYSDATE|TO_DATE|NVL|NEXTVAL)\b/gi,'<span class="fn">$1</span>');
+  return t;
+}
+const SQLS={
+d6:`-- Forma explícita (recomanada): especificar les columnes
+INSERT INTO departments (department_id, department_name, location_id)
+VALUES (280, 'Anàlisi de Dades', 1700);
+
+-- Amb SYSDATE i seqüència
+INSERT INTO employees (employee_id, first_name, last_name,
+                        email, hire_date, job_id, salary, department_id)
+VALUES (seq_emp.NEXTVAL, 'Anna', 'García',
+        'AGARCIA', SYSDATE, 'IT_PROG', 6500, 60);
+
+-- Inserir NULL explícit
+INSERT INTO employees (employee_id, last_name, email,
+                        hire_date, job_id, salary)
+VALUES (300, 'Prova', 'PROVA', SYSDATE, 'AD_ASST', NULL);
+
+-- Inserir des d'una consulta (còpia massiva)
+INSERT INTO emp_directius
+    SELECT employee_id, last_name, salary, hire_date
+    FROM   employees
+    WHERE  department_id = 100;`,
+d7:`-- Augmentar el salari un 10% als empleats d'IT
+UPDATE employees
+SET    salary = salary * 1.10
+WHERE  job_id LIKE 'IT%';
+
+-- Actualitzar diverses columnes a la vegada
+UPDATE employees
+SET    salary        = 9000,
+       commission_pct = 0.15,
+       department_id  = 80
+WHERE  employee_id = 300;
+
+-- UPDATE amb subconsulta: copiar dades d'una altra taula
+UPDATE employees e
+SET    (salary, job_id) = (SELECT salary, job_id
+                            FROM   employees
+                            WHERE  employee_id = 100)
+WHERE  e.department_id = 90
+  AND  e.employee_id  != 100;`,
+d8:`-- Esborrar files específiques
+DELETE FROM job_history
+WHERE  end_date < TO_DATE('01/01/2005', 'DD/MM/YYYY');
+
+-- Esborrar amb subconsulta
+DELETE FROM employees
+WHERE  department_id IN (SELECT department_id
+                          FROM   departments
+                          WHERE  location_id = 1700);
+
+-- TRUNCATE: buidar ràpid (NO es pot desfer, és DDL)
+-- TRUNCATE TABLE emp_copia;
+
+-- Diferència DELETE vs TRUNCATE:
+-- DELETE: DML → pot fer ROLLBACK, triggers s'executen
+-- TRUNCATE: DDL → NO rollback, NO triggers, reseteja HWM`,
+d9:`-- Inici implícit de la transacció en el primer DML
+INSERT INTO departments (department_id, department_name)
+VALUES (290, 'Robòtica');
+
+SAVEPOINT sp_dept;           -- punt de retorn
+
+INSERT INTO employees (employee_id, last_name, email,
+                        hire_date, job_id, salary, department_id)
+VALUES (301, 'Robot', 'ROBOT', SYSDATE, 'IT_PROG', 7000, 290);
+
+-- Detectem un error: volem desfer l'INSERT d'empleat però NO el de dept
+ROLLBACK TO SAVEPOINT sp_dept;
+
+-- La transacció continua. El dept 290 encara no s'ha confirmat.
+UPDATE departments
+SET    department_name = 'Intel·ligència Artificial'
+WHERE  department_id = 290;
+
+-- Confirmar tots els canvis pendents de forma permanent
+COMMIT;`,
+d10:`-- Bloquejar files per a actualització concurrent
+SELECT employee_id, salary, last_name
+FROM   employees
+WHERE  department_id = 80
+FOR UPDATE NOWAIT;      -- Error si les files estan bloquejades per altra sessió
+
+-- Actualitzem les files bloquejades (mateixa sessió)
+UPDATE employees
+SET    salary = salary * 1.05
+WHERE  department_id = 80;
+
+COMMIT;   -- allibera els bloquejos`
+};
+Object.keys(SQLS).forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=colorSQL(SQLS[id]); });
+
+const E3=[
+  {t:`Executes: INSERT fila A; SAVEPOINT s1; INSERT fila B; ROLLBACK TO s1; COMMIT. Quines files queden?`,opts:['Cap (ROLLBACK total)','Fila A i fila B','Només fila A','Només fila B'],ans:2,exp:'ROLLBACK TO s1 desfà tot el que hi ha després del savepoint (fila B). La fila A (anterior a s1) queda intacta. El COMMIT final confirma la fila A.'},
+  {t:'Executes un INSERT i després un CREATE TABLE sense COMMIT. El CREATE fa COMMIT de l\'INSERT?',opts:['No, cal fer COMMIT explícit','Sí, DDL fa COMMIT implícit','Depèn del client SQL','No, el CREATE fa ROLLBACK de l\'INSERT'],ans:1,exp:'DDL fa COMMIT implícit de qualsevol transacció DML pendent. L\'INSERT queda confirmat quan s\'executa el CREATE TABLE.'},
+  {t:'Dues sessions obren el mateix UPDATE sobre la fila X. La sessió B usa FOR UPDATE NOWAIT. Quin resultat rep B?',opts:['Espera fins que A acabi','Obté l\'error ORA-00054','Executa l\'UPDATE sobre la versió antiga','Rep el resultat de A'],ans:1,exp:'NOWAIT retorna error immediat (ORA-00054) si la fila ja és bloquejada. Sense NOWAIT, B esperaria fins que A faci COMMIT o ROLLBACK.'}
+];
+const E4=[
+  {ctx:'Insereix 3 clients a la taula CLIENTS usant la seqüència seq_client_id. El tercer ha d\'entrar amb saldo 250.00.',code:`INSERT INTO clients (client_id, nom, email)\nVALUES (seq_client_id.NEXTVAL, 'Maria Puig', 'mpuig@exemple.cat');\n\nINSERT INTO clients (client_id, nom, email)\nVALUES (seq_client_id.NEXTVAL, 'Joan Vidal', 'jvidal@exemple.cat');\n\nINSERT INTO clients (client_id, nom, email, saldo)\nVALUES (seq_client_id.NEXTVAL, 'Laura Mas', 'lmas@exemple.cat', 250.00);\n\nCOMMIT;`,note:'Criteri 4.1, 4.2 — INSERT usant seqüència per a la PK. El COMMIT confirma les tres insercions.'},
+  {ctx:'Augmenta el saldo un 5% a tots els clients que el tinguin major de 0. Confirma el canvi. Després elimina els clients amb saldo 0 i data_alta anterior a l\'any 2023, però si falla algun pas, torna enrere.',code:`UPDATE clients\nSET    saldo = saldo * 1.05\nWHERE  saldo > 0;\n\nSAVEPOINT sp_update;\n\nDELETE FROM clients\nWHERE  saldo = 0\n  AND  data_alta < TO_DATE('01/01/2023', 'DD/MM/YYYY');\n\n-- Si tot ha anat bé:\nCOMMIT;\n\n-- Si hagués hagut algun problema amb el DELETE:\n-- ROLLBACK TO SAVEPOINT sp_update;\n-- COMMIT;  -- confirmaria només l'UPDATE`,note:'Criteri 4.2, 4.5, 4.6 — Ús combinat d\'UPDATE, DELETE, SAVEPOINT i COMMIT/ROLLBACK.'}
+];
+(function(){
+  const c=document.getElementById('ex3-cont');
+  E3.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkE3(this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="E3f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+function checkE3(btn,i,choice){
+  const d=E3[i],fb=document.getElementById('E3f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+(function(){
+  const c=document.getElementById('ex4-cont');
+  E4.forEach((d,i)=>{
+    const div=document.createElement('div'); div.className='ri';
+    div.innerHTML=`<div class="ri-q"><div class="ri-q-text"><strong>${i+1}.</strong> ${d.ctx}</div><button class="ri-btn" onclick="reveal(this,'E4a${i}')">▶ Veure solució SQL</button></div><div class="ri-ans" id="E4a${i}"><div class="ri-ans-label">Solució</div><pre class="sql-out">${colorSQL(d.code)}</pre><div class="ri-note">${d.note}</div></div>`;
+    c.appendChild(div);
+  });
+})();
+function reveal(btn,id){document.getElementById(id).classList.add('show');btn.style.display='none';}
+</script>
+</body>
+</html>

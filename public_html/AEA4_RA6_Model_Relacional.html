@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA4 · RA6 · Model Relacional — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+      --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+      --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+      --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+      --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+      --yellow:#713f12; --yellow-bg:#fefce8; --yellow-bdr:#fef08a;
+      --purple:#5b21b6; --purple-bg:#f5f3ff; --purple-bdr:#ddd6fe;
+      --r:10px; --r-sm:6px;
+    }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+    .wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+    .site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 24px; }
+    .head-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+    .brand { text-decoration:none; display:flex; flex-direction:column; }
+    .brand-mark { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); }
+    .brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+    .head-course { font-size:13px; color:var(--ink-2); }
+    .merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+    .breadcrumb { font-size:13px; color:var(--ink-3); padding:14px 0 0; }
+    .breadcrumb a { color:var(--ink-2); text-decoration:none; }
+    .breadcrumb a:hover { color:var(--accent); }
+    .breadcrumb span { margin:0 5px; }
+    .page-header { padding:40px 0 32px; border-bottom:1.5px solid var(--border); margin-bottom:48px; }
+    .meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+    .badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+    .b-course { background:var(--ink); color:#fff; }
+    .b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+    .b-act { background:var(--accent-mid); color:#fff; }
+    .b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:10px; }
+    .page-sub { font-size:16px; color:var(--ink-2); margin-bottom:24px; }
+    .obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; }
+    .obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+    .obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+    .obj-text { font-size:14px; color:var(--ink-2); }
+    .toc { background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:20px 24px; margin-bottom:52px; }
+    .toc-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-3); margin-bottom:14px; }
+    .toc-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px 24px; }
+    .toc-item { font-size:13px; color:var(--blue); text-decoration:none; padding:3px 0; display:flex; align-items:center; gap:6px; }
+    .toc-item:hover { color:var(--accent); }
+    .toc-num { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-3); min-width:20px; }
+    .section { margin-bottom:64px; }
+    .sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+    .sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+    .sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+    .sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+    .lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+    .lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+    .ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+    .ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+    .ibox-text { font-size:14px; line-height:1.65; }
+    .ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+    .ibox.green { background:var(--green-bg); border:1px solid var(--green-bdr); }
+    .ibox.yellow { background:var(--yellow-bg); border:1px solid var(--yellow-bdr); }
+    .ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+    .ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+    .ibox.green .ibox-label, .ibox.green .ibox-text { color:var(--green); }
+    .ibox.yellow .ibox-label, .ibox.yellow .ibox-text { color:var(--yellow); }
+    .ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
+    .tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
+    .tbl { width:100%; border-collapse:collapse; font-size:13px; }
+    .tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
+    .tbl td { padding:9px 14px; border-bottom:1px solid var(--border); vertical-align:top; font-size:13px; }
+    .tbl tr:last-child td { border-bottom:none; }
+    .tbl td.mono { font-family:'JetBrains Mono',monospace; font-size:12px; }
+    .rule { border-radius:var(--r-sm); overflow:hidden; margin-bottom:20px; }
+    .rule-head { background:var(--ink); color:#fff; padding:9px 16px; font-size:12px; font-weight:600; display:flex; align-items:center; gap:8px; }
+    .rule-icon { font-size:15px; }
+    .rule-body { background:var(--blue-bg); border:1px solid var(--blue-bdr); border-top:none; padding:14px 16px; font-size:13px; color:var(--blue); line-height:1.6; }
+    .mr-box { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:14px 18px; margin-bottom:8px; font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.9; }
+    .mr-box .rel { color:var(--ink); font-weight:600; }
+    .mr-box .pk { text-decoration:underline; text-decoration-thickness:2px; color:var(--accent); }
+    .mr-box .fk { color:var(--blue); }
+    .mr-box .ref { color:var(--ink-3); font-size:11px; }
+    .mr-context { font-size:12px; color:var(--ink-2); background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); padding:10px 14px; margin-bottom:20px; border-radius:0 var(--r-sm) var(--r-sm) 0; line-height:1.55; }
+    /* EXERCISES */
+    .ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
+    .ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+    .ex-block-sub { font-size:13px; color:#a8a29e; }
+    .ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+    .exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+    .exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+    .ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+    .ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+    .ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+    .ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
+    .ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
+    .qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
+    .qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
+    .qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
+    .qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
+    .qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+    .qi-btn:disabled { cursor:default; }
+    .qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
+    .qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
+    .qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
+    .qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+    .qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
+    .doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; }
+    .doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
+    .doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+    .doc-nav .back { color:var(--ink-2); background:#fafaf9; border-color:var(--border); }
+    .doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+    .site-foot { border-top:1px solid var(--border); padding:20px 24px; }
+    .foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+    @media (max-width:600px) { .toc-grid { grid-template-columns:1fr; } .doc-nav { flex-direction:column; } }
+  </style>
+</head>
+<body>
+
+<div class="merce-top"></div>
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">La Mercè</span>
+      <span class="brand-sub">Formació Professional</span>
+    </a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="breadcrumb">
+    <a href="index.html">MP0484 Bases de dades</a><span>›</span>
+    <a href="index.html#aea4">AEA4 — Model relacional</a><span>›</span>
+    Model Relacional
+  </div>
+
+  <header class="page-header">
+    <div class="meta-row">
+      <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+      <span class="badge b-ra">AEA4 · RA6 · Part 2/3</span>
+      <span class="badge b-act">6 hores</span>
+      <span class="badge b-new">Model Relacional</span>
+    </div>
+    <h1 class="page-title">Del Model E/R al Model Relacional</h1>
+    <p class="page-sub">Regles de traducció sistemàtica, entitats febles, generalitzacions i restriccions d'integritat.</p>
+    <div class="obj-box">
+      <div class="obj-icon">🎯</div>
+      <div>
+        <div class="obj-label">Criteris d'avaluació · RA6</div>
+        <div class="obj-text">
+          <strong>6.2</strong> Taules del disseny lògic ·
+          <strong>6.3</strong> Camps de les taules ·
+          <strong>6.4</strong> Relacions entre taules ·
+          <strong>6.5</strong> Camps clau ·
+          <strong>6.6</strong> Regles d'integritat ·
+          <strong>6.8</strong> Restriccions que no es poden plasmar al disseny lògic
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="toc-title">Contingut d'aquest document</div>
+    <div class="toc-grid">
+      <a class="toc-item" href="#s4"><span class="toc-num">1</span>Regles de traducció E/R → MR</a>
+      <a class="toc-item" href="#s5"><span class="toc-num">2</span>Entitats febles i generalitzacions</a>
+      <a class="toc-item" href="#s6"><span class="toc-num">3</span>Restriccions d'integritat</a>
+      <a class="toc-item" href="#ex"><span class="toc-num">★</span>Exercicis</a>
+    </div>
+  </nav>
+
+  <!-- SECCIÓ: ER → MR -->
+  <section class="section" id="s4">
+    <div class="sec-head">
+      <span class="sec-num">1</span>
+      <div>
+        <h2 class="sec-title">Regles de traducció E/R → Model Relacional</h2>
+        <p class="sec-sub">Criteri 6.2 · 6.3 · 6.4 · 6.5 — Traducció sistemàtica</p>
+      </div>
+    </div>
+    <p class="lead">La traducció del model E/R al model relacional segueix un conjunt de <strong>regles sistemàtiques</strong>. La notació subratlla les claus primàries (<span style="text-decoration:underline;color:var(--accent)">CP</span>) i marca les claus foranes explícitament.</p>
+
+    <div class="rule">
+      <div class="rule-head"><span class="rule-icon">📌</span>Relació 1:1 — La CF va al costat obligatori (participació mínima 1)</div>
+      <div class="rule-body">S'afegeix una clau forana a una de les dues relacions. Si una entitat té participació opcional (0,1), és ella qui rep la CF per evitar valors nuls innecessaris a l'altra.</div>
+    </div>
+    <div class="mr-box">
+      <span class="rel">PROFESSOR</span>(<span class="pk">DNI</span>, Nom)<br>
+      <span class="rel">DEPARTAMENT</span>(<span class="pk">CodDept</span>, Nom, <span class="fk">DNICoord</span>)<br>
+      <span class="ref">  ON {DNICoord} REFERENCIA PROFESSOR — DNICoord NO ADMET NULS (tot dept. té coordinador)</span>
+    </div>
+    <div class="mr-context">Cas: PROFESSOR coordina DEPARTAMENT (0,1):(1,1). La CF va a DEPARTAMENT perquè <strong>tot departament ha de tenir coordinador</strong>. Si anés a PROFESSOR, molts professors tindrien NULL.</div>
+
+    <div class="rule">
+      <div class="rule-head"><span class="rule-icon">📌</span>Relació 1:N — La CF va al costat N, referencia el costat 1</div>
+      <div class="rule-body">La clau forana s'afegeix sempre a la relació del costat N. Si el costat 1 és opcional (0,1), la CF admet valors nuls.</div>
+    </div>
+    <div class="mr-box">
+      <span class="rel">DEPARTAMENT</span>(<span class="pk">CodDept</span>, Nom)<br>
+      <span class="rel">EMPLEAT</span>(<span class="pk">DNI</span>, Nom, Salari, <span class="fk">CodDept</span>)<br>
+      <span class="ref">  ON {CodDept} REFERENCIA DEPARTAMENT — CodDept NO ADMET NULS</span>
+    </div>
+    <div class="mr-context">Cas: EMPLEAT treballa_a DEPARTAMENT (1,1):(0,n). La CF CodDept va a EMPLEAT (costat N). No admet nuls perquè <strong>tot empleat pertany a un departament</strong>.</div>
+
+    <div class="rule">
+      <div class="rule-head"><span class="rule-icon">📌</span>Relació M:N — Es crea una taula nova amb les dues CP com a CP composta</div>
+      <div class="rule-body">Es crea una nova relació la CP de la qual és la combinació de les CP de les dues entitats. Els atributs propis de la relació s'incorporen a la nova taula.</div>
+    </div>
+    <div class="mr-box">
+      <span class="rel">ESTUDIANT</span>(<span class="pk">DNI</span>, Nom)<br>
+      <span class="rel">ASSIGNATURA</span>(<span class="pk">CodAssig</span>, Nom, Crèdits)<br>
+      <span class="rel">MATRICULA</span>(<span class="pk">DNI</span>, <span class="pk">CodAssig</span>, Nota)<br>
+      <span class="ref">  ON {DNI} REFERENCIA ESTUDIANT — ON {CodAssig} REFERENCIA ASSIGNATURA</span>
+    </div>
+    <div class="mr-context">L'atribut Nota pertany a la relació i s'incorpora a MATRICULA. La CP composta (DNI, CodAssig) garanteix que un estudiant no es matriculi dues vegades a la mateixa assignatura.</div>
+
+    <div class="rule">
+      <div class="rule-head"><span class="rule-icon">📌</span>Relació reflexiva 1:N — CF a la mateixa taula amb nom diferent</div>
+      <div class="rule-body">S'afegeix a la mateixa relació una CF que referencia la seva pròpia CP. Ha de tenir un nom diferent que reflecteixi el rol.</div>
+    </div>
+    <div class="mr-box">
+      <span class="rel">EMPLEAT</span>(<span class="pk">DNI</span>, Nom, Salari, <span class="fk">DNISupervisor</span>)<br>
+      <span class="ref">  ON {DNISupervisor} REFERENCIA EMPLEAT — DNISupervisor ADMET NULS (el director no té supervisor)</span>
+    </div>
+
+    <div class="rule">
+      <div class="rule-head"><span class="rule-icon">📌</span>Relació reflexiva M:N — CP repetida amb noms de rol</div>
+      <div class="rule-body">Es crea una nova taula amb la CP repetida dos cops (amb noms de rol), per representar que l'entitat es relaciona amb si mateixa.</div>
+    </div>
+    <div class="mr-box">
+      <span class="rel">PRODUCTE</span>(<span class="pk">CodProd</span>, Nom, Preu)<br>
+      <span class="rel">COMPOSICIO</span>(<span class="pk">CodComponent</span>, <span class="pk">CodCompost</span>, Quantitat)<br>
+      <span class="ref">  ON {CodComponent} REFERENCIA PRODUCTE — ON {CodCompost} REFERENCIA PRODUCTE</span>
+    </div>
+  </section>
+
+  <!-- SECCIÓ: FEBLES I GENERALITZACIONS -->
+  <section class="section" id="s5">
+    <div class="sec-head">
+      <span class="sec-num">2</span>
+      <div>
+        <h2 class="sec-title">Entitats febles i generalitzacions</h2>
+        <p class="sec-sub">Criteri 6.2 · 6.4 · 6.5 — Casos especials de traducció</p>
+      </div>
+    </div>
+
+    <p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-bottom:12px;">Entitats febles</p>
+
+    <div class="rule">
+      <div class="rule-head"><span class="rule-icon">📌</span>Feble per existència (EX) — té clau pròpia però no existeix sense la propietària</div>
+      <div class="rule-body">La CF s'afegeix com a atribut. La CF no admet nuls.</div>
+    </div>
+    <div class="mr-box">
+      <span class="rel">PACIENT</span>(<span class="pk">DNI</span>, Nom, DataNaix)<br>
+      <span class="rel">INGRES</span>(<span class="pk">CodIngrés</span>, Data, <span class="fk">DNI</span>)<br>
+      <span class="ref">  ON {DNI} REFERENCIA PACIENT — DNI NO ADMET NULS</span>
+    </div>
+    <div class="mr-context">CodIngrés identifica l'ingrés globalment. DNI és CF obligatòria però no forma part de la CP.</div>
+
+    <div class="rule">
+      <div class="rule-head"><span class="rule-icon">📌</span>Feble per identificació (ID) — necessita la clau propietària per ser identificada</div>
+      <div class="rule-body">La CP de la nova relació és la combinació de la CP de la propietària + el discriminant (clau parcial).</div>
+    </div>
+    <div class="mr-box">
+      <span class="rel">FACTURA</span>(<span class="pk">NumFact</span>, Data, Total)<br>
+      <span class="rel">LINIA_FACTURA</span>(<span class="pk">NumFact</span>, <span class="pk">NumLinia</span>, Quantitat, Preu)<br>
+      <span class="ref">  ON {NumFact} REFERENCIA FACTURA</span>
+    </div>
+    <div class="mr-context">NumLinia és el discriminant: únic dins de cada factura, però no globalment. La CP (NumFact, NumLinia) identifica unívocament cada línia.</div>
+
+    <p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-bottom:12px;margin-top:24px;">Generalitzacions i especialitzacions</p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Estratègia</th><th>Quan usar-la</th><th>Resultat</th></tr></thead>
+        <tbody>
+          <tr><td><strong>7A. Supertipus + subtipus</strong></td><td>Subtipus amb atributs propis i participació parcial (0,1)</td><td>Una taula per al supertipus + una per cada subtipus. La CP del subtipus és alhora CF al supertipus.</td></tr>
+          <tr><td><strong>7B. Només subtipus</strong></td><td>Generalització total i disjunta (tots pertanyen a algun subtipus)</td><td>El supertipus desapareix: cada subtipus incorpora els atributs comuns.</td></tr>
+          <tr><td><strong>7C. Taula única</strong></td><td>Subtipus amb pocs atributs propis i solapaments possibles</td><td>Una sola taula amb tots els atributs + columna discriminant. Genera molts NULLs.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mr-box">
+      <div style="font-size:11px;color:var(--ink-3);margin-bottom:6px">Estratègia 7A · VEHICLE → COTXE | MOTO | CAMIÓ</div>
+      <span class="rel">VEHICLE</span>(<span class="pk">MatVehicle</span>, Marca, Any)<br>
+      <span class="rel">COTXE</span>(<span class="pk">MatVehicle</span>, NumPortes) <span class="ref"> ON {MatVehicle} REFERENCIA VEHICLE</span><br>
+      <span class="rel">MOTO</span>(<span class="pk">MatVehicle</span>, Cilindrada) <span class="ref"> ON {MatVehicle} REFERENCIA VEHICLE</span><br>
+      <span class="rel">CAMIÓ</span>(<span class="pk">MatVehicle</span>, Capacitat_t) <span class="ref"> ON {MatVehicle} REFERENCIA VEHICLE</span>
+    </div>
+  </section>
+
+  <!-- SECCIÓ: RESTRICCIONS -->
+  <section class="section" id="s6">
+    <div class="sec-head">
+      <span class="sec-num">3</span>
+      <div>
+        <h2 class="sec-title">Restriccions d'integritat i semàntiques</h2>
+        <p class="sec-sub">Criteri 6.6 · 6.8 — Regles que garanteixen la validesa de les dades</p>
+      </div>
+    </div>
+    <p class="lead">Les <strong>regles d'integritat</strong> garanteixen que les dades emmagatzemades siguin vàlides i consistents. Algunes es poden expressar directament al disseny relacional; d'altres cal documentar-les com a restriccions semàntiques.</p>
+
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Tipus d'integritat</th><th>Descripció</th><th>Com s'implementa</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Integritat d'entitat</strong></td><td>Cap atribut de la clau primària pot ser NULL.</td><td>PRIMARY KEY (automàtic)</td></tr>
+          <tr><td><strong>Integritat referencial</strong></td><td>Una clau forana ha de referenciar una fila existent a la taula pare, o ser NULL.</td><td>FOREIGN KEY ... REFERENCES</td></tr>
+          <tr><td><strong>Integritat de domini</strong></td><td>Els valors han de pertànyer al domini definit per al tipus i les restriccions.</td><td>Tipus de dada + CHECK</td></tr>
+          <tr><td><strong>Integritat definida per l'usuari</strong></td><td>Regles de negoci específiques de l'aplicació.</td><td>CHECK, TRIGGER, aplicació</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ibox red">
+      <div class="ibox-label">Criteri 6.8 — Restriccions que no es poden plasmar al disseny lògic</div>
+      <div class="ibox-text">
+        Algunes restriccions del món real no es poden expressar directament en DDL i cal documentar-les explícitament:<br><br>
+        <strong>• Cardinalitat màxima finita > 1:</strong> "un professor pot impartir com a màxim 4 assignatures" no es pot expressar com a CF.<br>
+        <strong>• Restriccions d'exclusió:</strong> "un empleat pot ser gerent o comercial, però no tots dos".<br>
+        <strong>• Restriccions temporals:</strong> "la data de fi ha de ser posterior a la data d'inici".<br>
+        <strong>• Restriccions d'inclusió:</strong> "tot client que ha fet una comanda ha d'estar donat d'alta".<br>
+        <strong>• Restriccions derivades:</strong> "el total de la factura ha de ser igual a la suma de les línies".<br><br>
+        Aquestes restriccions es documenten al diccionari de dades i s'implementen via TRIGGER o en la capa d'aplicació.
+      </div>
+    </div>
+  </section>
+
+  <!-- EXERCICIS -->
+  <div class="ex-block-head" id="ex">
+    <h2 class="ex-block-title">Exercicis — Model Relacional</h2>
+    <p class="ex-block-sub">Traducció E/R → MR i restriccions · criteris 6.2–6.6 · 6.8</p>
+  </div>
+  <div class="ex-block-body">
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div>
+        <div class="ex-name">Traducció E/R → Model Relacional</div>
+        <div class="ex-level">Nivell mitjà · criteris 6.2–6.6</div>
+      </div></div>
+      <p class="ex-intro">Tria la traducció correcta al model relacional per a cada cas.</p>
+      <div id="ex2-cont"></div>
+    </div>
+  </div>
+
+  <nav class="doc-nav">
+    <a class="back" href="AEA4_RA6_Model_ER.html">← Model E/R</a>
+    <a href="AEA4_RA6_Normalitzacio.html">Normalització →</a>
+  </nav>
+</div>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+
+<script>
+const E2=[
+  {t:'FACTURA(NumFact, Data) i LINIA(NumLinia, Quantitat). LINIA és entitat feble per identificació de FACTURA. Quina és la CP de LINIA?',
+   opts:['NumLinia','NumFact','(NumFact, NumLinia)','(NumFact, Data, NumLinia)'],
+   ans:2, exp:'L\'entitat feble per ID té com a CP la combinació de la CP de la propietària (NumFact) i el discriminant (NumLinia). NumLinia sols no identifica globalment una línia.'},
+  {t:'La DF CodDept → NomDept apareix a la taula EMPLEAT(DNI, Nom, CodDept, NomDept). Quin problema de normalització representa?',
+   opts:['Dependència parcial (viola 2FN)','Dependència transitiva (viola 3FN)','Valor no atòmic (viola 1FN)','No hi ha cap problema'],
+   ans:1, exp:'DNI → CodDept → NomDept és una cadena transitiva: NomDept depèn d\'un atribut no clau (CodDept). Viola la 3FN. Solució: extreure DEPARTAMENT(CodDept, NomDept).'},
+  {t:'Taula COMANDA(NumCom, CodProd, NomProd, Quantitat) — CP: (NumCom, CodProd). La DF CodProd → NomProd és:',
+   opts:['Total respecte a la CP','Parcial respecte a la CP','Transitiva','No és una DF vàlida'],
+   ans:1, exp:'CodProd és una part de la CP composta. NomProd depèn SOLS de CodProd (part de la clau), no de la CP completa → dependència parcial → viola 2FN.'},
+  {t:'Quina restricció NO es pot expressar directament com a constraint DDL (PRIMARY KEY, FOREIGN KEY, CHECK)?',
+   opts:['La data de fi ha de ser > data d\'inici','El salari ha de ser > 0','L\'email ha de tenir @','Un professor pot impartir com a màxim 4 assignatures'],
+   ans:3, exp:'Les restriccions de cardinalitat màxima finita > 1 no es poden expressar com a constraint DDL. Les altres (CHECK de data, salari > 0, format email) sí que es poden implementar amb CHECK.'}
+];
+function buildQI(data,contId,prefix){
+  const c=document.getElementById(contId);
+  data.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('${prefix}',this,${i},${j})">${o.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="${prefix}f${i}"></div>`;
+    c.appendChild(div);
+  });
+}
+buildQI(E2,'ex2-cont','G2');
+const ALL={G2:E2};
+function checkQ(grp,btn,i,choice){
+  const d=ALL[grp][i],fb=document.getElementById(grp+'f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+</script>
+</body>
+</html>
