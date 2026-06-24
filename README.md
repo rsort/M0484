@@ -1,2 +1,6 @@
-# M0484
-Apunts mòdul M0484
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="refresh" content="0; url=public_html/index.html">
+</head>
+</html>
