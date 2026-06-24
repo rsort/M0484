@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA5 · RA7 · Redis — Bases de dades · La Mercè</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+      --border:#e7e5e4;
+      --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+      --mono-bg:#1e1e2e; --mono-fg:#f38ba8;
+      --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+      --tag-bg:#fff7ed; --tag-color:#9a3412; --tag-bdr:#fed7aa;
+    }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+    .merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+
+    .site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 32px; }
+    .head-inner { max-width:960px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:60px; }
+    .brand { text-decoration:none; display:flex; flex-direction:column; }
+    .brand-mark { font-family:'DM Serif Display',serif; font-size:1.2rem; color:var(--ink); }
+    .brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+    .head-course { font-size:13px; color:var(--ink-2); }
+
+    .hero { background:var(--ink); color:#fff; padding:52px 32px 44px; }
+    .hero-inner { max-width:960px; margin:0 auto; }
+    .hero-eyebrow { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:#a8a29e; margin-bottom:10px; }
+    .hero-title { font-family:'DM Serif Display',serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:12px; display:flex; align-items:center; gap:14px; }
+    .hero-title .badge { font-family:'JetBrains Mono',monospace; font-size:.7rem; background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent-bdr); padding:3px 10px; border-radius:5px; vertical-align:middle; }
+    .hero-lead { font-size:15px; color:#d6d3d1; max-width:640px; }
+
+    .breadcrumb { max-width:960px; margin:0 auto; padding:18px 32px 0; font-size:13px; color:var(--ink-3); }
+    .breadcrumb a { color:var(--ink-2); text-decoration:none; }
+    .breadcrumb a:hover { color:var(--accent); }
+    .breadcrumb span { margin:0 6px; }
+
+    .wrap { max-width:960px; margin:0 auto; padding:0 32px 80px; }
+
+    .section { margin-top:52px; }
+    .section-label { display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent); background:var(--accent-bg); border:1px solid var(--accent-bdr); padding:3px 10px; border-radius:4px; margin-bottom:14px; }
+    .section-title { font-family:'DM Serif Display',serif; font-size:1.55rem; color:var(--ink); margin-bottom:8px; }
+    .section-desc { font-size:14px; color:var(--ink-2); max-width:680px; margin-bottom:24px; }
+    h3.subsection { font-size:1rem; font-weight:700; color:var(--ink); margin:28px 0 10px; padding-left:12px; border-left:3px solid var(--accent); }
+
+    .prose { font-size:15px; color:var(--ink-2); line-height:1.75; margin-bottom:16px; }
+    .prose strong { color:var(--ink); }
+
+    .info-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:8px; padding:18px 22px; margin-bottom:20px; }
+    .info-box ul { list-style:none; padding:0; }
+    .info-box ul li { font-size:14px; color:var(--ink-2); padding:3px 0 3px 18px; position:relative; }
+    .info-box ul li::before { content:"•"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+    .info-box .box-title { font-weight:700; font-size:14px; color:var(--accent); margin-bottom:10px; }
+
+    .code-block { background:var(--mono-bg); border-radius:8px; padding:18px 22px; margin:14px 0 20px; overflow-x:auto; }
+    .code-block pre { font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.65; color:var(--mono-fg); white-space:pre; }
+    .code-block pre .comment { color:#6c7086; font-style:italic; }
+    .code-block pre .key { color:#89dceb; }
+
+    .data-table { width:100%; border-collapse:collapse; font-size:14px; margin-bottom:20px; border-radius:8px; overflow:hidden; border:1px solid var(--border); }
+    .data-table th { background:var(--accent); color:#fff; font-weight:600; padding:10px 14px; text-align:left; font-size:13px; }
+    .data-table td { padding:9px 14px; border-bottom:1px solid var(--border); color:var(--ink-2); vertical-align:top; }
+    .data-table tr:last-child td { border-bottom:none; }
+    .data-table tr:nth-child(even) td { background:#fafaf9; }
+    .data-table code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 5px; border-radius:3px; color:var(--accent); }
+
+    code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+
+    .tags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+    .tag { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--tag-bg); color:var(--tag-color); border:1px solid var(--tag-bdr); padding:3px 9px; border-radius:4px; font-weight:500; }
+
+    /* Type cards for data structures */
+    .type-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin-bottom:24px; }
+    .type-card { background:var(--card); border:1.5px solid var(--border); border-radius:10px; padding:18px 20px; }
+    .type-card:hover { border-color:var(--accent); }
+    .type-card-head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .type-icon { font-size:1.4rem; }
+    .type-name { font-weight:700; font-size:15px; color:var(--ink); }
+    .type-desc { font-size:13px; color:var(--ink-2); line-height:1.55; margin-bottom:10px; }
+    .type-example { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent-bdr); padding:6px 10px; border-radius:5px; }
+
+    .site-foot { border-top:1px solid var(--border); padding:24px 32px; margin-top:80px; }
+    .foot-inner { max-width:960px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+    .back-link { display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; margin-top:40px; }
+    .back-link:hover { text-decoration:underline; }
+
+    @media (max-width:600px) {
+      .hero { padding:36px 20px; }
+      .wrap { padding:0 20px 60px; }
+      .site-head { padding:0 20px; }
+      .breadcrumb { padding:14px 20px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="merce-top"></div>
+
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">La Mercè</span>
+      <span class="brand-sub">Formació Professional</span>
+    </a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">AEA5 · RA7 · Criteris 7.3–7.5</p>
+    <h1 class="hero-title">
+      ⚡ Redis
+      <span class="badge">NoSQL · Clau-Valor</span>
+    </h1>
+    <p class="hero-lead">Base de dades NoSQL en memòria: estructura clau-valor, tipus de dades especialitzats i operacions bàsiques per a caché, sessions i temps real.</p>
+  </div>
+</section>
+
+<div class="breadcrumb">
+  <a href="index.html">MP0484 Bases de dades</a>
+  <span>›</span>
+  <a href="index.html#aea5">AEA5 — NoSQL</a>
+  <span>›</span>
+  Redis
+</div>
+
+<main class="wrap">
+
+  <!-- 1. QUÈ ÉS REDIS -->
+  <section class="section">
+    <span class="section-label">§ 1</span>
+    <h2 class="section-title">Què és Redis?</h2>
+
+    <p class="prose"><strong>Redis</strong> (<em>Remote Dictionary Server</em>) és una base de dades NoSQL de tipus <strong>clau-valor</strong> que emmagatzema les dades completament en memòria RAM. Va ser creada per Salvatore Sanfilippo el 2009 i és avui una de les bases de dades més ràpides del món, emprada per empreses com Twitter, GitHub, Stack Overflow i Airbnb.</p>
+    <p class="prose">A diferència de MongoDB (que emmagatzema documents JSON al disc), Redis prioritza la <strong>velocitat màxima d'accés</strong> emmagatzemant totes les dades directament a la memòria principal.</p>
+
+    <div class="info-box">
+      <p class="box-title">Característiques principals</p>
+      <ul>
+        <li>Emmagatzematge <strong>100% en memòria RAM</strong>: accés en microsegons.</li>
+        <li>Suporta múltiples <strong>estructures de dades especialitzades</strong> (strings, llistes, sets, hashes, etc.).</li>
+        <li><strong>Persistència opcional</strong>: pot guardar una còpia de les dades al disc periòdicament.</li>
+        <li>Ideal per a <strong>caché</strong>, cues de missatgeria, comptadors en temps real i sessions.</li>
+        <li>Open-source i multi-plataforma.</li>
+        <li>8a posició al rànquing global DB-Engines (maig 2026) amb puntuació de 147,63.</li>
+      </ul>
+    </div>
+
+    <h3 class="subsection">Redis vs. MongoDB</h3>
+    <table class="data-table">
+      <thead><tr><th>Característica</th><th>MongoDB</th><th>Redis</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Model de dades</strong></td><td>Documental (JSON/BSON)</td><td>Clau-Valor</td></tr>
+        <tr><td><strong>Emmagatzematge</strong></td><td>Al disc (persistent)</td><td>En memòria RAM</td></tr>
+        <tr><td><strong>Velocitat</strong></td><td>Alta</td><td>Molt alta (microsegons)</td></tr>
+        <tr><td><strong>Persistència</strong></td><td>Sí, per defecte</td><td>Opcional (RDB/AOF)</td></tr>
+        <tr><td><strong>Casos típics</strong></td><td>Apps web, APIs, catàlegs</td><td>Caché, comptadors, cues</td></tr>
+        <tr><td><strong>Consultes complexes</strong></td><td>Sí (MQL complet)</td><td>Limitades (per clau)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 2. CASOS D'ÚS -->
+  <section class="section">
+    <span class="section-label">§ 2</span>
+    <h2 class="section-title">Casos d'ús principals</h2>
+
+    <div class="type-grid">
+      <div class="type-card">
+        <div class="type-card-head"><span class="type-icon">⏱</span><span class="type-name">Real-time Data Store</span></div>
+        <p class="type-desc">Emmagatzematge de dades en temps real: marcadors en viu, sistemes de votació, anàlisi de fluxos de dades amb latència mínima.</p>
+      </div>
+      <div class="type-card">
+        <div class="type-card-head"><span class="type-icon">📨</span><span class="type-name">Streaming &amp; Messaging</span></div>
+        <p class="type-desc">Cues de missatgeria i comunicació entre microserveis. Permet implementar patrons Pub/Sub i processing pipelines.</p>
+      </div>
+      <div class="type-card">
+        <div class="type-card-head"><span class="type-icon">💾</span><span class="type-name">Caching &amp; Session Storage</span></div>
+        <p class="type-desc">El cas d'ús més habitual: emmagatzemar resultats de consultes costoses i gestionar sessions d'usuari per servir-les ràpidament.</p>
+      </div>
+    </div>
+
+    <h3 class="subsection">Exemple típic de caché</h3>
+    <table class="data-table">
+      <thead><tr><th>Escenari</th><th>Flux</th><th>Temps</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Sense Redis</strong></td><td>Client → API → Base de Dades → API → Client</td><td>~15 s</td></tr>
+        <tr><td><strong>1a petició amb Redis</strong></td><td>Client → API → BD → Redis (guarda) → API → Client</td><td>~15 s</td></tr>
+        <tr><td><strong>2a+ peticions</strong></td><td>Client → API → Redis (serveix) → API → Client</td><td>~0,5 s</td></tr>
+      </tbody>
+    </table>
+    <p class="prose">A partir de la 2a petició, Redis serveix les dades directament des de memòria, sense accés HTTP a servidors externs ni consultes SQL. El procés pot ser fins a <strong>30 vegades més ràpid</strong>.</p>
+  </section>
+
+  <!-- 3. ESTRUCTURES DE DADES -->
+  <section class="section">
+    <span class="section-label">§ 3</span>
+    <h2 class="section-title">Estructures de dades</h2>
+    <p class="prose">Redis no només guarda dades simples: permet treballar amb <strong>8 estructures de dades especialitzades</strong> segons la necessitat del problema.</p>
+
+    <h3 class="subsection">1. Strings</h3>
+    <p class="prose">El tipus més bàsic. Pot emmagatzemar text, números o dades binàries. Màxim 512 MB per valor.</p>
+    <div class="code-block"><pre>SET nom "Laura"
+SET edat 23
+GET nom                    <span class="comment">// ➜ "Laura"</span>
+EXISTS edat                <span class="comment">// ➜ 1 (existeix)</span>
+STRLEN nom                 <span class="comment">// ➜ 5 (caràcters)</span>
+DEL nom                    <span class="comment">// Elimina la clau</span>
+
+<span class="comment">// Exemple JoinApp</span>
+SET joinapp:titol "JoinApp - Connecta amb la teva comunitat"</pre></div>
+
+    <h3 class="subsection">2. Lists (Llistes ordenades)</h3>
+    <p class="prose">Llistes de valors ordenats (similar als arrays). Permet afegir elements al principi (<code>LPUSH</code>) o al final (<code>RPUSH</code>). Admeten duplicats.</p>
+    <div class="code-block"><pre>LPUSH tasques "Estudiar"
+RPUSH tasques "Fer exercici Redis"
+LRANGE tasques 0 -1        <span class="comment">// ➜ ["Estudiar", "Fer exercici Redis"]</span>
+LLEN tasques               <span class="comment">// ➜ 2</span>
+LPOP tasques               <span class="comment">// Treu i retorna el primer element</span>
+RPOP tasques               <span class="comment">// Treu i retorna l'últim element</span>
+
+<span class="comment">// Exemple JoinApp: historial d'activitats d'un usuari</span>
+RPUSH usuari:42:historial "Ruta pel Montseny"
+RPUSH usuari:42:historial "Ciclisme Garraf"</pre></div>
+
+    <h3 class="subsection">3. Sets (Conjunts)</h3>
+    <p class="prose">Col·lecció no ordenada d'elements únics. No permet duplicats. Perfecte per emmagatzemar etiquetes o usuaris únics.</p>
+    <div class="code-block"><pre>SADD alumnes "Laura"
+SADD alumnes "Joan"
+SADD alumnes "Laura"       <span class="comment">// Ignorat: ja existeix</span>
+SMEMBERS alumnes           <span class="comment">// ➜ {Laura, Joan}</span>
+SCARD alumnes              <span class="comment">// ➜ 2</span>
+SISMEMBER alumnes "Joan"   <span class="comment">// ➜ 1 (existeix)</span>
+SREM alumnes "Joan"        <span class="comment">// Elimina Joan del set</span>
+
+<span class="comment">// Exemple JoinApp: assignatures del cicle (sense duplicats)</span>
+SADD cicle:daw:assignatures "Bases de Dades" "Programació" "Sistemes"</pre></div>
+
+    <h3 class="subsection">4. Sorted Sets (Conjunts ordenats)</h3>
+    <p class="prose">Com els sets, però cada element té una puntuació numèrica (<em>score</em>) que defineix el seu ordre. Ideal per a rankings i sistemes de puntuació.</p>
+    <div class="code-block"><pre>ZADD ranking 100 "Laura"
+ZADD ranking 150 "Joan"
+ZADD ranking 75  "Maria"
+ZRANGE ranking 0 -1 WITHSCORES   <span class="comment">// ➜ Maria(75) Laura(100) Joan(150)</span>
+ZREVRANGE ranking 0 -1 WITHSCORES <span class="comment">// Ordre descendent</span>
+ZSCORE ranking "Joan"             <span class="comment">// ➜ 150</span>
+ZRANK ranking "Laura"             <span class="comment">// ➜ 1 (posició, comença per 0)</span>
+ZCARD ranking                     <span class="comment">// ➜ 3</span>
+
+<span class="comment">// Exemple JoinApp: ranking d'activitats per participants</span>
+ZADD activitats:ranking 342 "Ruta Montserrat"
+ZADD activitats:ranking 127 "Kayak Port Olímpic"</pre></div>
+
+    <h3 class="subsection">5. Hashes (Diccionaris)</h3>
+    <p class="prose">Estructura de clau-valor dins d'una clau. Permet representar objectes (usuaris, productes) de manera similar a un JSON pla. Molt eficient per a entitats amb múltiples camps.</p>
+    <div class="code-block"><pre>HSET usuari:1 nom "Laura" edat "23" hobby "senderisme"
+HGET usuari:1 nom           <span class="comment">// ➜ "Laura"</span>
+HGETALL usuari:1            <span class="comment">// ➜ nom:Laura, edat:23, hobby:senderisme</span>
+HKEYS usuari:1              <span class="comment">// ➜ nom, edat, hobby</span>
+HVALS usuari:1              <span class="comment">// ➜ Laura, 23, senderisme</span>
+HEXISTS usuari:1 edat       <span class="comment">// ➜ 1 (existeix)</span>
+HLEN usuari:1               <span class="comment">// ➜ 3 (nombre de camps)</span>
+
+<span class="comment">// Exemple JoinApp: dades d'un esdeveniment</span>
+HSET event:101 nom "Trail Tibidabo" ubicacio "Barcelona" participants "48"</pre></div>
+
+    <h3 class="subsection">6. Bitmaps</h3>
+    <p class="prose">Emmagatzema bits (0 o 1) en posicions específiques. Extremadament eficient en memòria per fer seguiment binari (sí/no) de grans quantitats d'elements.</p>
+    <div class="code-block"><pre><span class="comment">// Posició = ID alumne, 1=present, 0=absent</span>
+SETBIT assistencia:avui 4 1  <span class="comment">// Alumne 4 present</span>
+SETBIT assistencia:avui 7 1  <span class="comment">// Alumne 7 present</span>
+GETBIT assistencia:avui 4    <span class="comment">// ➜ 1 (present)</span>
+GETBIT assistencia:avui 2    <span class="comment">// ➜ 0 (absent)</span>
+BITCOUNT assistencia:avui    <span class="comment">// ➜ 2 (alumnes presents)</span></pre></div>
+
+    <h3 class="subsection">7. HyperLogLogs</h3>
+    <p class="prose">Estructura probabilística per comptar elements únics usant molt poca memòria. No emmagatzema els elements reals, sinó una estimació del nombre d'elements únics (precisió ~0,81%).</p>
+    <div class="code-block"><pre>PFADD visites "laura" "joan" "maria"
+PFADD visites "laura"          <span class="comment">// Duplicat: ignorat</span>
+PFADD visites "pau"
+PFCOUNT visites                <span class="comment">// ➜ 4 (estimació d'únics)</span>
+
+<span class="comment">// Exemple JoinApp: usuaris únics connectats</span>
+PFADD assignatura:daw:usuaris "anna" "marc" "laura"
+PFCOUNT assignatura:daw:usuaris</pre></div>
+
+    <h3 class="subsection">8. Streams</h3>
+    <p class="prose">Estructura de dades per a esdeveniments o missatges ordenats en el temps. Similar a un log <em>append-only</em>: permet que múltiples consumidors llegeixin les dades a ritmes diferents.</p>
+    <div class="code-block"><pre>XADD logs * event "login" user "anna"
+<span class="comment">// * = Redis genera un ID automàtic basat en el temps</span>
+
+XRANGE logs - +              <span class="comment">// Totes les entrades del stream</span>
+XREVRANGE logs + - COUNT 5   <span class="comment">// Les últimes 5 entrades</span>
+XREAD COUNT 2 STREAMS logs 0 <span class="comment">// Llegeix els primers 2</span>
+XLEN logs                    <span class="comment">// Nombre total d'entrades</span>
+
+<span class="comment">// Exemple JoinApp: avisos de l'assignatura</span>
+XADD avis:daw * tipus "examen" contingut "MongoDB - dimecres 10:00"
+XRANGE avis:daw - +          <span class="comment">// Veure tots els avisos</span></pre></div>
+  </section>
+
+  <!-- 4. GESTIÓ GENERAL -->
+  <section class="section">
+    <span class="section-label">§ 4</span>
+    <h2 class="section-title">Comandes de gestió general</h2>
+
+    <div class="code-block"><pre>KEYS *                     <span class="comment">// Llista totes les claus (evitar en producció)</span>
+SCAN 0                     <span class="comment">// Alternativa segura a KEYS</span>
+TYPE mykey                 <span class="comment">// Tipus de dada emmagatzemada</span>
+
+EXPIRE mykey 60            <span class="comment">// La clau caduca en 60 segons</span>
+TTL mykey                  <span class="comment">// Temps restant fins a caducar</span>
+PERSIST mykey              <span class="comment">// Elimina la caducitat (fa la clau permanent)</span>
+
+DEL clau1 clau2 clau3      <span class="comment">// Elimina múltiples claus</span>
+RENAME mykey nounom        <span class="comment">// Reanomena la clau</span>
+
+<span class="comment">// Exemple: sessió d'usuari amb caducitat de 30 minuts</span>
+SET sessio:user_42 "token_abc123"
+EXPIRE sessio:user_42 1800  <span class="comment">// 30 min = 1800 s</span></pre></div>
+  </section>
+
+  <!-- 5. REFERÈNCIA RÀPIDA -->
+  <section class="section">
+    <span class="section-label">§ 5</span>
+    <h2 class="section-title">Referència ràpida per estructura</h2>
+    <div class="tags">
+      <span class="tag">redis-cli</span>
+      <span class="tag">clau-valor</span>
+      <span class="tag">en memòria</span>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Estructura</th><th>Comandes principals</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Strings</strong></td><td><code>SET</code> <code>GET</code> <code>EXISTS</code> <code>DEL</code> <code>STRLEN</code> <code>INCR</code> <code>DECR</code></td></tr>
+        <tr><td><strong>Lists</strong></td><td><code>LPUSH</code> <code>RPUSH</code> <code>LRANGE</code> <code>LLEN</code> <code>LPOP</code> <code>RPOP</code></td></tr>
+        <tr><td><strong>Sets</strong></td><td><code>SADD</code> <code>SMEMBERS</code> <code>SCARD</code> <code>SISMEMBER</code> <code>SREM</code> <code>SUNION</code> <code>SINTER</code></td></tr>
+        <tr><td><strong>Sorted Sets</strong></td><td><code>ZADD</code> <code>ZRANGE</code> <code>ZREVRANGE</code> <code>ZSCORE</code> <code>ZRANK</code> <code>ZCARD</code> <code>ZREM</code></td></tr>
+        <tr><td><strong>Hashes</strong></td><td><code>HSET</code> <code>HGET</code> <code>HGETALL</code> <code>HKEYS</code> <code>HVALS</code> <code>HEXISTS</code> <code>HLEN</code> <code>HDEL</code></td></tr>
+        <tr><td><strong>Bitmaps</strong></td><td><code>SETBIT</code> <code>GETBIT</code> <code>BITCOUNT</code> <code>BITPOS</code></td></tr>
+        <tr><td><strong>HyperLogLogs</strong></td><td><code>PFADD</code> <code>PFCOUNT</code> <code>PFMERGE</code></td></tr>
+        <tr><td><strong>Streams</strong></td><td><code>XADD</code> <code>XRANGE</code> <code>XREVRANGE</code> <code>XREAD</code> <code>XLEN</code></td></tr>
+        <tr><td><strong>General</strong></td><td><code>KEYS</code> <code>SCAN</code> <code>TYPE</code> <code>EXPIRE</code> <code>TTL</code> <code>PERSIST</code> <code>DEL</code> <code>RENAME</code></td></tr>
+      </tbody>
+    </table>
+
+    <a class="back-link" href="index.html">← Tornar a MP0484 Bases de dades</a>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+
+</body>
+</html>

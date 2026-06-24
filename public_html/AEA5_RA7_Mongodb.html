@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA5 · RA7 · MongoDB — Bases de dades · La Mercè</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+      --border:#e7e5e4;
+      --accent:#166534; --accent-mid:#15803d; --accent-bg:#f0fdf4; --accent-bdr:#bbf7d0;
+      --mono-bg:#1e1e2e; --mono-fg:#a6e3a1;
+      --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+      --tag-bg:#f0fdf4; --tag-color:#166534; --tag-bdr:#bbf7d0;
+    }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+    .merce-top { height:5px; background:linear-gradient(90deg,#166534 0%,#15803d 50%,#166534 100%); }
+
+    /* HEADER */
+    .site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 32px; }
+    .head-inner { max-width:960px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:60px; }
+    .brand { text-decoration:none; display:flex; flex-direction:column; }
+    .brand-mark { font-family:'DM Serif Display',serif; font-size:1.2rem; color:var(--ink); }
+    .brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+    .head-course { font-size:13px; color:var(--ink-2); }
+
+    /* HERO */
+    .hero { background:var(--ink); color:#fff; padding:52px 32px 44px; }
+    .hero-inner { max-width:960px; margin:0 auto; }
+    .hero-eyebrow { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:#a8a29e; margin-bottom:10px; }
+    .hero-title { font-family:'DM Serif Display',serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:12px; display:flex; align-items:center; gap:14px; }
+    .hero-title .badge { font-family:'JetBrains Mono',monospace; font-size:.7rem; background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent-bdr); padding:3px 10px; border-radius:5px; vertical-align:middle; }
+    .hero-lead { font-size:15px; color:#d6d3d1; max-width:640px; }
+
+    /* NAV BREADCRUMB */
+    .breadcrumb { max-width:960px; margin:0 auto; padding:18px 32px 0; font-size:13px; color:var(--ink-3); }
+    .breadcrumb a { color:var(--ink-2); text-decoration:none; }
+    .breadcrumb a:hover { color:var(--accent); }
+    .breadcrumb span { margin:0 6px; }
+
+    /* LAYOUT */
+    .wrap { max-width:960px; margin:0 auto; padding:0 32px 80px; }
+
+    /* SECTION */
+    .section { margin-top:52px; }
+    .section-label { display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent); background:var(--accent-bg); border:1px solid var(--accent-bdr); padding:3px 10px; border-radius:4px; margin-bottom:14px; }
+    .section-title { font-family:'DM Serif Display',serif; font-size:1.55rem; color:var(--ink); margin-bottom:8px; }
+    .section-desc { font-size:14px; color:var(--ink-2); max-width:680px; margin-bottom:24px; }
+    h3.subsection { font-size:1rem; font-weight:700; color:var(--ink); margin:28px 0 10px; padding-left:12px; border-left:3px solid var(--accent); }
+
+    /* PROSE */
+    .prose { font-size:15px; color:var(--ink-2); line-height:1.75; margin-bottom:16px; }
+    .prose strong { color:var(--ink); }
+
+    /* INFO BOX */
+    .info-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:8px; padding:18px 22px; margin-bottom:20px; }
+    .info-box p { font-size:14px; color:var(--ink-2); margin-bottom:6px; }
+    .info-box ul { list-style:none; padding:0; }
+    .info-box ul li { font-size:14px; color:var(--ink-2); padding:3px 0 3px 18px; position:relative; }
+    .info-box ul li::before { content:"•"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+    .info-box .box-title { font-weight:700; font-size:14px; color:var(--accent); margin-bottom:10px; }
+
+    /* CODE BLOCK */
+    .code-block { background:var(--mono-bg); border-radius:8px; padding:18px 22px; margin:14px 0 20px; overflow-x:auto; }
+    .code-block pre { font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.65; color:var(--mono-fg); white-space:pre; }
+    .code-block pre .comment { color:#6c7086; font-style:italic; }
+    .code-block pre .key { color:#89dceb; }
+    .code-block pre .val { color:#f9e2af; }
+
+    /* TABLE */
+    .data-table { width:100%; border-collapse:collapse; font-size:14px; margin-bottom:20px; border-radius:8px; overflow:hidden; border:1px solid var(--border); }
+    .data-table th { background:var(--accent); color:#fff; font-weight:600; padding:10px 14px; text-align:left; font-size:13px; }
+    .data-table td { padding:9px 14px; border-bottom:1px solid var(--border); color:var(--ink-2); vertical-align:top; }
+    .data-table tr:last-child td { border-bottom:none; }
+    .data-table tr:nth-child(even) td { background:#fafaf9; }
+    .data-table code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 5px; border-radius:3px; color:var(--accent); }
+
+    /* TIMELINE */
+    .timeline { list-style:none; padding:0; margin-bottom:20px; }
+    .timeline li { display:flex; gap:20px; padding:14px 0; border-bottom:1px solid var(--border); }
+    .timeline li:last-child { border-bottom:none; }
+    .tl-year { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:var(--accent); min-width:48px; padding-top:2px; }
+    .tl-text { font-size:14px; color:var(--ink-2); line-height:1.6; }
+
+    /* INLINE CODE */
+    code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+
+    /* FOOTER */
+    .site-foot { border-top:1px solid var(--border); padding:24px 32px; margin-top:80px; }
+    .foot-inner { max-width:960px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+    .back-link { display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; margin-top:40px; }
+    .back-link:hover { text-decoration:underline; }
+
+    /* TAG PILLS */
+    .tags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+    .tag { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--tag-bg); color:var(--tag-color); border:1px solid var(--tag-bdr); padding:3px 9px; border-radius:4px; font-weight:500; }
+
+    @media (max-width:600px) {
+      .hero { padding:36px 20px; }
+      .wrap { padding:0 20px 60px; }
+      .site-head { padding:0 20px; }
+      .breadcrumb { padding:14px 20px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="merce-top"></div>
+
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">La Mercè</span>
+      <span class="brand-sub">Formació Professional</span>
+    </a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">AEA5 · RA7 · Criteris 7.1–7.5</p>
+    <h1 class="hero-title">
+      🍃 MongoDB
+      <span class="badge">NoSQL · Documental</span>
+    </h1>
+    <p class="hero-lead">Bases de dades no relacionals orientades a documents: estructura BSON, col·leccions, consultes MQL i modelat de relacions.</p>
+  </div>
+</section>
+
+<div class="breadcrumb">
+  <a href="index.html">MP0484 Bases de dades</a>
+  <span>›</span>
+  <a href="index.html#aea5">AEA5 — NoSQL</a>
+  <span>›</span>
+  MongoDB
+</div>
+
+<main class="wrap">
+
+  <!-- 1. CONTEXT -->
+  <section class="section">
+    <span class="section-label">§ 1</span>
+    <h2 class="section-title">Context i necessitat de les BD NoSQL</h2>
+    <p class="section-desc">Per entendre MongoDB cal entendre per què les bases de dades relacionals tradicionals van deixar de ser suficients.</p>
+
+    <h3 class="subsection">Els grans canvis tecnològics dels darrers 25 anys</h3>
+    <p class="prose">L'explosió d'Internet, les xarxes socials i els dispositius mòbils ha generat un creixement exponencial en el volum, la varietat i la velocitat de les dades. Plataformes com Facebook, Instagram o Twitter gestionen centenars de milions d'usuaris generant dades constantment i de manera no estructurada.</p>
+
+    <div class="info-box">
+      <p class="box-title">Dades que es generen cada minut (2015, en creixement constant)</p>
+      <ul>
+        <li>YouTube: 300 hores de vídeo pujades</li>
+        <li>Facebook: 4.166.667 publicacions</li>
+        <li>Twitter: 347.222 tweets enviats</li>
+        <li>WhatsApp: 347.222 fotos compartides</li>
+        <li>Tinder: 590.278 swipes d'usuaris</li>
+        <li>App Store: 51.000 descàrregues d'aplicacions</li>
+      </ul>
+    </div>
+
+    <p class="prose">Avui, la població total d'Internet supera els <strong>5.560 milions de persones</strong> (2025), amb una projecció de 6.120 milions el 2026. Cada any es creen aproximadament <strong>300 zettabytes</strong> de dades — l'equivalent a 6.000 milions de mòbils de 128 GB completament plens cada dia.</p>
+
+    <h3 class="subsection">Limitacions de les BD relacionals davant el Big Data</h3>
+    <div class="info-box">
+      <ul>
+        <li><strong>Escalabilitat vertical:</strong> només creixen afegint maquinari més potent al mateix servidor.</li>
+        <li><strong>Esquema rígid:</strong> totes les files d'una taula han de tenir les mateixes columnes.</li>
+        <li><strong>Dificultat amb dades no estructurades:</strong> imatges, textos lliures, JSON anidats.</li>
+        <li><strong>Rendiment sota alta concurrència:</strong> milions d'usuaris simultanis saturen el sistema.</li>
+        <li><strong>Cost elevat</strong> de llicències i infraestructura en solucions tradicionals.</li>
+      </ul>
+    </div>
+
+    <h3 class="subsection">El Big Data: les 5 (o 7) Vs</h3>
+    <p class="prose">El Big Data és el sector de IT que fa referència a grans conjunts de dades que, per la velocitat a la qual es generen, la capacitat per tractar-los i els múltiples formats i fonts, és necessari processar-los amb mecanismes diferents als tradicionals. (ONU, 2012)</p>
+    <table class="data-table">
+      <thead><tr><th>Dimensió</th><th>Descripció</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Volum</strong></td><td>Gran quantitat de dades, difícil de processar amb mètodes convencionals.</td></tr>
+        <tr><td><strong>Velocitat</strong></td><td>Les dades es generen i emmagatzemen a una velocitat sense precedents.</td></tr>
+        <tr><td><strong>Varietat</strong></td><td>Dades de múltiples fonts: estructurades, semi-estructurades i no estructurades.</td></tr>
+        <tr><td><strong>Veracitat</strong></td><td>Cal assegurar-se que les dades recollides tinguin validesa i siguin fiables.</td></tr>
+        <tr><td><strong>Valor</strong></td><td>Extreure informació útil i accionable és l'objectiu final del tractament de dades.</td></tr>
+        <tr><td><strong>Viabilitat</strong></td><td>Capacitat d'interpretació i ús pràctic de la informació obtinguda.</td></tr>
+        <tr><td><strong>Visualització</strong></td><td>Representació gràfica i comprensible per a la presa de decisions.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 2. NOSQL -->
+  <section class="section">
+    <span class="section-label">§ 2</span>
+    <h2 class="section-title">Introducció a les BD NoSQL</h2>
+
+    <p class="prose">Les bases de dades NoSQL (<em>Not Only SQL</em>) són sistemes de gestió de dades que difereixen del model clàssic relacional. Sorgeixen com a resposta a les limitacions d'escala i flexibilitat davant el Big Data.</p>
+
+    <div class="info-box">
+      <p class="box-title">Característiques principals</p>
+      <ul>
+        <li>No utilitzen SQL com a llenguatge de consulta principal.</li>
+        <li>Les dades no requereixen estructures fixes com taules amb columnes predefinides.</li>
+        <li>No garanteixen consistència plena (els canvis es propaguen als servidors amb cert retard).</li>
+        <li>Escalen <strong>horitzontalment</strong>: augmentant el nombre de servidors (sharding).</li>
+        <li>Generalment open-source i amb menors costos d'infraestructura.</li>
+      </ul>
+    </div>
+
+    <h3 class="subsection">Tipus de BD NoSQL</h3>
+    <table class="data-table">
+      <thead><tr><th>Tipus</th><th>Descripció</th><th>Exemples</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Clau-Valor</strong></td><td>Emmagatzema parells clau→valor. Molt ràpid per a lectures simples.</td><td>Redis, DynamoDB</td></tr>
+        <tr><td><strong>Documental</strong></td><td>Emmagatzema documents JSON/BSON. Flexible i versàtil.</td><td>MongoDB, CouchDB</td></tr>
+        <tr><td><strong>Orientada a Columnes</strong></td><td>Organitza les dades per columnes. Eficient per a consultes analítiques.</td><td>Cassandra, HBase</td></tr>
+        <tr><td><strong>Grafs</strong></td><td>Modelitza relacions complexes entre entitats com a nodes i arestes.</td><td>Neo4j, InfiniteGraph</td></tr>
+      </tbody>
+    </table>
+
+    <p class="prose">Segons el rànquing de <strong>DB-Engines</strong> (maig 2026, 434 sistemes), MongoDB és la 5a base de dades més popular del món i la líder absoluta entre les NoSQL documentals, amb una puntuació de 384,65.</p>
+  </section>
+
+  <!-- 3. QUÈ ÉS MONGODB -->
+  <section class="section">
+    <span class="section-label">§ 3</span>
+    <h2 class="section-title">MongoDB: la BD documental per excel·lència</h2>
+
+    <h3 class="subsection">Origen i història</h3>
+    <ul class="timeline">
+      <li><span class="tl-year">2007</span><span class="tl-text">L'empresa <strong>10gen</strong> la desenvolupa mentre construïa una plataforma PaaS (<em>Platform as a Service</em>), similar a Google App Engine.</span></li>
+      <li><span class="tl-year">2009</span><span class="tl-text">MongoDB és llançat com a producte públic sota llicència de codi obert <strong>AGPL</strong>.</span></li>
+      <li><span class="tl-year">2011</span><span class="tl-text">Es llança la versió 1.4, considerada la primera versió llesta per a producció.</span></li>
+      <li><span class="tl-year">2025</span><span class="tl-text">MongoDB es troba a la versió <strong>8.0.x</strong> i és la BD NoSQL amb major popularitat mundial.</span></li>
+    </ul>
+
+    <h3 class="subsection">Definició</h3>
+    <p class="prose">MongoDB és un sistema de base de dades no relacional (NoSQL) <strong>open-source orientat a documents</strong>. Emmagatzema dades en un format basat en JSON anomenat <strong>BSON</strong> (Binary JSON), que permet representar estructures de dades complexes de manera natural.</p>
+    <p class="prose">El seu nom prové de la paraula anglesa <em>"humongous"</em> (enormement gran), reflectint la seva capacitat per gestionar grans volums de dades.</p>
+
+    <div class="info-box">
+      <p class="box-title">Principals avantatges</p>
+      <ul>
+        <li><strong>Multi-plataforma:</strong> disponible a Windows, macOS i Linux.</li>
+        <li><strong>Alt rendiment:</strong> consultes ràpides gràcies a índexs i el format BSON.</li>
+        <li><strong>Alta disponibilitat:</strong> suport natiu per a rèpliques (Replica Sets).</li>
+        <li><strong>Molt escalable:</strong> sharding automàtic entre múltiples servidors.</li>
+        <li><strong>Esquema flexible:</strong> cada document pot tenir una estructura diferent.</li>
+        <li><strong>Integració natural</strong> amb JavaScript i entorns web moderns.</li>
+      </ul>
+    </div>
+
+    <h3 class="subsection">Quan utilitzar MongoDB?</h3>
+    <div class="info-box">
+      <ul>
+        <li>L'aplicació tindrà un creixement ràpid i necessita escalar horitzontalment.</li>
+        <li>Es treballa amb servidors al núvol (cloud) i es necessita distribució geogràfica.</li>
+        <li>Es vol muntar una base de dades de manera àgil i sense esquema rígid previ.</li>
+        <li>Les dades no tindran sempre la mateixa estructura (perfils d'usuari, catàlegs, logs).</li>
+        <li>La informació és molt dinàmica i canvia freqüentment en la seva forma.</li>
+        <li>Molts usuaris accediran al sistema simultàniament (xarxes socials, e-commerce).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. ESTRUCTURA -->
+  <section class="section">
+    <span class="section-label">§ 4</span>
+    <h2 class="section-title">Estructura i model de dades</h2>
+
+    <h3 class="subsection">Jerarquia: Servidor → BD → Col·leccions → Documents</h3>
+    <table class="data-table">
+      <thead><tr><th>SQL (Relacional)</th><th>MongoDB (Documental)</th></tr></thead>
+      <tbody>
+        <tr><td>database</td><td>database</td></tr>
+        <tr><td>table (taula)</td><td>collection (col·lecció)</td></tr>
+        <tr><td>row (fila)</td><td>document (BSON)</td></tr>
+        <tr><td>column (columna)</td><td>field (camp)</td></tr>
+        <tr><td>JOIN</td><td>Embedded document / <code>$lookup</code></td></tr>
+        <tr><td>PRIMARY KEY</td><td><code>_id</code> (autogenerat)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection">Documents BSON</h3>
+    <p class="prose">Un document és la unitat bàsica d'emmagatzematge. És un conjunt de parells clau-valor que representa una entitat del món real. Els valors poden ser <code>String</code>, <code>Number</code>, <code>Array</code>, <code>Date</code>, <code>Boolean</code> o <code>Object</code>.</p>
+    <div class="code-block"><pre><span class="comment">// Exemple de document d'un usuari de JoinApp</span>
+{
+  "_id":        ObjectId("64a7f3b2c8d9e0f1a2b3c4d5"),
+  "nom":        "Anna García",
+  "user":       "anna_garcia",
+  "edat":       28,
+  "hobby":      "senderisme",
+  "correu":     "anna@joinapp.cat",
+  "estat_civil":"soltera",
+  "fills":      0,
+  "data_reg":   ISODate("2024-03-15T10:30:00Z")
+}</pre></div>
+
+    <h3 class="subsection">Col·leccions</h3>
+    <p class="prose">Les col·leccions representen un conjunt de documents d'una mateixa entitat. A diferència de les taules SQL, els documents d'una mateixa col·lecció poden tenir camps completament independents entre ells.</p>
+
+    <h3 class="subsection">Modelat de relacions: documents incrustats</h3>
+    <p class="prose">Quan una entitat relacionada s'accedeix sempre conjuntament amb l'entitat principal, la millor opció és incrustar-la dins el mateix document (una sola consulta ho recupera tot).</p>
+    <div class="code-block"><pre><span class="comment">// Relació 1:1 amb document incrustat</span>
+{
+  "_id":  "u0001",
+  "nom":  "Joan Martí",
+  "adreca": {
+    "carrer":      "Carrer Major, 15",
+    "ciutat":      "Barcelona",
+    "codi_postal": "08001"
+  }
+}</pre></div>
+
+    <h3 class="subsection">Modelat de relacions: documents referenciats</h3>
+    <p class="prose">Quan la relació pot créixer molt (1:N) o quan les dades relacionades s'accedeixen independentment, és millor emmagatzemar una referència (<code>_id</code>) a l'altre document.</p>
+    <div class="code-block"><pre><span class="comment">// Relació 1:N amb referència — col·lecció 'llibres'</span>
+{
+  "_id":       987654321,
+  "titol":     "MongoDB: The Definitive Guide",
+  "autor":     ["K. Chodorow", "M. Dirolf"],
+  "pagines":   216,
+  "id_editor": "oreilly"   <span class="comment">// Referència a col·lecció 'editors'</span>
+}</pre></div>
+  </section>
+
+  <!-- 5. ÚS -->
+  <section class="section">
+    <span class="section-label">§ 5</span>
+    <h2 class="section-title">Com funciona: instal·lació i ús</h2>
+
+    <h3 class="subsection">Components principals</h3>
+    <table class="data-table">
+      <thead><tr><th>Component</th><th>Descripció</th></tr></thead>
+      <tbody>
+        <tr><td><strong>MongoDB Server</strong> (<code>mongod</code>)</td><td>Motor de la BD. Emmagatzema les dades, gestiona col·leccions i documents, i escolta connexions. S'executa en segon pla com a servei.</td></tr>
+        <tr><td><strong>MongoDB Compass</strong></td><td>Interfície gràfica oficial. Permet veure BD, crear col·leccions, inserir i consultar documents i analitzar l'esquema (Schema). Ideal per a principiants.</td></tr>
+        <tr><td><strong>MongoDB Shell</strong> (<code>mongosh</code>)</td><td>Consola de comandes. Permet escriure instruccions MQL directament. Més potent per a automatitzar tasques i fer consultes complexes.</td></tr>
+      </tbody>
+    </table>
+
+    <p class="prose">MongoDB té el seu propi llenguatge de consulta i manipulació d'informació, <strong>MQL</strong> (MongoDB Query Language), basat en JavaScript amb lleugeres diferències.</p>
+
+    <h3 class="subsection">Gestió de bases de dades i col·leccions</h3>
+    <div class="code-block"><pre>mongod                         <span class="comment">// Iniciar el servidor</span>
+mongosh                        <span class="comment">// Iniciar el client (Shell)</span>
+
+use joinapp                    <span class="comment">// Crear o seleccionar una BD</span>
+db                             <span class="comment">// Veure la BD actual</span>
+show dbs                       <span class="comment">// Llistar totes les BD</span>
+show collections               <span class="comment">// Llistar col·leccions de la BD actual</span>
+
+db.createCollection("usuaris") <span class="comment">// Crear col·lecció explícitament</span>
+db.productes.drop()            <span class="comment">// Eliminar una col·lecció</span>
+db.dropDatabase()              <span class="comment">// Eliminar la BD actual</span></pre></div>
+
+    <h3 class="subsection">Inserció de documents</h3>
+    <div class="code-block"><pre><span class="comment">// Inserir un document (MongoDB genera _id automàticament)</span>
+db.usuaris.insertOne({
+  "nom":  "Leonardo Kuffo",
+  "edat": 21,
+  "pais": "Ecuador"
+})
+
+<span class="comment">// Inserir múltiples documents</span>
+db.usuaris.insertMany([
+  { "nom": "Anna", "edat": 30 },
+  { "nom": "Marc", "edat": 22, "hobby": "escalada" }
+])</pre></div>
+  </section>
+
+  <!-- 6. CONSULTES -->
+  <section class="section">
+    <span class="section-label">§ 6</span>
+    <h2 class="section-title">Consultes amb MQL</h2>
+
+    <h3 class="subsection">find() bàsic</h3>
+    <div class="code-block"><pre>db.usuaris.find()              <span class="comment">// Tots els documents</span>
+db.usuaris.findOne()           <span class="comment">// Un sol document</span>
+db.usuaris.count()             <span class="comment">// Comptar documents</span>
+
+db.usuaris.find({ "nom": "Anna" })          <span class="comment">// Cerca exacta</span>
+db.usuaris.find().limit(5).skip(2)          <span class="comment">// Paginació</span>
+db.usuaris.find().sort({ "edat": 1 })       <span class="comment">// Ordenar (1=asc, -1=desc)</span></pre></div>
+
+    <h3 class="subsection">Operadors de comparació</h3>
+    <table class="data-table">
+      <thead><tr><th>Operador</th><th>Significat</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td><code>{ camp: val }</code></td><td>Igual a</td><td><code>{ "edat": 25 }</code></td></tr>
+        <tr><td><code>$gt</code></td><td>Major que</td><td><code>{ "edat": { $gt: 18 } }</code></td></tr>
+        <tr><td><code>$gte</code></td><td>Major o igual</td><td><code>{ "edat": { $gte: 18 } }</code></td></tr>
+        <tr><td><code>$lt</code></td><td>Menor que</td><td><code>{ "preu": { $lt: 50 } }</code></td></tr>
+        <tr><td><code>$lte</code></td><td>Menor o igual</td><td><code>{ "preu": { $lte: 50 } }</code></td></tr>
+        <tr><td><code>$ne</code></td><td>Diferent de</td><td><code>{ "actiu": { $ne: false } }</code></td></tr>
+        <tr><td><code>$in</code></td><td>Inclòs en llista</td><td><code>{ "rol": { $in: ["admin","user"] } }</code></td></tr>
+        <tr><td><code>$exists</code></td><td>Camp existeix</td><td><code>{ "telèfon": { $exists: true } }</code></td></tr>
+        <tr><td><code>$regex</code></td><td>Expressió regular</td><td><code>{ "nom": { $regex: "^A" } }</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection">Operadors lògics</h3>
+    <div class="code-block"><pre><span class="comment">// AND implícit: condicions separades per coma</span>
+db.usuaris.find({ "edat": { $gte: 18 }, "pais": "Catalunya" })
+
+<span class="comment">// OR amb $or</span>
+db.usuaris.find({
+  $or: [
+    { "hobby": "senderisme" },
+    { "hobby": "ciclisme" }
+  ]
+})
+
+<span class="comment">// AND + OR combinats</span>
+db.usuaris.find({
+  "actiu": true,
+  $or: [{ "edat": { $lt: 25 } }, { "fills": 0 }]
+})</pre></div>
+  </section>
+
+  <!-- 7. MODIFICAR I ELIMINAR -->
+  <section class="section">
+    <span class="section-label">§ 7</span>
+    <h2 class="section-title">Modificar i eliminar documents</h2>
+
+    <h3 class="subsection">Update total (replaceOne)</h3>
+    <p class="prose">Reemplaça completament el document existent per un de nou, mantenint el mateix <code>_id</code>. Els camps no inclosos desapareixen.</p>
+    <div class="code-block"><pre>db.usuaris.replaceOne(
+  { _id: 1 },                   <span class="comment">// Filtre</span>
+  { nom: "Joan", edat: 30 }     <span class="comment">// Reemplaç total</span>
+)</pre></div>
+
+    <h3 class="subsection">Update parcial (updateOne / updateMany)</h3>
+    <p class="prose">Modifica únicament els camps especificats, deixant la resta del document intacta.</p>
+    <div class="code-block"><pre><span class="comment">// Actualitzar un sol document</span>
+db.usuaris.updateOne(
+  { _id: 1 },
+  { $set: { edat: 31 } }
+)
+
+<span class="comment">// Actualitzar múltiples documents</span>
+db.usuaris.updateMany(
+  { "pais": "Espanya" },
+  { $set: { moneda: "EUR" } }
+)
+
+<span class="comment">// Incrementar un valor numèric</span>
+db.productes.updateOne(
+  { "id": "p001" },
+  { $inc: { estoc: -1 } }   <span class="comment">// Decrementar estoc en 1</span>
+)</pre></div>
+
+    <h3 class="subsection">Operadors d'actualització</h3>
+    <table class="data-table">
+      <thead><tr><th>Operador</th><th>Acció</th></tr></thead>
+      <tbody>
+        <tr><td><code>$set</code></td><td>Modifica o afegeix un camp.</td></tr>
+        <tr><td><code>$unset</code></td><td>Elimina un camp del document.</td></tr>
+        <tr><td><code>$inc</code></td><td>Incrementa o decrementa un valor numèric.</td></tr>
+        <tr><td><code>$push</code></td><td>Afegeix un element a un array.</td></tr>
+        <tr><td><code>$addToSet</code></td><td>Afegeix un element a un array, però només si no existeix ja.</td></tr>
+        <tr><td><code>$pop</code></td><td>Elimina el primer (−1) o l'últim (1) element d'un array.</td></tr>
+        <tr><td><code>$pull</code></td><td>Elimina elements d'un array que compleixin una condició.</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection">Eliminar documents</h3>
+    <div class="code-block"><pre><span class="comment">// Eliminar el PRIMER document que compleixi la condició</span>
+db.productes.deleteOne({ "id": "1" })
+
+<span class="comment">// Eliminar TOTS els documents que compleixin la condició</span>
+db.productes.deleteMany({ "actiu": false })
+
+<span class="comment">// Buidar completament una col·lecció</span>
+db.productes.deleteMany({})</pre></div>
+  </section>
+
+  <!-- 8. REFERÈNCIA RÀPIDA -->
+  <section class="section">
+    <span class="section-label">§ 8</span>
+    <h2 class="section-title">Referència ràpida de comandes</h2>
+    <div class="tags">
+      <span class="tag">mongosh</span>
+      <span class="tag">CRUD</span>
+      <span class="tag">MQL</span>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Comanda</th><th>Descripció</th></tr></thead>
+      <tbody>
+        <tr><td><code>use &lt;nom_bd&gt;</code></td><td>Crea o selecciona una base de dades.</td></tr>
+        <tr><td><code>show dbs</code></td><td>Llista totes les bases de dades.</td></tr>
+        <tr><td><code>show collections</code></td><td>Llista les col·leccions de la BD actual.</td></tr>
+        <tr><td><code>db.col.insertOne({})</code></td><td>Insereix un document.</td></tr>
+        <tr><td><code>db.col.insertMany([])</code></td><td>Insereix múltiples documents.</td></tr>
+        <tr><td><code>db.col.find({})</code></td><td>Cerca documents amb filtre opcional.</td></tr>
+        <tr><td><code>db.col.findOne({})</code></td><td>Retorna el primer document que coincideix.</td></tr>
+        <tr><td><code>db.col.count()</code></td><td>Compta el nombre de documents.</td></tr>
+        <tr><td><code>db.col.find().sort({})</code></td><td>Ordena els resultats.</td></tr>
+        <tr><td><code>db.col.find().limit(n)</code></td><td>Limita el nombre de resultats.</td></tr>
+        <tr><td><code>db.col.find().skip(n)</code></td><td>Salta els primers n resultats.</td></tr>
+        <tr><td><code>db.col.replaceOne({},{})</code></td><td>Reemplaça completament un document.</td></tr>
+        <tr><td><code>db.col.updateOne({},{})</code></td><td>Actualització parcial d'un document.</td></tr>
+        <tr><td><code>db.col.updateMany({},{})</code></td><td>Actualització parcial de múltiples documents.</td></tr>
+        <tr><td><code>db.col.deleteOne({})</code></td><td>Elimina el primer document que coincideix.</td></tr>
+        <tr><td><code>db.col.deleteMany({})</code></td><td>Elimina tots els documents que coincideixen.</td></tr>
+        <tr><td><code>db.col.drop()</code></td><td>Elimina la col·lecció.</td></tr>
+        <tr><td><code>db.dropDatabase()</code></td><td>Elimina la base de dades actual.</td></tr>
+      </tbody>
+    </table>
+
+    <a class="back-link" href="index.html">← Tornar a MP0484 Bases de dades</a>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+
+</body>
+</html>
