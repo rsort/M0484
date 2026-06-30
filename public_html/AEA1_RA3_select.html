@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA1 · La sentència SELECT — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+  --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+  --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+  --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+  --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+  --yellow:#713f12; --yellow-bg:#fefce8; --yellow-bdr:#fef08a;
+  --purple:#5b21b6; --purple-bg:#f5f3ff; --purple-bdr:#ddd6fe;
+  --code-bg:#1e293b; --code-text:#e2e8f0; --r:10px; --r-sm:6px;
+}
+body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+.merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+.site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 24px; }
+.head-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+.brand { text-decoration:none; display:flex; flex-direction:column; }
+.brand-mark { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); }
+.brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+.head-course { font-size:13px; color:var(--ink-2); }
+.wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+.breadcrumb { font-size:13px; color:var(--ink-3); padding:14px 0 0; }
+.breadcrumb a { color:var(--ink-2); text-decoration:none; }
+.breadcrumb a:hover { color:var(--accent); }
+.breadcrumb span { margin:0 5px; }
+.page-header { padding:40px 0 32px; border-bottom:1.5px solid var(--border); margin-bottom:48px; }
+.meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+.badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+.b-course { background:var(--ink); color:#fff; }
+.b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+.b-act { background:var(--accent-mid); color:#fff; }
+.b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+.page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:10px; }
+.page-sub { font-size:16px; color:var(--ink-2); margin-bottom:24px; }
+.obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; }
+.obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+.obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+.obj-text { font-size:14px; color:var(--ink-2); }
+.schema-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:20px; }
+.schema-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; }
+.schema-card-head { background:var(--ink); color:#fff; padding:6px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:.04em; }
+.schema-card-body { padding:8px 12px; }
+.schema-card-body div { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-2); padding:2px 0; border-bottom:1px solid var(--border); }
+.schema-card-body div:last-child { border-bottom:none; }
+.schema-card-body .pk { color:var(--accent); font-weight:600; }
+.schema-card-body .fk { color:var(--blue); }
+.schema-mini { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 16px; margin-bottom:32px; font-size:13px; color:var(--ink-2); }
+.schema-mini a { color:var(--accent); font-weight:600; text-decoration:none; }
+.schema-mini a:hover { text-decoration:underline; }
+.schema-mini code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); color:var(--accent); padding:1px 6px; border-radius:3px; }
+.section { margin-bottom:60px; }
+.sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+.sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+.sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+.sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+.subhead { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin:32px 0 14px; padding-bottom:8px; border-bottom:1px dashed var(--accent-bdr); }
+.subhead:first-of-type { margin-top:8px; }
+.lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+.lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+.ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+.ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+.ibox-text { font-size:14px; line-height:1.65; }
+.ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+.ibox.green { background:var(--green-bg); border:1px solid var(--green-bdr); }
+.ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+.ibox.yellow { background:var(--yellow-bg); border:1px solid var(--yellow-bdr); }
+.ibox.purple { background:var(--purple-bg); border:1px solid var(--purple-bdr); }
+.ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+.ibox.green .ibox-label, .ibox.green .ibox-text { color:var(--green); }
+.ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
+.ibox.yellow .ibox-label, .ibox.yellow .ibox-text { color:var(--yellow); }
+.ibox.purple .ibox-label, .ibox.purple .ibox-text { color:var(--purple); }
+.ibox code { background:#ffffffaa; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 6px; border-radius:3px; }
+.demo { margin-bottom:24px; }
+.demo-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-bottom:8px; }
+.sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.8; white-space:pre; margin:0; overflow-x:auto; }
+.exp-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 16px; margin-top:10px; }
+.exp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin-bottom:5px; }
+.exp-text { font-size:13px; color:var(--ink-2); line-height:1.6; }
+.exp-text code { background:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 5px; border-radius:3px; }
+.kw { color:#fbbf24; font-weight:500; }
+.fn { color:#a78bfa; }
+.str { color:#4ade80; }
+.num { color:#f472b6; }
+.cmt { color:#64748b; font-style:italic; }
+.tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
+.tbl { width:100%; border-collapse:collapse; font-size:13px; }
+.tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
+.tbl td { padding:9px 14px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:12px; vertical-align:middle; }
+.tbl tr:last-child td { border-bottom:none; }
+.ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
+.ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+.ex-block-sub { font-size:13px; color:#a8a29e; }
+.ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+.exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+.exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+.ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+.ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+.ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+.ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
+.ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
+.qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
+.qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
+.qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
+.qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
+.qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+.qi-btn:disabled { cursor:default; }
+.qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
+.qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
+.qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
+.qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+.qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
+.ri { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-bottom:12px; }
+.ri-q { padding:14px 18px; background:#fafaf9; }
+.ri-q-text { font-size:14px; color:var(--ink); margin-bottom:4px; }
+.ri-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 15px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); color:var(--accent); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; transition:background .12s,color .12s,border-color .12s; }
+.ri-btn:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+.ri-ans { display:none; padding:16px 18px; background:var(--accent-bg); border-top:1px solid var(--accent-bdr); }
+.ri-ans.show { display:block; }
+.ri-ans-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--accent-mid); margin-bottom:8px; }
+.ri-note { font-size:13px; color:var(--ink-2); margin-top:10px; line-height:1.55; }
+.doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; flex-wrap:wrap; }
+.doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
+.doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+.doc-nav .back { color:var(--ink-2); background:#fafaf9; border-color:var(--border); }
+.doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+.site-foot { border-top:1px solid var(--border); padding:20px 24px; margin-top:0; }
+.foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+/* TARGETES SUB-INDEX (pàgina selector) */
+.subcards { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-bottom:8px; }
+.subcard { background:var(--card); border:1.5px solid var(--border); border-radius:var(--r); padding:22px 22px 18px; text-decoration:none; color:var(--ink); display:flex; flex-direction:column; transition:border-color .15s,box-shadow .15s,transform .15s; }
+.subcard:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(0,0,0,.08); transform:translateY(-2px); }
+.subcard-num { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent-bdr); padding:2px 8px; border-radius:4px; letter-spacing:.04em; display:inline-block; margin-bottom:14px; width:fit-content; }
+.subcard-title { font-weight:600; font-size:16px; color:var(--ink); margin-bottom:8px; }
+.subcard-text { font-size:13px; color:var(--ink-2); flex:1; line-height:1.55; margin-bottom:16px; }
+.subcard-text code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); padding:1px 5px; border-radius:3px; color:var(--accent); }
+.subcard-foot { display:flex; align-items:center; justify-content:space-between; font-size:12px; }
+.subcard-go { color:var(--accent); font-weight:600; }
+@media (max-width:600px){ .schema-grid { grid-template-columns:1fr 1fr; } }
+
+  </style>
+</head>
+<body>
+<div class="merce-top"></div>
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">La Mercè</span><span class="brand-sub">Formació Professional</span></a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="breadcrumb"><a href="index.html">MP0484 Bases de dades</a><span>›</span><a href="index.html#aea1">AEA1 — Consultes SQL</a><span>›</span><a href="AEA1_RA3_consultes_simples.html">Consultes simples</a><span>›</span>La sentència SELECT</div>
+  
+<header class="page-header">
+  <div class="meta-row">
+    <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+    <span class="badge b-ra">AEA1 · RA3 · 1 de 4</span>
+    <span class="badge b-new">SELECT</span>
+  </div>
+  <h1 class="page-title">La sentència SELECT</h1>
+  <p class="page-sub">Recuperar, filtrar i ordenar dades amb <strong>SELECT</strong>, <strong>WHERE</strong> i <strong>ORDER BY</strong>. Base de dades <strong>HR</strong> d'Oracle.</p>
+  <div class="obj-box">
+    <div class="obj-icon">🎯</div>
+    <div>
+      <div class="obj-label">Criteris d'avaluació · RA3</div>
+      <div class="obj-text"><strong>3.1</strong> Identificar eines i sentències per fer consultes · <strong>3.2</strong> Consultes simples sobre una taula</div>
+    </div>
+  </div>
+</header>
+
+  
+<section class="section">
+  <div class="sec-head"><span class="sec-num">0</span><div><h2 class="sec-title">L'esquema HR d'Oracle</h2><p class="sec-sub">La base de dades de recursos humans que farem servir a tot el curs</p></div></div>
+  <p class="lead">Tots els exemples utilitzen l'esquema <strong>HR (Human Resources)</strong> d'Oracle, que modela una empresa fictícia amb empleats, departaments, càrrecs i ubicacions arreu del món.</p>
+  <div class="schema-grid" id="schema">
+    <div class="schema-card"><div class="schema-card-head">EMPLOYEES</div><div class="schema-card-body"><div class="pk">🔑 EMPLOYEE_ID</div><div>FIRST_NAME</div><div>LAST_NAME</div><div>EMAIL</div><div>PHONE_NUMBER</div><div>HIRE_DATE</div><div class="fk">🔗 JOB_ID</div><div>SALARY</div><div>COMMISSION_PCT</div><div class="fk">🔗 MANAGER_ID</div><div class="fk">🔗 DEPARTMENT_ID</div></div></div>
+    <div class="schema-card"><div class="schema-card-head">DEPARTMENTS</div><div class="schema-card-body"><div class="pk">🔑 DEPARTMENT_ID</div><div>DEPARTMENT_NAME</div><div class="fk">🔗 MANAGER_ID</div><div class="fk">🔗 LOCATION_ID</div></div></div>
+    <div class="schema-card"><div class="schema-card-head">JOBS</div><div class="schema-card-body"><div class="pk">🔑 JOB_ID</div><div>JOB_TITLE</div><div>MIN_SALARY</div><div>MAX_SALARY</div></div></div>
+    <div class="schema-card"><div class="schema-card-head">LOCATIONS</div><div class="schema-card-body"><div class="pk">🔑 LOCATION_ID</div><div>STREET_ADDRESS</div><div>POSTAL_CODE</div><div>CITY</div><div>STATE_PROVINCE</div><div class="fk">🔗 COUNTRY_ID</div></div></div>
+    <div class="schema-card"><div class="schema-card-head">COUNTRIES</div><div class="schema-card-body"><div class="pk">🔑 COUNTRY_ID</div><div>COUNTRY_NAME</div><div class="fk">🔗 REGION_ID</div></div></div>
+    <div class="schema-card"><div class="schema-card-head">REGIONS</div><div class="schema-card-body"><div class="pk">🔑 REGION_ID</div><div>REGION_NAME</div></div></div>
+    <div class="schema-card"><div class="schema-card-head">JOB_HISTORY</div><div class="schema-card-body"><div class="pk">🔑 EMPLOYEE_ID</div><div class="pk">🔑 START_DATE</div><div>END_DATE</div><div class="fk">🔗 JOB_ID</div><div class="fk">🔗 DEPARTMENT_ID</div></div></div>
+  </div>
+  <div class="ibox blue"><div class="ibox-label">Llegenda</div><div class="ibox-text">🔑 Clau primària (PRIMARY KEY) · 🔗 Clau forana (FOREIGN KEY)</div></div>
+</section>
+<section class="section"><div class="sec-head"><span class="sec-num">1</span><div><h2 class="sec-title">Estructura bàsica: SELECT … FROM</h2><p class="sec-sub">Triar columnes i recuperar files</p></div></div>
+<p class="lead">Tota consulta SQL comença triant <strong>quines columnes</strong> volem veure i <strong>de quina taula</strong> les volem treure.</p>
+<div class="ibox blue"><div class="ibox-label">Sintaxi bàsica</div><div class="ibox-text"><code>SELECT columna1, columna2 FROM taula;</code><br>Usa <code>SELECT *</code> per treure totes les columnes (útil per explorar, però evita-ho en producció: és menys eficient i menys llegible).</div></div>
+<div class="demo"><div class="demo-label">Exemple 1 · Seleccionar totes les columnes</div><pre class="sql-out" id="e01"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Retorna totes les columnes i totes les files de la taula <code>EMPLOYEES</code>. L'asterisc (<code>*</code>) significa "totes les columnes". És útil per descobrir l'estructura d'una taula, però en aplicacions reals és ineficient perquè viatgen dades que potser no necessitem.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 2 · Seleccionar columnes concretes</div><pre class="sql-out" id="e02"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Triem només les columnes que necessitem, en l'ordre que vulguem (no cal que coincideixi amb l'ordre de la taula).</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 3 · Àlies de columna amb AS</div><pre class="sql-out" id="e03"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">L'àlies (<code>AS</code>) canvia el nom de la capçalera a la sortida, sense modificar la taula. La paraula <code>AS</code> és opcional (<code>salary sal</code> també funcionaria). Si l'àlies conté espais o vol mantenir majúscules/minúscules exactes, cal posar-lo entre cometes dobles: <code>AS "Nom complet"</code>.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">2</span><div><h2 class="sec-title">Filtratge amb WHERE</h2><p class="sec-sub">Triar quines files es mostren</p></div></div>
+<p class="lead">La clàusula <code>WHERE</code> s'avalua <strong>fila a fila</strong>: només les files on la condició és certa (<code>TRUE</code>) passen al resultat.</p>
+<div class="demo"><div class="demo-label">Exemple 4 · Operadors de comparació</div><pre class="sql-out" id="e04"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Operadors disponibles: <code>=</code>, <code>!=</code> o <code>&lt;&gt;</code> (diferent de), <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>. Les cadenes de text van entre cometes simples i Oracle hi distingeix majúscules de minúscules per defecte.</div></div></div>
+<div class="ibox yellow"><div class="ibox-label">Atenció</div><div class="ibox-text">El <code>WHERE</code> es processa <strong>abans</strong> de decidir quines columnes es mostren al <code>SELECT</code>; per tant pots filtrar per una columna encara que no aparegui a la llista de columnes seleccionades.</div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">3</span><div><h2 class="sec-title">Operadors lògics: AND, OR, NOT</h2><p class="sec-sub">Combinar diverses condicions</p></div></div>
+<p class="lead">Quan necessitem més d'una condició, les combinem amb operadors lògics. L'ordre de prioritat és <code>NOT</code> &gt; <code>AND</code> &gt; <code>OR</code>; els parèntesis sempre tenen preferència i ajuden a evitar ambigüitats.</p>
+<div class="demo"><div class="demo-label">Exemple 5 · AND — totes les condicions han de ser certes</div><pre class="sql-out" id="e05"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>AND</code> només deixa passar la fila si <strong>totes</strong> les condicions són certes alhora.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 6 · OR — n'hi ha prou amb una condició certa</div><pre class="sql-out" id="e06"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>OR</code> deixa passar la fila si <strong>almenys una</strong> de les condicions és certa. Quan barregem <code>AND</code> i <code>OR</code> és recomanable usar parèntesis per deixar clara la intenció.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 7 · NOT — negar una condició</div><pre class="sql-out" id="e07"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>NOT</code> inverteix el resultat lògic d'una condició. És útil combinat amb <code>IN</code>, <code>BETWEEN</code> o <code>LIKE</code> (per exemple <code>NOT IN (...)</code>) per expressar "que no compleixi...".</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">4</span><div><h2 class="sec-title">Operadors especials</h2><p class="sec-sub">BETWEEN, IN, LIKE i IS NULL</p></div></div>
+<p class="lead">Oracle ofereix operadors pensats per a situacions habituals: rangs, llistes de valors, patrons de text i valors absents.</p>
+<div class="demo"><div class="demo-label">Exemple 8 · BETWEEN — comprovar un rang</div><pre class="sql-out" id="e08"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>BETWEEN valor_min AND valor_max</code> és <strong>inclusiu als dos extrems</strong>: el salari 5000 i el 12000 també compleixen la condició. Equival a escriure <code>salary &gt;= 5000 AND salary &lt;= 12000</code>.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 9 · IN — comparar amb una llista de valors</div><pre class="sql-out" id="e09"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>IN (v1, v2, v3, ...)</code> equival a encadenar diverses condicions amb <code>OR</code>, però és més curt i llegible. Es pot negar amb <code>NOT IN (...)</code>.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 10 · LIKE — cercar per patrons de text</div><pre class="sql-out" id="e10"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>LIKE</code> compara cadenes amb comodins: <code>%</code> substitueix zero o més caràcters qualssevol, i <code>_</code> substitueix exactament un caràcter. <code>'S%'</code> significa "comença per S"; <code>'%s'</code> seria "acaba en s"; <code>'_a%'</code> és "la segona lletra és una 'a'".</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 11 · IS NULL / IS NOT NULL — valors absents</div><pre class="sql-out" id="e11"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>NULL</code> representa l'absència de valor i <strong>no es pot comparar amb l'operador <code>=</code></strong> (<code>columna = NULL</code> mai és cert, ni tan sols quan la columna és NULL). Cal usar sempre <code>IS NULL</code> o <code>IS NOT NULL</code>.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">5</span><div><h2 class="sec-title">Ordenació amb ORDER BY</h2><p class="sec-sub">Decidir l'ordre de les files del resultat</p></div></div>
+<p class="lead"><code>ORDER BY</code> és l'última clàusula que s'executa i només afecta com es presenta el resultat, no quines files el formen.</p>
+<div class="demo"><div class="demo-label">Exemple 12 · ORDER BY d'una sola columna</div><pre class="sql-out" id="e12"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Per defecte l'ordenació és ascendent (<code>ASC</code>). Per invertir-la cal indicar <code>DESC</code> explícitament. <code>ORDER BY</code> sempre es col·loca al final de la consulta.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 13 · ORDER BY de diverses columnes</div><pre class="sql-out" id="e13"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Quan hi ha empat a la primera columna d'ordenació, es desempata amb la segona, i així successivament. Cada columna pot tenir el seu propi sentit (<code>ASC</code> o <code>DESC</code>).</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">6</span><div><h2 class="sec-title">DISTINCT i expressions aritmètiques</h2><p class="sec-sub">Eliminar duplicats i fer càlculs al SELECT</p></div></div>
+<p class="lead">El <code>SELECT</code> no només mostra columnes: també pot eliminar duplicats i calcular expressions noves.</p>
+<div class="demo"><div class="demo-label">Exemple 14 · DISTINCT — eliminar files duplicades</div><pre class="sql-out" id="e14"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>DISTINCT</code> s'aplica a tota la combinació de columnes seleccionades, no a una sola: si seleccionem dues columnes, només es consideren duplicades les files on <strong>totes dues</strong> coincideixen.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 15 · Expressions aritmètiques al SELECT</div><pre class="sql-out" id="e15"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Es poden fer càlculs directament al <code>SELECT</code> amb <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>. L'operador <code>||</code> concatena cadenes de text. Si una columna numèrica conté <code>NULL</code>, qualsevol operació aritmètica amb ella dona <code>NULL</code> (per això més endavant farem servir <code>NVL</code>).</div></div></div>
+</section>
+<div class="ex-block-head"><h2 class="ex-block-title">Exercicis — La sentència SELECT</h2><p class="ex-block-sub">Criteris 3.1 i 3.2 · BD HR d'Oracle</p></div>
+<div class="ex-block-body">
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Comprensió de clàusules i operadors</div><div class="ex-level">Nivell bàsic · criteri 3.1 i 3.2</div></div></div>
+    <p class="ex-intro">Tria la resposta correcta per a cada situació.</p>
+    <div id="ex1-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Resultat de consultes</div><div class="ex-level">Nivell mitjà · criteri 3.2</div></div></div>
+    <p class="ex-intro">Analitza el fragment SQL i tria el resultat correcte.</p>
+    <div id="ex2-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Escriu la consulta SQL</div><div class="ex-level">Nivell avançat · criteri 3.2</div></div></div>
+    <p class="ex-intro">Escriu la consulta SQL per a cada enunciat i comprova-la amb la solució.</p>
+    <div id="ex3-cont"></div>
+  </div>
+</div>
+
+<nav class="doc-nav">
+  <a class="back" href="AEA1_RA3_consultes_simples.html">← Consultes simples</a>
+  <a href="AEA1_RA3_funcions_fila.html">Funcions d'una sola fila →</a>
+</nav>
+
+</div>
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+<script>
+
+function colorSQL(t){
+  t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t=t.replace(/(--[^\n]*)/g,'<span class="cmt">$1</span>');
+  t=t.replace(/('[^']*')/g,'<span class="str">$1</span>');
+  t=t.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');
+  t=t.replace(/\b(SELECT|FROM|WHERE|AND|OR|NOT|IN|LIKE|BETWEEN|IS|NULL|ORDER\s+BY|GROUP\s+BY|HAVING|DISTINCT|AS|ASC|DESC|CASE|WHEN|THEN|ELSE|END)\b/gi,'<span class="kw">$1</span>');
+  t=t.replace(/\b(COUNT|SUM|AVG|MAX|MIN|ROUND|TRUNC|MOD|UPPER|LOWER|INITCAP|CONCAT|SUBSTR|LENGTH|TRIM|LTRIM|RTRIM|REPLACE|INSTR|LPAD|RPAD|NVL|NVL2|NULLIF|COALESCE|TO_CHAR|TO_DATE|TO_NUMBER|SYSDATE|MONTHS_BETWEEN|ADD_MONTHS|DECODE|GREATEST|LEAST|ABS|CEIL|FLOOR|ROWNUM)\b/gi,'<span class="fn">$1</span>');
+  return t;
+}
+
+
+const SQLS={
+  e01:`SELECT *\nFROM   employees;`,
+  e02:`SELECT employee_id, first_name, last_name, salary\nFROM   employees;`,
+  e03:`SELECT employee_id                   AS "ID",\n       first_name || ' ' || last_name AS "Nom complet",\n       salary                         AS "Salari"\nFROM   employees;`,
+  e04:`SELECT last_name, salary\nFROM   employees\nWHERE  salary > 10000;`,
+  e05:`SELECT last_name, salary, department_id\nFROM   employees\nWHERE  department_id = 80\n  AND  salary > 9000;`,
+  e06:`SELECT last_name, department_id\nFROM   employees\nWHERE  department_id = 50\n   OR  department_id = 80;`,
+  e07:`SELECT last_name, department_id\nFROM   employees\nWHERE  NOT department_id = 50;`,
+  e08:`SELECT last_name, salary\nFROM   employees\nWHERE  salary BETWEEN 5000 AND 12000;`,
+  e09:`SELECT last_name, job_id\nFROM   employees\nWHERE  job_id IN ('IT_PROG', 'SA_REP', 'FI_MGR');`,
+  e10:`SELECT last_name\nFROM   employees\nWHERE  last_name LIKE 'S%'\n   OR  last_name LIKE '_a%';`,
+  e11:`SELECT last_name, commission_pct\nFROM   employees\nWHERE  commission_pct IS NULL;`,
+  e12:`SELECT last_name, salary\nFROM   employees\nORDER BY salary DESC;`,
+  e13:`SELECT department_id, last_name, salary\nFROM   employees\nORDER BY department_id ASC, salary DESC;`,
+  e14:`SELECT DISTINCT department_id\nFROM   employees\nORDER BY department_id;`,
+  e15:`SELECT last_name || ' guanya ' || salary || '€/mes' AS resum,\n       salary * 12                                  AS salari_anual\nFROM   employees;`
+};
+
+const E1=[
+  {t:'Vols filtrar files d\'una consulta SQL. Quina clàusula uses?',opts:['GROUP BY','WHERE','HAVING','ORDER BY'],ans:1,exp:'WHERE filtra files individuals abans d\'agrupar. HAVING filtra grups, ORDER BY només ordena.'},
+  {t:'Com comproves si una columna no té valor a Oracle SQL?',opts:['columna = NULL','columna == NULL','columna IS NULL','columna != NULL'],ans:2,exp:'NULL no és comparable amb = ni !=. Cal usar IS NULL o IS NOT NULL.'},
+  {t:'Quina paraula clau elimina files duplicades del resultat?',opts:['UNIQUE','DISTINCT','NODUPE','FILTER'],ans:1,exp:'DISTINCT elimina les combinacions de valors duplicades del conjunt de resultats.'},
+  {t:'Quin operador de LIKE substitueix exactament un caràcter?',opts:['%','_','*','?'],ans:1,exp:'El guió baix (_) representa exactament un caràcter. El percentatge (%) representa zero o més caràcters.'},
+  {t:'Quina clàusula s\'executa sempre en últim lloc en una consulta SELECT?',opts:['WHERE','FROM','ORDER BY','SELECT'],ans:2,exp:'ORDER BY ordena el resultat final i s\'executa després de totes les altres clàusules.'}
+];
+
+const E2=[
+  {q:'Quants empleats retorna aquesta consulta si n\'hi ha 107 en total i 10 al departament 80?',code:`SELECT COUNT(*) FROM employees WHERE department_id != 80;`,opts:['10','97','107','0'],ans:1,exp:'107 - 10 = 97. El WHERE descarta les 10 files del departament 80.'},
+  {q:'Quina d\'aquestes consultes és equivalent a "WHERE salary BETWEEN 5000 AND 8000"?',code:`-- A: WHERE salary > 5000 AND salary < 8000\n-- B: WHERE salary >= 5000 AND salary <= 8000`,opts:['A','B','Les dues','Cap'],ans:1,exp:'BETWEEN és inclusiu als dos extrems, per tant equival a >= i <=, no a > i <.'},
+  {q:'Aquesta consulta dona error. Per què?',code:`SELECT last_name\nFROM employees\nWHERE commission_pct = NULL;`,opts:['Falta el FROM','NULL no es compara amb =','Falta cometes a NULL','És correcta'],ans:1,exp:'NULL representa "sense valor" i mai es compara amb =. Caldria escriure IS NULL; la consulta no dona error de sintaxi però mai retorna files.'}
+];
+
+const E3sol=[
+  {ctx:'Mostra el cognom i el correu electrònic dels empleats del departament 60, ordenats alfabèticament pel cognom.',code:`SELECT last_name, email\nFROM   employees\nWHERE  department_id = 60\nORDER BY last_name;`,note:'Criteris 3.1, 3.2 — filtratge simple amb WHERE i ordenació amb ORDER BY.'},
+  {ctx:'Llista els empleats el cognom dels quals comença per "A" o "B" i que no tenen comissió assignada.',code:`SELECT last_name, commission_pct\nFROM   employees\nWHERE  (last_name LIKE 'A%' OR last_name LIKE 'B%')\n  AND  commission_pct IS NULL;`,note:'Criteri 3.2 — combinació de LIKE, OR amb parèntesis, AND i IS NULL.'},
+  {ctx:'Mostra, sense duplicats, els càrrecs (JOB_ID) dels empleats amb salari entre 8000 i 15000, ordenats de major a menor salari... pensa: és possible ordenar per una columna que no surt al SELECT?',code:`SELECT DISTINCT job_id, salary\nFROM   employees\nWHERE  salary BETWEEN 8000 AND 15000\nORDER BY salary DESC;`,note:'Criteri 3.2 — per ordenar per SALARY de forma fiable amb DISTINCT, cal incloure-la al SELECT (en cas contrari l\'ordre dins de cada JOB_ID repetit no estaria garantit).'}
+];
+
+Object.keys(SQLS).forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=colorSQL(SQLS[id]); });
+(function(){
+  const c=document.getElementById('ex1-cont');
+  E1.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E1',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="E1f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex2-cont');
+  E2.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E2',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.q}</div><pre class="sql-out" style="font-size:11px;margin-bottom:8px">${colorSQL(d.code)}</pre><div class="qi-opts">${opts}</div><div class="qi-fb" id="E2f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex3-cont');
+  E3sol.forEach((d,i)=>{
+    const div=document.createElement('div'); div.className='ri';
+    div.innerHTML=`<div class="ri-q"><div class="ri-q-text"><strong>${i+1}.</strong> ${d.ctx}</div><button class="ri-btn" onclick="reveal(this,'E3a${i}')">▶ Veure solució SQL</button></div><div class="ri-ans" id="E3a${i}"><div class="ri-ans-label">Solució</div><pre class="sql-out">${colorSQL(d.code)}</pre><div class="ri-note">${d.note}</div></div>`;
+    c.appendChild(div);
+  });
+})();
+const ALL={E1,E2};
+function checkQ(grp,btn,i,choice){
+  const d=ALL[grp][i],fb=document.getElementById(grp+'f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+function reveal(btn,id){document.getElementById(id).classList.add('show');btn.style.display='none';}
+
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AEA1 · Consultes simples SQL — MP0484 Bases de dades</title>
+  <title>AEA1 · Funcions de grup i agrupaments — MP0484 Bases de dades</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -159,68 +159,61 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
   </div>
 </header>
 <div class="wrap">
-  <div class="breadcrumb"><a href="index.html">MP0484 Bases de dades</a><span>›</span><a href="index.html#aea1">AEA1 — Consultes SQL</a><span>›</span>Consultes simples</div>
+  <div class="breadcrumb"><a href="index.html">MP0484 Bases de dades</a><span>›</span><a href="index.html#aea1">AEA1 — Consultes SQL</a><span>›</span><a href="AEA1_RA3_consultes_simples.html">Consultes simples</a><span>›</span>Funcions de grup i agrupaments</div>
   
 <header class="page-header">
   <div class="meta-row">
     <span class="badge b-course">DAW · MP0484 Bases de dades</span>
-    <span class="badge b-ra">AEA1 · RA3 · Part 1/2</span>
-    <span class="badge b-act">18 hores</span>
-    <span class="badge b-new">Consultes simples</span>
+    <span class="badge b-ra">AEA1 · RA3 · 4 de 4</span>
+    <span class="badge b-new">Grup i agrupaments</span>
   </div>
-  <h1 class="page-title">Consultes simples SQL</h1>
-  <p class="page-sub">La sentència <strong>SELECT</strong>, filtratge, ordenació, funcions d'una fila, conversió, expressions condicionals i agregació amb GROUP BY / HAVING. Base de dades <strong>HR</strong> d'Oracle.</p>
+  <h1 class="page-title">Funcions de grup i agrupaments</h1>
+  <p class="page-sub">Resumir dades amb <strong>COUNT</strong>, <strong>SUM</strong>, <strong>AVG</strong>, <strong>MAX</strong> i <strong>MIN</strong>; agrupar-les amb <strong>GROUP BY</strong> i filtrar els grups amb <strong>HAVING</strong>.</p>
   <div class="obj-box">
     <div class="obj-icon">🎯</div>
-    <div>
-      <div class="obj-label">Criteris d'avaluació · RA3</div>
-      <div class="obj-text">
-        <strong>3.1</strong> Identificar eines i sentències per fer consultes ·
-        <strong>3.2</strong> Consultes simples sobre una taula ·
-        <strong>3.5</strong> Consultes de resum (GROUP BY / HAVING)
-      </div>
-    </div>
+    <div><div class="obj-label">Criteri d'avaluació · RA3</div><div class="obj-text"><strong>3.5</strong> Consultes de resum sobre una taula (funcions de grup, GROUP BY i HAVING)</div></div>
   </div>
 </header>
 
   
-<section class="section">
-  <p class="lead" style="margin-bottom:24px;">Aquest bloc es divideix en quatre apartats. Cadascun té teoria, exemples comentats pas a pas i exercicis interactius. Recomanem seguir l'ordre proposat.</p>
-  <div class="subcards">
+<div class="schema-mini">📋 Tots els exemples fan servir l'esquema <strong>HR</strong> d'Oracle (taula principal <code>EMPLOYEES</code>). Si no el recordes, consulta el <a href="AEA1_RA3_select.html#schema">detall de taules i columnes</a>.</div>
 
-    <a class="subcard" href="AEA1_RA3_select.html">
-      <span class="subcard-num">1 · Base</span>
-      <h3 class="subcard-title">La sentència SELECT</h3>
-      <p class="subcard-text">Esquema HR, <code>SELECT</code>/<code>FROM</code>, filtratge amb <code>WHERE</code>, operadors de comparació i lògics, <code>BETWEEN</code>/<code>IN</code>/<code>LIKE</code>/<code>IS NULL</code>, <code>ORDER BY</code>, <code>DISTINCT</code> i expressions aritmètiques.</p>
-      <span class="subcard-foot"><span class="crit" style="color:var(--ink-3)">Criteris 3.1, 3.2</span><span class="subcard-go">Obrir →</span></span>
-    </a>
-
-    <a class="subcard" href="AEA1_RA3_funcions_fila.html">
-      <span class="subcard-num">2 · Funcions</span>
-      <h3 class="subcard-title">Funcions d'una sola fila</h3>
-      <p class="subcard-text">Funcions de caràcter (<code>UPPER</code>, <code>SUBSTR</code>, <code>INSTR</code>...), numèriques (<code>ROUND</code>, <code>MOD</code>...) i de data (<code>SYSDATE</code>, <code>MONTHS_BETWEEN</code>...) aplicades fila a fila.</p>
-      <span class="subcard-foot"><span class="crit" style="color:var(--ink-3)">Criteri 3.2</span><span class="subcard-go">Obrir →</span></span>
-    </a>
-
-    <a class="subcard" href="AEA1_RA3_conversio_condicionals.html">
-      <span class="subcard-num">3 · Funcions</span>
-      <h3 class="subcard-title">Funcions de conversió i expressions condicionals</h3>
-      <p class="subcard-text"><code>TO_CHAR</code>, <code>TO_DATE</code>, <code>TO_NUMBER</code> i conversió implícita; lògica condicional amb <code>CASE</code>, <code>DECODE</code>, <code>NVL</code>, <code>NVL2</code>, <code>COALESCE</code> i <code>NULLIF</code>.</p>
-      <span class="subcard-foot"><span class="crit" style="color:var(--ink-3)">Criteri 3.2</span><span class="subcard-go">Obrir →</span></span>
-    </a>
-
-    <a class="subcard" href="AEA1_RA3_grup_agrupaments.html">
-      <span class="subcard-num">4 · Resum</span>
-      <h3 class="subcard-title">Funcions de grup i agrupaments</h3>
-      <p class="subcard-text"><code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MAX</code>, <code>MIN</code>; agrupar dades amb <code>GROUP BY</code> i filtrar grups amb <code>HAVING</code>. Ordre d'execució d'una consulta.</p>
-      <span class="subcard-foot"><span class="crit" style="color:var(--ink-3)">Criteri 3.5</span><span class="subcard-go">Obrir →</span></span>
-    </a>
-
-  </div>
+<div class="ibox blue"><div class="ibox-label">Funcions de grup vs funcions d'una fila</div><div class="ibox-text">A diferència de les funcions d'una sola fila, les <strong>funcions de grup</strong> reben <strong>moltes files</strong> com a entrada i retornen <strong>un sol valor</strong> de sortida (relació N a 1). Les principals són <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MAX</code> i <code>MIN</code>.</div></div>
+<section class="section"><div class="sec-head"><span class="sec-num">1</span><div><h2 class="sec-title">Funcions d'agregació</h2><p class="sec-sub">Calcular un resum sobre un conjunt de files</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 1 · COUNT(*) vs COUNT(columna)</div><pre class="sql-out" id="e01"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>COUNT(*)</code> compta totes les files, incloses les que tenen algun valor <code>NULL</code>. <code>COUNT(columna)</code> només compta les files on aquella columna <strong>no</strong> és NULL. Per això a la taula EMPLOYEES, <code>COUNT(commission_pct)</code> sol donar un número més petit que <code>COUNT(*)</code>.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 2 · SUM, AVG, MAX i MIN</div><pre class="sql-out" id="e02"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>SUM</code> suma tots els valors, <code>AVG</code> en calcula la mitjana, <code>MAX</code> i <code>MIN</code> retornen el valor més alt i més baix. Totes quatre <strong>ignoren automàticament els valors NULL</strong> en el càlcul (no els compten com a zero).</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 3 · COUNT(DISTINCT columna)</div><pre class="sql-out" id="e03"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Afegint <code>DISTINCT</code> dins de <code>COUNT</code>, comptem només els valors <strong>diferents</strong> d'una columna, sense repeticions. Per exemple, per saber en quants departaments diferents hi ha empleats (no quants empleats hi ha).</div></div></div>
+<div class="ibox yellow"><div class="ibox-label">Atenció</div><div class="ibox-text">Les funcions de grup <strong>no es poden anidar</strong> directament a Oracle SQL estàndard (per exemple <code>MAX(AVG(salary))</code> no és vàlid en una consulta simple); per fer-ho caldria una subconsulta, que es treballa al bloc de consultes complexes.</div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">2</span><div><h2 class="sec-title">Agrupar dades amb GROUP BY</h2><p class="sec-sub">Calcular un resum per a cada grup, no per a tota la taula</p></div></div>
+<div class="ibox blue"><div class="ibox-label">Regla important</div><div class="ibox-text">Tota columna que aparegui al <code>SELECT</code> sense estar dins d'una funció de grup <strong>ha d'aparèixer també</strong> al <code>GROUP BY</code>. En cas contrari, Oracle dona l'error <code>ORA-00979: not a GROUP BY expression</code>.</div></div>
+<div class="demo"><div class="demo-label">Exemple 4 · GROUP BY d'una sola columna</div><pre class="sql-out" id="e04"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>GROUP BY</code> agrupa les files que comparteixen el mateix valor en la columna indicada, i la funció de grup es calcula per a cada grup per separat, no per a tota la taula.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 5 · GROUP BY de diverses columnes</div><pre class="sql-out" id="e05"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Quan agrupem per més d'una columna, es crea un grup per cada <strong>combinació única</strong> de valors d'aquestes columnes (per exemple, cada parella departament + càrrec).</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">3</span><div><h2 class="sec-title">Filtrar grups amb HAVING</h2><p class="sec-sub">WHERE filtra files, HAVING filtra grups</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 6 · HAVING — filtrar resultats d'una funció de grup</div><pre class="sql-out" id="e06"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>HAVING</code> s'aplica <strong>després</strong> de calcular els grups, i pot fer servir funcions de grup a la seva condició. Al contrari, <code>WHERE</code> s'aplica abans d'agrupar i <strong>mai pot</strong> contenir una funció de grup.</div></div></div>
+<div class="ibox red"><div class="ibox-label">Error habitual</div><div class="ibox-text">Escriure <code>WHERE AVG(salary) &gt; 8000</code> provoca un error, perquè quan s'executa el <code>WHERE</code> encara no existeixen els grups ni, per tant, les seves mitjanes. La condició sobre <code>AVG(salary)</code> ha d'anar a <code>HAVING</code>.</div></div>
+<div class="demo"><div class="demo-label">Exemple 7 · Consulta completa: WHERE + GROUP BY + HAVING + ORDER BY</div><pre class="sql-out" id="e07"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Aquesta és l'estructura completa d'una consulta de resum, i Oracle les processa en aquest ordre lògic: primer <code>FROM</code>, després <code>WHERE</code> (filtra files individuals), després <code>GROUP BY</code> (crea els grups i calcula els agregats), després <code>HAVING</code> (filtra grups) i finalment <code>ORDER BY</code> (ordena el resultat final).</div></div></div>
 </section>
+<div class="ex-block-head"><h2 class="ex-block-title">Exercicis — Funcions de grup i agrupaments</h2><p class="ex-block-sub">Criteri 3.5 · BD HR d'Oracle</p></div>
+<div class="ex-block-body">
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Comprensió de clàusules</div><div class="ex-level">Nivell bàsic · criteri 3.5</div></div></div>
+    <p class="ex-intro">Tria la clàusula o funció correcta per a cada situació.</p>
+    <div id="ex1-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Resultat de consultes</div><div class="ex-level">Nivell mitjà · criteri 3.5</div></div></div>
+    <p class="ex-intro">Analitza el fragment SQL i tria el resultat correcte.</p>
+    <div id="ex2-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Escriu la consulta SQL</div><div class="ex-level">Nivell avançat · criteri 3.5</div></div></div>
+    <p class="ex-intro">Escriu la consulta SQL per a cada enunciat i comprova-la amb la solució.</p>
+    <div id="ex3-cont"></div>
+  </div>
+</div>
 
 <nav class="doc-nav">
-  <a class="back" href="index.html">← Índex del mòdul</a>
+  <a class="back" href="AEA1_RA3_conversio_condicionals.html">← Conversió i condicionals</a>
   <a href="AEA1_RA3_consultes_complexes.html">Consultes complexes →</a>
 </nav>
 
@@ -243,6 +236,72 @@ function colorSQL(t){
   return t;
 }
 
+
+const SQLS={
+  e01:`SELECT COUNT(*)              AS total_files,\n       COUNT(commission_pct) AS amb_comissio\nFROM   employees;`,
+  e02:`SELECT SUM(salary)          AS suma_salaris,\n       ROUND(AVG(salary),2) AS salari_mig,\n       MAX(salary)          AS salari_max,\n       MIN(salary)          AS salari_min\nFROM   employees;`,
+  e03:`SELECT COUNT(DISTINCT department_id) AS num_departaments_amb_empleats\nFROM   employees;`,
+  e04:`SELECT department_id,\n       COUNT(*)              AS num_empleats,\n       ROUND(AVG(salary),2)  AS salari_mig\nFROM   employees\nGROUP BY department_id;`,
+  e05:`SELECT department_id,\n       job_id,\n       COUNT(*) AS num_empleats\nFROM   employees\nGROUP BY department_id, job_id\nORDER BY department_id, job_id;`,
+  e06:`SELECT department_id,\n       COUNT(*)             AS num_empleats,\n       ROUND(AVG(salary),2) AS salari_mig\nFROM   employees\nGROUP BY department_id\nHAVING COUNT(*) > 3;`,
+  e07:`SELECT department_id,\n       ROUND(AVG(salary), 2) AS salari_mig\nFROM   employees\nWHERE  job_id != 'SA_REP'\nGROUP BY department_id\nHAVING AVG(salary) > 8000\nORDER BY salari_mig DESC;`
+};
+
+const E1=[
+  {t:'Quina funció compta totes les files d\'una taula, incloent les que tenen NULL en alguna columna?',opts:['COUNT(columna)','COUNT(*)','SUM(*)','TOTAL(*)'],ans:1,exp:'COUNT(*) compta totes les files, sense mirar si alguna columna concreta és NULL.'},
+  {t:'Quina clàusula filtra files individuals abans d\'agrupar-les?',opts:['HAVING','GROUP BY','WHERE','ORDER BY'],ans:2,exp:'WHERE filtra files individuals i s\'executa abans del GROUP BY.'},
+  {t:'Quina clàusula filtra els grups creats per GROUP BY?',opts:['WHERE','HAVING','FILTER','DISTINCT'],ans:1,exp:'HAVING s\'aplica després del GROUP BY i pot usar funcions d\'agregació a la seva condició.'},
+  {t:'Si una columna del SELECT no està dins d\'una funció de grup, on ha d\'aparèixer obligatòriament?',opts:['Al WHERE','Al HAVING','Al GROUP BY','A l\'ORDER BY'],ans:2,exp:'Tota columna "solta" al SELECT ha d\'estar també al GROUP BY, o Oracle donarà error ORA-00979.'},
+  {t:'Quin és l\'ordre lògic d\'execució d\'una consulta amb totes les clàusules?',opts:['SELECT → WHERE → GROUP BY → HAVING → ORDER BY','FROM → WHERE → GROUP BY → HAVING → ORDER BY','FROM → GROUP BY → WHERE → HAVING → ORDER BY','WHERE → FROM → HAVING → GROUP BY → ORDER BY'],ans:1,exp:'Primer es resol el FROM, després WHERE (files), GROUP BY (grups), HAVING (filtra grups) i finalment ORDER BY.'}
+];
+
+const E2=[
+  {q:'Quants registres retorna aquesta consulta si hi ha 107 empleats i 10 al departament 80?',code:`SELECT COUNT(*) FROM employees WHERE department_id != 80;`,opts:['10','97','107','0'],ans:1,exp:'107 - 10 = 97. El WHERE descarta les 10 files del departament 80 abans de comptar.'},
+  {q:'Quin resultat dona AVG(commission_pct) si 72 empleats tenen NULL i 35 en tenen un valor numèric?',code:`SELECT AVG(commission_pct) FROM employees;`,opts:['Divideix la suma entre 107','Divideix la suma entre 35','Retorna NULL','Dona error'],ans:1,exp:'AVG ignora els valors NULL: la mitjana es calcula només sobre els 35 empleats amb valor no nul.'},
+  {q:'Quina d\'aquestes opcions és sintàcticament vàlida per filtrar departaments amb salari mig superior a 8000?',code:`-- Opció A: WHERE AVG(salary) > 8000\n-- Opció B: HAVING AVG(salary) > 8000`,opts:['Opció A','Opció B','Les dues','Cap de les dues'],ans:1,exp:'No es pot usar una funció d\'agregació al WHERE perquè encara no hi ha grups; cal usar HAVING després del GROUP BY.'}
+];
+
+const E3sol=[
+  {ctx:'Mostra el nombre total d\'empleats i el salari mitjà de tota l\'empresa, arrodonit a 2 decimals.',code:`SELECT COUNT(*)             AS total_empleats,\n       ROUND(AVG(salary),2) AS salari_mig\nFROM   employees;`,note:'Criteri 3.5 — funcions de grup sense GROUP BY, calculades sobre tota la taula com un únic grup.'},
+  {ctx:'Mostra el nombre d\'empleats i el salari mig per a cada JOB_ID, però només dels grups amb salari mig superior a 8000, ordenats per salari mig descendent.',code:`SELECT   job_id,\n         COUNT(*)              AS num_emp,\n         ROUND(AVG(salary), 2) AS salari_mig\nFROM     employees\nGROUP BY job_id\nHAVING   AVG(salary) > 8000\nORDER BY salari_mig DESC;`,note:'Criteri 3.5 — GROUP BY + HAVING; el filtre sobre AVG no es pot posar al WHERE.'},
+  {ctx:'Per a cada departament, mostra quants empleats diferents tenen comissió assignada, només dels departaments amb més de 2 empleats amb comissió.',code:`SELECT   department_id,\n         COUNT(commission_pct) AS num_amb_comissio\nFROM     employees\nGROUP BY department_id\nHAVING   COUNT(commission_pct) > 2;`,note:'Criteri 3.5 — COUNT(columna) ignora els NULL; el HAVING reutilitza la mateixa funció d\'agregació del SELECT.'}
+];
+
+Object.keys(SQLS).forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=colorSQL(SQLS[id]); });
+(function(){
+  const c=document.getElementById('ex1-cont');
+  E1.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E1',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="E1f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex2-cont');
+  E2.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E2',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.q}</div><pre class="sql-out" style="font-size:11px;margin-bottom:8px">${colorSQL(d.code)}</pre><div class="qi-opts">${opts}</div><div class="qi-fb" id="E2f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex3-cont');
+  E3sol.forEach((d,i)=>{
+    const div=document.createElement('div'); div.className='ri';
+    div.innerHTML=`<div class="ri-q"><div class="ri-q-text"><strong>${i+1}.</strong> ${d.ctx}</div><button class="ri-btn" onclick="reveal(this,'E3a${i}')">▶ Veure solució SQL</button></div><div class="ri-ans" id="E3a${i}"><div class="ri-ans-label">Solució</div><pre class="sql-out">${colorSQL(d.code)}</pre><div class="ri-note">${d.note}</div></div>`;
+    c.appendChild(div);
+  });
+})();
+const ALL={E1,E2};
+function checkQ(grp,btn,i,choice){
+  const d=ALL[grp][i],fb=document.getElementById(grp+'f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+function reveal(btn,id){document.getElementById(id).classList.add('show');btn.style.display='none';}
 
 </script>
 </body>

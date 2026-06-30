@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA1 · Funcions d'una sola fila — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+  --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+  --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+  --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+  --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+  --yellow:#713f12; --yellow-bg:#fefce8; --yellow-bdr:#fef08a;
+  --purple:#5b21b6; --purple-bg:#f5f3ff; --purple-bdr:#ddd6fe;
+  --code-bg:#1e293b; --code-text:#e2e8f0; --r:10px; --r-sm:6px;
+}
+body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+.merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+.site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 24px; }
+.head-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+.brand { text-decoration:none; display:flex; flex-direction:column; }
+.brand-mark { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); }
+.brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+.head-course { font-size:13px; color:var(--ink-2); }
+.wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+.breadcrumb { font-size:13px; color:var(--ink-3); padding:14px 0 0; }
+.breadcrumb a { color:var(--ink-2); text-decoration:none; }
+.breadcrumb a:hover { color:var(--accent); }
+.breadcrumb span { margin:0 5px; }
+.page-header { padding:40px 0 32px; border-bottom:1.5px solid var(--border); margin-bottom:48px; }
+.meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+.badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+.b-course { background:var(--ink); color:#fff; }
+.b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+.b-act { background:var(--accent-mid); color:#fff; }
+.b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+.page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:10px; }
+.page-sub { font-size:16px; color:var(--ink-2); margin-bottom:24px; }
+.obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; }
+.obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+.obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+.obj-text { font-size:14px; color:var(--ink-2); }
+.schema-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:20px; }
+.schema-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; }
+.schema-card-head { background:var(--ink); color:#fff; padding:6px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:.04em; }
+.schema-card-body { padding:8px 12px; }
+.schema-card-body div { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-2); padding:2px 0; border-bottom:1px solid var(--border); }
+.schema-card-body div:last-child { border-bottom:none; }
+.schema-card-body .pk { color:var(--accent); font-weight:600; }
+.schema-card-body .fk { color:var(--blue); }
+.schema-mini { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 16px; margin-bottom:32px; font-size:13px; color:var(--ink-2); }
+.schema-mini a { color:var(--accent); font-weight:600; text-decoration:none; }
+.schema-mini a:hover { text-decoration:underline; }
+.schema-mini code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); color:var(--accent); padding:1px 6px; border-radius:3px; }
+.section { margin-bottom:60px; }
+.sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+.sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+.sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+.sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+.subhead { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin:32px 0 14px; padding-bottom:8px; border-bottom:1px dashed var(--accent-bdr); }
+.subhead:first-of-type { margin-top:8px; }
+.lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+.lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+.ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+.ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+.ibox-text { font-size:14px; line-height:1.65; }
+.ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+.ibox.green { background:var(--green-bg); border:1px solid var(--green-bdr); }
+.ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+.ibox.yellow { background:var(--yellow-bg); border:1px solid var(--yellow-bdr); }
+.ibox.purple { background:var(--purple-bg); border:1px solid var(--purple-bdr); }
+.ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+.ibox.green .ibox-label, .ibox.green .ibox-text { color:var(--green); }
+.ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
+.ibox.yellow .ibox-label, .ibox.yellow .ibox-text { color:var(--yellow); }
+.ibox.purple .ibox-label, .ibox.purple .ibox-text { color:var(--purple); }
+.ibox code { background:#ffffffaa; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 6px; border-radius:3px; }
+.demo { margin-bottom:24px; }
+.demo-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-bottom:8px; }
+.sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.8; white-space:pre; margin:0; overflow-x:auto; }
+.exp-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 16px; margin-top:10px; }
+.exp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin-bottom:5px; }
+.exp-text { font-size:13px; color:var(--ink-2); line-height:1.6; }
+.exp-text code { background:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 5px; border-radius:3px; }
+.kw { color:#fbbf24; font-weight:500; }
+.fn { color:#a78bfa; }
+.str { color:#4ade80; }
+.num { color:#f472b6; }
+.cmt { color:#64748b; font-style:italic; }
+.tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
+.tbl { width:100%; border-collapse:collapse; font-size:13px; }
+.tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
+.tbl td { padding:9px 14px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:12px; vertical-align:middle; }
+.tbl tr:last-child td { border-bottom:none; }
+.ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
+.ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+.ex-block-sub { font-size:13px; color:#a8a29e; }
+.ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+.exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+.exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+.ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+.ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+.ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+.ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
+.ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
+.qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
+.qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
+.qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
+.qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
+.qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+.qi-btn:disabled { cursor:default; }
+.qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
+.qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
+.qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
+.qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+.qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
+.ri { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-bottom:12px; }
+.ri-q { padding:14px 18px; background:#fafaf9; }
+.ri-q-text { font-size:14px; color:var(--ink); margin-bottom:4px; }
+.ri-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 15px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); color:var(--accent); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; transition:background .12s,color .12s,border-color .12s; }
+.ri-btn:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+.ri-ans { display:none; padding:16px 18px; background:var(--accent-bg); border-top:1px solid var(--accent-bdr); }
+.ri-ans.show { display:block; }
+.ri-ans-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--accent-mid); margin-bottom:8px; }
+.ri-note { font-size:13px; color:var(--ink-2); margin-top:10px; line-height:1.55; }
+.doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; flex-wrap:wrap; }
+.doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
+.doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+.doc-nav .back { color:var(--ink-2); background:#fafaf9; border-color:var(--border); }
+.doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+.site-foot { border-top:1px solid var(--border); padding:20px 24px; margin-top:0; }
+.foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+/* TARGETES SUB-INDEX (pàgina selector) */
+.subcards { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-bottom:8px; }
+.subcard { background:var(--card); border:1.5px solid var(--border); border-radius:var(--r); padding:22px 22px 18px; text-decoration:none; color:var(--ink); display:flex; flex-direction:column; transition:border-color .15s,box-shadow .15s,transform .15s; }
+.subcard:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(0,0,0,.08); transform:translateY(-2px); }
+.subcard-num { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent-bdr); padding:2px 8px; border-radius:4px; letter-spacing:.04em; display:inline-block; margin-bottom:14px; width:fit-content; }
+.subcard-title { font-weight:600; font-size:16px; color:var(--ink); margin-bottom:8px; }
+.subcard-text { font-size:13px; color:var(--ink-2); flex:1; line-height:1.55; margin-bottom:16px; }
+.subcard-text code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); padding:1px 5px; border-radius:3px; color:var(--accent); }
+.subcard-foot { display:flex; align-items:center; justify-content:space-between; font-size:12px; }
+.subcard-go { color:var(--accent); font-weight:600; }
+@media (max-width:600px){ .schema-grid { grid-template-columns:1fr 1fr; } }
+
+  </style>
+</head>
+<body>
+<div class="merce-top"></div>
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">La Mercè</span><span class="brand-sub">Formació Professional</span></a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="breadcrumb"><a href="index.html">MP0484 Bases de dades</a><span>›</span><a href="index.html#aea1">AEA1 — Consultes SQL</a><span>›</span><a href="AEA1_RA3_consultes_simples.html">Consultes simples</a><span>›</span>Funcions d'una sola fila</div>
+  
+<header class="page-header">
+  <div class="meta-row">
+    <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+    <span class="badge b-ra">AEA1 · RA3 · 2 de 4</span>
+    <span class="badge b-new">Funcions d'una fila</span>
+  </div>
+  <h1 class="page-title">Funcions d'una sola fila</h1>
+  <p class="page-sub">Funcions de <strong>caràcter</strong>, <strong>numèriques</strong> i de <strong>data</strong> que transformen el valor de cada fila individualment.</p>
+  <div class="obj-box">
+    <div class="obj-icon">🎯</div>
+    <div><div class="obj-label">Criteri d'avaluació · RA3</div><div class="obj-text"><strong>3.2</strong> Consultes simples sobre una taula: ús de funcions per transformar valors</div></div>
+  </div>
+</header>
+
+  
+<div class="schema-mini">📋 Tots els exemples fan servir l'esquema <strong>HR</strong> d'Oracle (taula principal <code>EMPLOYEES</code>). Si no el recordes, consulta el <a href="AEA1_RA3_select.html#schema">detall de taules i columnes</a>.</div>
+
+<div class="ibox blue"><div class="ibox-label">Què són les funcions d'una sola fila?</div><div class="ibox-text">Reben <strong>un valor d'entrada per fila</strong> i retornen <strong>un valor de sortida per fila</strong> (relació 1 a 1). Es poden usar al <code>SELECT</code>, al <code>WHERE</code> i a l'<code>ORDER BY</code>. Es classifiquen en funcions de caràcter, numèriques i de data.</div></div>
+<section class="section"><div class="sec-head"><span class="sec-num">1</span><div><h2 class="sec-title">Funcions de caràcter</h2><p class="sec-sub">Manipular text: majúscules, subcadenes, longituds...</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 1 · UPPER i LOWER — canviar majúscules/minúscules</div><pre class="sql-out" id="e01"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>UPPER(cadena)</code> converteix tot el text a majúscules. <code>LOWER(cadena)</code> el converteix a minúscules. S'utilitzen sovint per fer cerques o comparacions sense distingir majúscules de minúscules.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 2 · INITCAP — majúscula inicial</div><pre class="sql-out" id="e02"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>INITCAP(cadena)</code> posa en majúscula la primera lletra de cada paraula i la resta en minúscula. Molt útil per donar format a noms propis.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 3 · Concatenació amb CONCAT i l'operador ||</div><pre class="sql-out" id="e03"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>CONCAT(a, b)</code> uneix exactament dues cadenes. L'operador <code>||</code> fa el mateix però permet encadenar més de dues cadenes en una sola expressió i és el que s'utilitza més habitualment a Oracle.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 4 · SUBSTR — extreure una part del text</div><pre class="sql-out" id="e04"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>SUBSTR(cadena, posició_inici, longitud)</code> extreu una subcadena. Si s'omet la longitud, agafa fins al final. Una posició d'inici negativa compta des del final de la cadena.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 5 · LENGTH — comptar caràcters</div><pre class="sql-out" id="e05"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>LENGTH(cadena)</code> retorna el nombre de caràcters, inclosos els espais. És habitual combinar-la amb <code>SUBSTR</code> per treballar amb text de longitud variable.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 6 · INSTR — localitzar una subcadena</div><pre class="sql-out" id="e06"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>INSTR(cadena, subcadena)</code> retorna la posició on comença la primera aparició de la subcadena, o <code>0</code> si no la troba. Útil, per exemple, per localitzar l'arrova en un correu electrònic.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 7 · TRIM, LTRIM, RTRIM — eliminar espais o caràcters</div><pre class="sql-out" id="e07"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>TRIM(cadena)</code> elimina espais en blanc al principi i al final. <code>LTRIM</code> només pel davant, <code>RTRIM</code> només pel darrere. Totes tres admeten un segon paràmetre opcional per indicar quin caràcter eliminar (no només espais).</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 8 · LPAD i RPAD — emplenar amb caràcters</div><pre class="sql-out" id="e08"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>LPAD(cadena, longitud_total, caràcter)</code> afegeix caràcters per l'esquerra fins arribar a la longitud indicada; <code>RPAD</code> ho fa per la dreta. S'utilitzen per alinear text en informes o generar codis amb zeros a l'esquerra.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 9 · REPLACE — substituir text</div><pre class="sql-out" id="e09"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>REPLACE(cadena, text_a_buscar, text_nou)</code> substitueix totes les aparicions d'un fragment de text per un altre dins la cadena.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">2</span><div><h2 class="sec-title">Funcions numèriques</h2><p class="sec-sub">Arrodonir, truncar i operar amb números</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 10 · ROUND i TRUNC — arrodonir i truncar</div><pre class="sql-out" id="e10"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>ROUND(número, decimals)</code> arrodoneix matemàticament. <code>TRUNC(número, decimals)</code> talla els decimals sobrants sense arrodonir. Amb decimals negatius, totes dues funcions arrodoneixen/trunquen xifres senceres (desenes, centenes...).</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 11 · MOD — residu d'una divisió</div><pre class="sql-out" id="e11"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>MOD(n, m)</code> retorna el residu de dividir <code>n</code> entre <code>m</code>. Molt útil per detectar parells/senars o per repartir elements en grups cíclics.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 12 · ABS, CEIL i FLOOR</div><pre class="sql-out" id="e12"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>ABS(n)</code> retorna el valor absolut. <code>CEIL(n)</code> arrodoneix cap amunt a l'enter més proper ("sostre"). <code>FLOOR(n)</code> arrodoneix cap avall ("terra").</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">3</span><div><h2 class="sec-title">Funcions de data</h2><p class="sec-sub">Treballar amb dates i calcular intervals de temps</p></div></div>
+<div class="ibox blue"><div class="ibox-label">Bon saber</div><div class="ibox-text">A Oracle, les dates es poden sumar i restar directament: <code>data + n</code> avança <code>n</code> dies i <code>data1 - data2</code> retorna el nombre de dies entre totes dues.</div></div>
+<div class="demo"><div class="demo-label">Exemple 13 · SYSDATE i aritmètica de dates</div><pre class="sql-out" id="e13"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>SYSDATE</code> retorna la data i hora actuals del servidor. Sumant o restant un número a una data obtenim una altra data desplaçada aquell nombre de dies.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 14 · MONTHS_BETWEEN — mesos entre dues dates</div><pre class="sql-out" id="e14"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>MONTHS_BETWEEN(data1, data2)</code> retorna el nombre de mesos (amb decimals) entre dues dates. Combinat amb <code>TRUNC</code> i una divisió entre 12, podem calcular anys complets d'antiguitat.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 15 · ADD_MONTHS — desplaçar una data per mesos</div><pre class="sql-out" id="e15"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>ADD_MONTHS(data, n)</code> suma (o resta, si <code>n</code> és negatiu) <code>n</code> mesos a una data, ajustant automàticament el dia si el mes de destí és més curt.</div></div></div>
+</section>
+<div class="ex-block-head"><h2 class="ex-block-title">Exercicis — Funcions d'una sola fila</h2><p class="ex-block-sub">Criteri 3.2 · BD HR d'Oracle</p></div>
+<div class="ex-block-body">
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Identificar la funció correcta</div><div class="ex-level">Nivell bàsic · criteri 3.2</div></div></div>
+    <p class="ex-intro">Tria la funció adequada per a cada situació.</p>
+    <div id="ex1-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Resultat de funcions</div><div class="ex-level">Nivell mitjà · criteri 3.2</div></div></div>
+    <p class="ex-intro">Calcula mentalment el resultat de cada expressió.</p>
+    <div id="ex2-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Escriu la consulta SQL</div><div class="ex-level">Nivell avançat · criteri 3.2</div></div></div>
+    <p class="ex-intro">Escriu la consulta SQL per a cada enunciat i comprova-la amb la solució.</p>
+    <div id="ex3-cont"></div>
+  </div>
+</div>
+
+<nav class="doc-nav">
+  <a class="back" href="AEA1_RA3_select.html">← La sentència SELECT</a>
+  <a href="AEA1_RA3_conversio_condicionals.html">Conversió i condicionals →</a>
+</nav>
+
+</div>
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+<script>
+
+function colorSQL(t){
+  t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t=t.replace(/(--[^\n]*)/g,'<span class="cmt">$1</span>');
+  t=t.replace(/('[^']*')/g,'<span class="str">$1</span>');
+  t=t.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');
+  t=t.replace(/\b(SELECT|FROM|WHERE|AND|OR|NOT|IN|LIKE|BETWEEN|IS|NULL|ORDER\s+BY|GROUP\s+BY|HAVING|DISTINCT|AS|ASC|DESC|CASE|WHEN|THEN|ELSE|END)\b/gi,'<span class="kw">$1</span>');
+  t=t.replace(/\b(COUNT|SUM|AVG|MAX|MIN|ROUND|TRUNC|MOD|UPPER|LOWER|INITCAP|CONCAT|SUBSTR|LENGTH|TRIM|LTRIM|RTRIM|REPLACE|INSTR|LPAD|RPAD|NVL|NVL2|NULLIF|COALESCE|TO_CHAR|TO_DATE|TO_NUMBER|SYSDATE|MONTHS_BETWEEN|ADD_MONTHS|DECODE|GREATEST|LEAST|ABS|CEIL|FLOOR|ROWNUM)\b/gi,'<span class="fn">$1</span>');
+  return t;
+}
+
+
+const SQLS={
+  e01:`SELECT UPPER(first_name) AS majuscules,\n       LOWER(last_name)  AS minuscules\nFROM   employees\nWHERE  ROWNUM <= 5;`,
+  e02:`SELECT INITCAP(first_name || ' ' || last_name) AS nom_format\nFROM   employees\nWHERE  ROWNUM <= 5;`,
+  e03:`SELECT CONCAT(first_name, last_name)            AS amb_concat,\n       first_name || ' ' || last_name           AS amb_operador\nFROM   employees\nWHERE  ROWNUM <= 5;`,
+  e04:`SELECT last_name,\n       SUBSTR(last_name, 1, 3)  AS tres_primers,\n       SUBSTR(last_name, -3)   AS tres_ultims\nFROM   employees\nWHERE  ROWNUM <= 5;`,
+  e05:`SELECT last_name, LENGTH(last_name) AS longitud\nFROM   employees\nORDER BY longitud DESC;`,
+  e06:`SELECT email, INSTR(email, '@') AS pos_arroba\nFROM   employees\nWHERE  ROWNUM <= 5;`,
+  e07:`SELECT TRIM('   Oracle SQL   ') AS sense_espais FROM dual;`,
+  e08:`SELECT LPAD(employee_id, 6, '0') AS codi_emp,\n       RPAD(last_name, 12, '.')  AS nom_alineat\nFROM   employees\nWHERE  ROWNUM <= 5;`,
+  e09:`SELECT REPLACE(email, '@example.com', '@lamerce.cat') AS email_nou\nFROM   employees\nWHERE  ROWNUM <= 5;`,
+  e10:`SELECT salary,\n       ROUND(salary / 12, 2) AS mensual_arrodonit,\n       TRUNC(salary / 12, 2) AS mensual_truncat\nFROM   employees\nWHERE  ROWNUM <= 5;`,
+  e11:`SELECT employee_id,\n       MOD(employee_id, 2) AS parell_o_senar\nFROM   employees\nWHERE  ROWNUM <= 6;`,
+  e12:`SELECT CEIL(101.2)  AS sostre,\n       FLOOR(101.8) AS terra,\n       ABS(-25)     AS valor_absolut\nFROM   dual;`,
+  e13:`SELECT last_name,\n       hire_date,\n       SYSDATE          AS avui,\n       hire_date + 90   AS final_periode_prova\nFROM   employees\nWHERE  department_id = 90;`,
+  e14:`SELECT last_name,\n       hire_date,\n       TRUNC(MONTHS_BETWEEN(SYSDATE, hire_date) / 12) AS anys_antiguitat\nFROM   employees\nORDER BY anys_antiguitat DESC;`,
+  e15:`SELECT last_name,\n       hire_date,\n       ADD_MONTHS(hire_date, 6) AS final_periode_prova_6m\nFROM   employees\nWHERE  department_id = 60;`
+};
+
+const E1=[
+  {t:'Quina funció converteix tot un text a majúscules?',opts:['INITCAP','UPPER','CONCAT','TRIM'],ans:1,exp:'UPPER converteix tota la cadena a majúscules. INITCAP només posa en majúscula la primera lletra de cada paraula.'},
+  {t:'Quina funció retorna el residu d\'una divisió entera?',opts:['TRUNC','ROUND','MOD','ABS'],ans:2,exp:'MOD(n, m) retorna el residu de dividir n entre m.'},
+  {t:'Quina diferència hi ha entre ROUND i TRUNC amb decimals?',opts:['Cap, fan el mateix','ROUND arrodoneix, TRUNC talla sense arrodonir','TRUNC només funciona amb dates','ROUND només accepta enters'],ans:1,exp:'ROUND arrodoneix matemàticament; TRUNC elimina els decimals sobrants sense arrodonir.'},
+  {t:'Quina funció retorna el nombre de mesos entre dues dates?',opts:['ADD_MONTHS','MONTHS_BETWEEN','SYSDATE','TRUNC'],ans:1,exp:'MONTHS_BETWEEN(data1, data2) retorna els mesos (amb decimals) entre dues dates.'},
+  {t:'Quina funció emplena una cadena per l\'esquerra fins a una longitud fixa?',opts:['RPAD','TRIM','LPAD','SUBSTR'],ans:2,exp:'LPAD afegeix caràcters per l\'esquerra. RPAD ho fa per la dreta.'}
+];
+
+const E2=[
+  {q:'Quin resultat retorna aquesta expressió?',code:`SELECT SUBSTR('BASES DE DADES', 1, 5) FROM dual;`,opts:['"BASES"','"DADES"','"BASE"','Error'],ans:0,exp:'SUBSTR comença a la posició 1 i agafa 5 caràcters: "BASES".'},
+  {q:'Quin valor retorna aquesta expressió?',code:`SELECT MOD(17, 5) FROM dual;`,opts:['3','2','12','0'],ans:1,exp:'17 dividit entre 5 dona 3 amb residu 2 (5×3=15, 17-15=2).'},
+  {q:'Quina d\'aquestes és la manera correcta d\'eliminar els decimals d\'un número sense arrodonir?',code:`-- A: ROUND(123.789, 0)\n-- B: TRUNC(123.789, 0)`,opts:['A','B','Les dues donen el mateix resultat sempre','Cap'],ans:1,exp:'TRUNC(123.789, 0) dona 123 (talla sense arrodonir). ROUND(123.789, 0) donaria 124.'}
+];
+
+const E3sol=[
+  {ctx:'Mostra el cognom de cada empleat en majúscules, juntament amb la longitud del cognom, ordenat de més llarg a més curt.',code:`SELECT UPPER(last_name)        AS cognom_majuscules,\n       LENGTH(last_name)       AS longitud\nFROM   employees\nORDER BY longitud DESC;`,note:'Criteri 3.2 — combinació de UPPER i LENGTH, cadascuna en la seva pròpia columna.'},
+  {ctx:'Genera un codi d\'empleat de 5 xifres omplint amb zeros a l\'esquerra a partir de EMPLOYEE_ID (per exemple, 107 → "00107").',code:`SELECT employee_id,\n       LPAD(employee_id, 5, '0') AS codi_empleat\nFROM   employees;`,note:'Criteri 3.2 — ús de LPAD per generar codis amb format fix.'},
+  {ctx:'Calcula quants anys complets porta cada empleat a l\'empresa a partir de la seva data de contractació, ordenats de més antic a més modern.',code:`SELECT last_name,\n       TRUNC(MONTHS_BETWEEN(SYSDATE, hire_date) / 12) AS anys_antiguitat\nFROM   employees\nORDER BY anys_antiguitat DESC;`,note:'Criteri 3.2 — MONTHS_BETWEEN combinat amb divisió i TRUNC per obtenir anys complets.'}
+];
+
+Object.keys(SQLS).forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=colorSQL(SQLS[id]); });
+(function(){
+  const c=document.getElementById('ex1-cont');
+  E1.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E1',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="E1f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex2-cont');
+  E2.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E2',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.q}</div><pre class="sql-out" style="font-size:11px;margin-bottom:8px">${colorSQL(d.code)}</pre><div class="qi-opts">${opts}</div><div class="qi-fb" id="E2f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex3-cont');
+  E3sol.forEach((d,i)=>{
+    const div=document.createElement('div'); div.className='ri';
+    div.innerHTML=`<div class="ri-q"><div class="ri-q-text"><strong>${i+1}.</strong> ${d.ctx}</div><button class="ri-btn" onclick="reveal(this,'E3a${i}')">▶ Veure solució SQL</button></div><div class="ri-ans" id="E3a${i}"><div class="ri-ans-label">Solució</div><pre class="sql-out">${colorSQL(d.code)}</pre><div class="ri-note">${d.note}</div></div>`;
+    c.appendChild(div);
+  });
+})();
+const ALL={E1,E2};
+function checkQ(grp,btn,i,choice){
+  const d=ALL[grp][i],fb=document.getElementById(grp+'f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+function reveal(btn,id){document.getElementById(id).classList.add('show');btn.style.display='none';}
+
+</script>
+</body>
+</html>

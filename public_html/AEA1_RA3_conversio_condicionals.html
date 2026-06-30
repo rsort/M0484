@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA1 · Conversió i expressions condicionals — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+  --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+  --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+  --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+  --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+  --yellow:#713f12; --yellow-bg:#fefce8; --yellow-bdr:#fef08a;
+  --purple:#5b21b6; --purple-bg:#f5f3ff; --purple-bdr:#ddd6fe;
+  --code-bg:#1e293b; --code-text:#e2e8f0; --r:10px; --r-sm:6px;
+}
+body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+.merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+.site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 24px; }
+.head-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+.brand { text-decoration:none; display:flex; flex-direction:column; }
+.brand-mark { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); }
+.brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+.head-course { font-size:13px; color:var(--ink-2); }
+.wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+.breadcrumb { font-size:13px; color:var(--ink-3); padding:14px 0 0; }
+.breadcrumb a { color:var(--ink-2); text-decoration:none; }
+.breadcrumb a:hover { color:var(--accent); }
+.breadcrumb span { margin:0 5px; }
+.page-header { padding:40px 0 32px; border-bottom:1.5px solid var(--border); margin-bottom:48px; }
+.meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+.badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+.b-course { background:var(--ink); color:#fff; }
+.b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+.b-act { background:var(--accent-mid); color:#fff; }
+.b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+.page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:10px; }
+.page-sub { font-size:16px; color:var(--ink-2); margin-bottom:24px; }
+.obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; }
+.obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+.obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+.obj-text { font-size:14px; color:var(--ink-2); }
+.schema-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:20px; }
+.schema-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; }
+.schema-card-head { background:var(--ink); color:#fff; padding:6px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:.04em; }
+.schema-card-body { padding:8px 12px; }
+.schema-card-body div { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-2); padding:2px 0; border-bottom:1px solid var(--border); }
+.schema-card-body div:last-child { border-bottom:none; }
+.schema-card-body .pk { color:var(--accent); font-weight:600; }
+.schema-card-body .fk { color:var(--blue); }
+.schema-mini { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 16px; margin-bottom:32px; font-size:13px; color:var(--ink-2); }
+.schema-mini a { color:var(--accent); font-weight:600; text-decoration:none; }
+.schema-mini a:hover { text-decoration:underline; }
+.schema-mini code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); color:var(--accent); padding:1px 6px; border-radius:3px; }
+.section { margin-bottom:60px; }
+.sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+.sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+.sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+.sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+.subhead { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin:32px 0 14px; padding-bottom:8px; border-bottom:1px dashed var(--accent-bdr); }
+.subhead:first-of-type { margin-top:8px; }
+.lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+.lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+.ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+.ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+.ibox-text { font-size:14px; line-height:1.65; }
+.ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+.ibox.green { background:var(--green-bg); border:1px solid var(--green-bdr); }
+.ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+.ibox.yellow { background:var(--yellow-bg); border:1px solid var(--yellow-bdr); }
+.ibox.purple { background:var(--purple-bg); border:1px solid var(--purple-bdr); }
+.ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+.ibox.green .ibox-label, .ibox.green .ibox-text { color:var(--green); }
+.ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
+.ibox.yellow .ibox-label, .ibox.yellow .ibox-text { color:var(--yellow); }
+.ibox.purple .ibox-label, .ibox.purple .ibox-text { color:var(--purple); }
+.ibox code { background:#ffffffaa; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 6px; border-radius:3px; }
+.demo { margin-bottom:24px; }
+.demo-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-bottom:8px; }
+.sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.8; white-space:pre; margin:0; overflow-x:auto; }
+.exp-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 16px; margin-top:10px; }
+.exp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin-bottom:5px; }
+.exp-text { font-size:13px; color:var(--ink-2); line-height:1.6; }
+.exp-text code { background:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 5px; border-radius:3px; }
+.kw { color:#fbbf24; font-weight:500; }
+.fn { color:#a78bfa; }
+.str { color:#4ade80; }
+.num { color:#f472b6; }
+.cmt { color:#64748b; font-style:italic; }
+.tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
+.tbl { width:100%; border-collapse:collapse; font-size:13px; }
+.tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
+.tbl td { padding:9px 14px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:12px; vertical-align:middle; }
+.tbl tr:last-child td { border-bottom:none; }
+.ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
+.ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+.ex-block-sub { font-size:13px; color:#a8a29e; }
+.ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+.exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+.exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+.ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+.ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+.ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+.ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
+.ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
+.qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
+.qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
+.qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
+.qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
+.qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+.qi-btn:disabled { cursor:default; }
+.qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
+.qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
+.qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
+.qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+.qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
+.ri { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-bottom:12px; }
+.ri-q { padding:14px 18px; background:#fafaf9; }
+.ri-q-text { font-size:14px; color:var(--ink); margin-bottom:4px; }
+.ri-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 15px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); color:var(--accent); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; transition:background .12s,color .12s,border-color .12s; }
+.ri-btn:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+.ri-ans { display:none; padding:16px 18px; background:var(--accent-bg); border-top:1px solid var(--accent-bdr); }
+.ri-ans.show { display:block; }
+.ri-ans-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--accent-mid); margin-bottom:8px; }
+.ri-note { font-size:13px; color:var(--ink-2); margin-top:10px; line-height:1.55; }
+.doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; flex-wrap:wrap; }
+.doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
+.doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+.doc-nav .back { color:var(--ink-2); background:#fafaf9; border-color:var(--border); }
+.doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+.site-foot { border-top:1px solid var(--border); padding:20px 24px; margin-top:0; }
+.foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+/* TARGETES SUB-INDEX (pàgina selector) */
+.subcards { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-bottom:8px; }
+.subcard { background:var(--card); border:1.5px solid var(--border); border-radius:var(--r); padding:22px 22px 18px; text-decoration:none; color:var(--ink); display:flex; flex-direction:column; transition:border-color .15s,box-shadow .15s,transform .15s; }
+.subcard:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(0,0,0,.08); transform:translateY(-2px); }
+.subcard-num { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent-bdr); padding:2px 8px; border-radius:4px; letter-spacing:.04em; display:inline-block; margin-bottom:14px; width:fit-content; }
+.subcard-title { font-weight:600; font-size:16px; color:var(--ink); margin-bottom:8px; }
+.subcard-text { font-size:13px; color:var(--ink-2); flex:1; line-height:1.55; margin-bottom:16px; }
+.subcard-text code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); padding:1px 5px; border-radius:3px; color:var(--accent); }
+.subcard-foot { display:flex; align-items:center; justify-content:space-between; font-size:12px; }
+.subcard-go { color:var(--accent); font-weight:600; }
+@media (max-width:600px){ .schema-grid { grid-template-columns:1fr 1fr; } }
+
+  </style>
+</head>
+<body>
+<div class="merce-top"></div>
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">La Mercè</span><span class="brand-sub">Formació Professional</span></a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="breadcrumb"><a href="index.html">MP0484 Bases de dades</a><span>›</span><a href="index.html#aea1">AEA1 — Consultes SQL</a><span>›</span><a href="AEA1_RA3_consultes_simples.html">Consultes simples</a><span>›</span>Conversió i condicionals</div>
+  
+<header class="page-header">
+  <div class="meta-row">
+    <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+    <span class="badge b-ra">AEA1 · RA3 · 3 de 4</span>
+    <span class="badge b-new">Conversió i condicionals</span>
+  </div>
+  <h1 class="page-title">Funcions de conversió i expressions condicionals</h1>
+  <p class="page-sub">Convertir dades entre tipus amb <strong>TO_CHAR</strong>, <strong>TO_DATE</strong> i <strong>TO_NUMBER</strong>, i aplicar lògica condicional dins d'una consulta amb <strong>CASE</strong>, <strong>DECODE</strong> i les funcions de tractament de <strong>NULL</strong>.</p>
+  <div class="obj-box">
+    <div class="obj-icon">🎯</div>
+    <div><div class="obj-label">Criteri d'avaluació · RA3</div><div class="obj-text"><strong>3.2</strong> Consultes simples sobre una taula: conversió de tipus i lògica condicional</div></div>
+  </div>
+</header>
+
+  
+<div class="schema-mini">📋 Tots els exemples fan servir l'esquema <strong>HR</strong> d'Oracle (taula principal <code>EMPLOYEES</code>). Si no el recordes, consulta el <a href="AEA1_RA3_select.html#schema">detall de taules i columnes</a>.</div>
+<section class="section"><div class="sec-head"><span class="sec-num">1</span><div><h2 class="sec-title">Funcions de conversió</h2><p class="sec-sub">Canviar el tipus de dada d'un valor</p></div></div>
+<div class="ibox blue"><div class="ibox-label">Conversió implícita vs explícita</div><div class="ibox-text">Oracle a vegades converteix tipus automàticament (<strong>conversió implícita</strong>), per exemple en comparar un número amb un text que sembla un número. És més segur fer-ho sempre de manera <strong>explícita</strong> amb <code>TO_CHAR</code>, <code>TO_DATE</code> i <code>TO_NUMBER</code>, perquè el codi és més clar i evita errors difícils de detectar.</div></div>
+<div class="demo"><div class="demo-label">Exemple 1 · TO_CHAR amb dates</div><pre class="sql-out" id="e01"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>TO_CHAR(data, 'format')</code> converteix una data a text amb el format que indiquem. Patrons habituals: <code>DD</code> (dia), <code>MM</code> (mes numèric), <code>MON</code> (mes abreujat), <code>MONTH</code> (mes complet), <code>YYYY</code> (any amb 4 xifres), <code>DAY</code> (nom del dia).</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 2 · TO_CHAR amb números</div><pre class="sql-out" id="e02"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>TO_CHAR(número, 'format')</code> dona format a un número com a text. <code>9</code> representa una xifra (no es mostra si és zero a l'esquerra), <code>0</code> força mostrar el zero, <code>,</code> i <code>.</code> col·loquen separadors de milers i decimals, i <code>$</code> afegeix el símbol de moneda.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 3 · TO_DATE — de text a data</div><pre class="sql-out" id="e03"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>TO_DATE(text, 'format')</code> converteix una cadena de text en una data real, indicant quin format té el text d'entrada. És imprescindible per comparar o filtrar per dates escrites com a text, per exemple a la clàusula <code>WHERE</code>.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 4 · TO_NUMBER — de text a número</div><pre class="sql-out" id="e04"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>TO_NUMBER(text)</code> converteix una cadena de text en un valor numèric, per poder-hi fer operacions aritmètiques o comparacions numèriques.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 5 · Conversió implícita: per què val més evitar-la</div><pre class="sql-out" id="e05"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Aquesta consulta funciona perquè Oracle converteix implícitament el text <code>'5000'</code> a número per poder comparar-lo amb <code>SALARY</code>. Si el format del text no fos vàlid (per exemple <code>'5.000€'</code>), la consulta donaria error en temps d'execució. És més segur i llegible convertir sempre explícitament.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">2</span><div><h2 class="sec-title">Expressions condicionals</h2><p class="sec-sub">Triar un valor o un altre segons una condició</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 6 · CASE simple — comparar amb valors concrets</div><pre class="sql-out" id="e06"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">El <code>CASE</code> simple compara una expressió amb diversos valors concrets, un per un, com un <code>switch</code> en altres llenguatges. És equivalent (i normalment més clar) que <code>DECODE</code>.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 7 · CASE cercat — avaluar condicions (rangs)</div><pre class="sql-out" id="e07"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">El <code>CASE</code> cercat (<em>searched CASE</em>) avalua una condició diferent a cada <code>WHEN</code> (no només igualtats), cosa que el fa ideal per treballar amb rangs de valors. Les condicions s'avaluen en ordre i s'atura a la primera que és certa.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 8 · DECODE — l'alternativa clàssica d'Oracle</div><pre class="sql-out" id="e08"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>DECODE(expressió, valor1, resultat1, valor2, resultat2, ..., per_defecte)</code> és la funció pròpia d'Oracle anterior al <code>CASE</code> de l'estàndard SQL. Només compara igualtats (com el <code>CASE</code> simple), no rangs.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">3</span><div><h2 class="sec-title">Tractament de valors NULL</h2><p class="sec-sub">NVL, NVL2, COALESCE i NULLIF</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 9 · NVL — substituir NULL per un valor per defecte</div><pre class="sql-out" id="e09"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>NVL(expressió, valor_si_null)</code> retorna <code>valor_si_null</code> quan l'expressió és <code>NULL</code>, i l'expressió original en cas contrari. Molt útil abans de fer operacions aritmètiques amb columnes que poden ser NULL.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 10 · NVL2 — triar entre dos valors segons si és NULL o no</div><pre class="sql-out" id="e10"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>NVL2(expressió, valor_si_no_null, valor_si_null)</code> retorna el segon paràmetre si l'expressió <strong>no</strong> és NULL, i el tercer si ho és. És com un <code>NVL</code> amb dues sortides possibles en lloc d'una.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 11 · COALESCE — el primer valor no NULL d'una llista</div><pre class="sql-out" id="e11"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>COALESCE(v1, v2, v3, ...)</code> retorna el primer valor de la llista que no sigui <code>NULL</code>. És una generalització de <code>NVL</code> que admet més de dos arguments, útil quan hi ha diverses columnes alternatives a comprovar.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 12 · NULLIF — convertir un valor concret en NULL</div><pre class="sql-out" id="e12"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>NULLIF(expr1, expr2)</code> retorna <code>NULL</code> si <code>expr1</code> i <code>expr2</code> són iguals; si no, retorna <code>expr1</code>. És l'operació "inversa" de NVL: serveix per descartar valors sentinella (per exemple, un 0 que en realitat vol dir "sense dades").</div></div></div>
+</section>
+<div class="ex-block-head"><h2 class="ex-block-title">Exercicis — Conversió i expressions condicionals</h2><p class="ex-block-sub">Criteri 3.2 · BD HR d'Oracle</p></div>
+<div class="ex-block-body">
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Identificar la funció correcta</div><div class="ex-level">Nivell bàsic · criteri 3.2</div></div></div>
+    <p class="ex-intro">Tria la funció adequada per a cada situació.</p>
+    <div id="ex1-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Resultat d'expressions</div><div class="ex-level">Nivell mitjà · criteri 3.2</div></div></div>
+    <p class="ex-intro">Calcula mentalment el resultat de cada expressió.</p>
+    <div id="ex2-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Escriu la consulta SQL</div><div class="ex-level">Nivell avançat · criteri 3.2</div></div></div>
+    <p class="ex-intro">Escriu la consulta SQL per a cada enunciat i comprova-la amb la solució.</p>
+    <div id="ex3-cont"></div>
+  </div>
+</div>
+
+<nav class="doc-nav">
+  <a class="back" href="AEA1_RA3_funcions_fila.html">← Funcions d'una sola fila</a>
+  <a href="AEA1_RA3_grup_agrupaments.html">Funcions de grup i agrupaments →</a>
+</nav>
+
+</div>
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+<script>
+
+function colorSQL(t){
+  t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t=t.replace(/(--[^\n]*)/g,'<span class="cmt">$1</span>');
+  t=t.replace(/('[^']*')/g,'<span class="str">$1</span>');
+  t=t.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');
+  t=t.replace(/\b(SELECT|FROM|WHERE|AND|OR|NOT|IN|LIKE|BETWEEN|IS|NULL|ORDER\s+BY|GROUP\s+BY|HAVING|DISTINCT|AS|ASC|DESC|CASE|WHEN|THEN|ELSE|END)\b/gi,'<span class="kw">$1</span>');
+  t=t.replace(/\b(COUNT|SUM|AVG|MAX|MIN|ROUND|TRUNC|MOD|UPPER|LOWER|INITCAP|CONCAT|SUBSTR|LENGTH|TRIM|LTRIM|RTRIM|REPLACE|INSTR|LPAD|RPAD|NVL|NVL2|NULLIF|COALESCE|TO_CHAR|TO_DATE|TO_NUMBER|SYSDATE|MONTHS_BETWEEN|ADD_MONTHS|DECODE|GREATEST|LEAST|ABS|CEIL|FLOOR|ROWNUM)\b/gi,'<span class="fn">$1</span>');
+  return t;
+}
+
+
+const SQLS={
+  e01:`SELECT last_name,\n       hire_date,\n       TO_CHAR(hire_date, 'DD/MM/YYYY')   AS data_curta,\n       TO_CHAR(hire_date, 'DD "de" MONTH "de" YYYY') AS data_llarga\nFROM   employees\nWHERE  department_id = 90;`,
+  e02:`SELECT last_name,\n       salary,\n       TO_CHAR(salary, '99,999.00') AS salari_format,\n       TO_CHAR(salary, '$99,999')   AS salari_moneda\nFROM   employees\nWHERE  department_id = 90;`,
+  e03:`SELECT last_name, hire_date\nFROM   employees\nWHERE  hire_date >= TO_DATE('01/01/2005', 'DD/MM/YYYY');`,
+  e04:`SELECT TO_NUMBER('1250.50') + 100 AS resultat\nFROM   dual;`,
+  e05:`-- Funciona per conversió implícita, però no és recomanable:\nSELECT last_name, salary\nFROM   employees\nWHERE  salary > '5000';`,
+  e06:`SELECT last_name,\n       department_id,\n       CASE department_id\n         WHEN 10 THEN 'Administració'\n         WHEN 60 THEN 'IT'\n         WHEN 90 THEN 'Executiu'\n         ELSE 'Altres'\n       END AS area\nFROM   employees;`,
+  e07:`SELECT last_name,\n       salary,\n       CASE\n         WHEN salary < 5000  THEN 'Baix'\n         WHEN salary < 10000 THEN 'Mig'\n         ELSE                     'Alt'\n       END AS rang_salarial\nFROM   employees\nORDER BY salary;`,
+  e08:`SELECT last_name,\n       department_id,\n       DECODE(department_id,\n              10, 'Administració',\n              60, 'IT',\n              90, 'Executiu',\n              'Altres') AS area\nFROM   employees;`,
+  e09:`SELECT last_name,\n       commission_pct,\n       NVL(commission_pct, 0) AS comissio_calculada,\n       salary * (1 + NVL(commission_pct, 0)) AS salari_amb_comissio\nFROM   employees;`,
+  e10:`SELECT last_name,\n       commission_pct,\n       NVL2(commission_pct, 'Té comissió', 'Sense comissió') AS te_comissio\nFROM   employees;`,
+  e11:`SELECT last_name,\n       COALESCE(commission_pct, manager_id, 0) AS primer_valor_no_null\nFROM   employees;`,
+  e12:`SELECT employee_id,\n       commission_pct,\n       NULLIF(commission_pct, 0) AS comissio_real\nFROM   employees;`
+};
+
+const E1=[
+  {t:'Quina funció converteix una data en una cadena de text amb un format determinat?',opts:['TO_DATE','TO_CHAR','TO_NUMBER','CAST'],ans:1,exp:'TO_CHAR converteix dates (o números) a text amb el format indicat.'},
+  {t:'Quina funció converteix un text en una data real?',opts:['TO_DATE','TO_CHAR','DATE_VALUE','PARSE_DATE'],ans:0,exp:'TO_DATE(text, format) interpreta el text segons el format indicat i retorna una data.'},
+  {t:'Quina expressió és equivalent a un CASE simple que només compara igualtats?',opts:['NVL2','DECODE','COALESCE','NULLIF'],ans:1,exp:'DECODE és la funció clàssica d\'Oracle per comparar igualtats, equivalent a un CASE simple.'},
+  {t:'Quina funció retorna el primer valor no NULL d\'una llista de tres o més expressions?',opts:['NVL','NVL2','COALESCE','NULLIF'],ans:2,exp:'COALESCE accepta diversos arguments i retorna el primer que no sigui NULL. NVL només n\'accepta dos.'},
+  {t:'Quina funció cal usar si vols triar entre rangs de valors (no només igualtats exactes)?',opts:['CASE simple','CASE cercat (amb condicions)','DECODE','NVL'],ans:1,exp:'El CASE cercat avalua una condició a cada WHEN, per això pot treballar amb rangs (<, >, BETWEEN...).'}
+];
+
+const E2=[
+  {q:'Quin resultat retorna aquesta expressió?',code:`SELECT NVL(NULL, 100) FROM dual;`,opts:['NULL','0','100','Error'],ans:2,exp:'NVL retorna el segon paràmetre (100) quan el primer és NULL.'},
+  {q:'Quin valor retorna NULLIF en aquest cas?',code:`SELECT NULLIF(5, 5) FROM dual;`,opts:['5','0','NULL','Error'],ans:2,exp:'NULLIF retorna NULL quan els dos valors comparats són iguals.'},
+  {q:'Quina és la diferència principal entre NVL i NVL2?',code:`-- NVL(expr, valor_si_null)\n-- NVL2(expr, valor_si_no_null, valor_si_null)`,opts:['Cap, són idèntiques','NVL2 permet definir un valor diferent també per al cas "no NULL"','NVL2 només funciona amb números','NVL2 està obsoleta'],ans:1,exp:'NVL només substitueix el NULL; NVL2 a més permet triar un valor diferent quan NO és NULL.'}
+];
+
+const E3sol=[
+  {ctx:'Mostra el cognom i la data de contractació amb el format "15 de Gener de 2003" per a tots els empleats del departament 50.',code:`SELECT last_name,\n       TO_CHAR(hire_date, 'DD "de" MONTH "de" YYYY') AS data_contractacio\nFROM   employees\nWHERE  department_id = 50;`,note:'Criteri 3.2 — TO_CHAR amb format de data personalitzat i text literal entre cometes.'},
+  {ctx:'Classifica cada empleat en "Júnior" (menys de 3 anys a l\'empresa), "Sènior" (entre 3 i 10) o "Veterà" (més de 10), a partir de la seva data de contractació.',code:`SELECT last_name,\n       TRUNC(MONTHS_BETWEEN(SYSDATE, hire_date) / 12) AS anys,\n       CASE\n         WHEN MONTHS_BETWEEN(SYSDATE, hire_date) / 12 < 3  THEN 'Júnior'\n         WHEN MONTHS_BETWEEN(SYSDATE, hire_date) / 12 <= 10 THEN 'Sènior'\n         ELSE 'Veterà'\n       END AS categoria\nFROM   employees;`,note:'Criteri 3.2 — CASE cercat amb rangs construïts a partir de MONTHS_BETWEEN.'},
+  {ctx:'Mostra el cognom i la comissió de cada empleat: si no en té, mostra el text "Sense comissió"; si en té, mostra el percentatge convertit a text amb el símbol "%".',code:`SELECT last_name,\n       NVL2(commission_pct,\n            TO_CHAR(commission_pct * 100) || '%',\n            'Sense comissió') AS comissio\nFROM   employees;`,note:'Criteri 3.2 — combinació de NVL2 amb TO_CHAR i concatenació.'}
+];
+
+Object.keys(SQLS).forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=colorSQL(SQLS[id]); });
+(function(){
+  const c=document.getElementById('ex1-cont');
+  E1.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E1',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="E1f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex2-cont');
+  E2.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E2',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.q}</div><pre class="sql-out" style="font-size:11px;margin-bottom:8px">${colorSQL(d.code)}</pre><div class="qi-opts">${opts}</div><div class="qi-fb" id="E2f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex3-cont');
+  E3sol.forEach((d,i)=>{
+    const div=document.createElement('div'); div.className='ri';
+    div.innerHTML=`<div class="ri-q"><div class="ri-q-text"><strong>${i+1}.</strong> ${d.ctx}</div><button class="ri-btn" onclick="reveal(this,'E3a${i}')">▶ Veure solució SQL</button></div><div class="ri-ans" id="E3a${i}"><div class="ri-ans-label">Solució</div><pre class="sql-out">${colorSQL(d.code)}</pre><div class="ri-note">${d.note}</div></div>`;
+    c.appendChild(div);
+  });
+})();
+const ALL={E1,E2};
+function checkQ(grp,btn,i,choice){
+  const d=ALL[grp][i],fb=document.getElementById(grp+'f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+function reveal(btn,id){document.getElementById(id).classList.add('show');btn.style.display='none';}
+
+</script>
+</body>
+</html>
