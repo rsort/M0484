@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA1 · Bones pràctiques i optimització — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+  --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+  --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+  --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+  --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+  --yellow:#713f12; --yellow-bg:#fefce8; --yellow-bdr:#fef08a;
+  --purple:#5b21b6; --purple-bg:#f5f3ff; --purple-bdr:#ddd6fe;
+  --code-bg:#1e293b; --code-text:#e2e8f0; --r:10px; --r-sm:6px;
+}
+body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+.merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+.site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 24px; }
+.head-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+.brand { text-decoration:none; display:flex; flex-direction:column; }
+.brand-mark { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); }
+.brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+.head-course { font-size:13px; color:var(--ink-2); }
+.wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+.breadcrumb { font-size:13px; color:var(--ink-3); padding:14px 0 0; }
+.breadcrumb a { color:var(--ink-2); text-decoration:none; }
+.breadcrumb a:hover { color:var(--accent); }
+.breadcrumb span { margin:0 5px; }
+.page-header { padding:40px 0 32px; border-bottom:1.5px solid var(--border); margin-bottom:48px; }
+.meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+.badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+.b-course { background:var(--ink); color:#fff; }
+.b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+.b-act { background:var(--accent-mid); color:#fff; }
+.b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+.page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:10px; }
+.page-sub { font-size:16px; color:var(--ink-2); margin-bottom:24px; }
+.obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; }
+.obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+.obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+.obj-text { font-size:14px; color:var(--ink-2); }
+.schema-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:20px; }
+.schema-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; }
+.schema-card-head { background:var(--ink); color:#fff; padding:6px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:.04em; }
+.schema-card-body { padding:8px 12px; }
+.schema-card-body div { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-2); padding:2px 0; border-bottom:1px solid var(--border); }
+.schema-card-body div:last-child { border-bottom:none; }
+.schema-card-body .pk { color:var(--accent); font-weight:600; }
+.schema-card-body .fk { color:var(--blue); }
+.schema-mini { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 16px; margin-bottom:32px; font-size:13px; color:var(--ink-2); }
+.schema-mini a { color:var(--accent); font-weight:600; text-decoration:none; }
+.schema-mini a:hover { text-decoration:underline; }
+.schema-mini code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); color:var(--accent); padding:1px 6px; border-radius:3px; }
+.section { margin-bottom:60px; }
+.sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+.sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+.sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+.sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+.subhead { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin:32px 0 14px; padding-bottom:8px; border-bottom:1px dashed var(--accent-bdr); }
+.subhead:first-of-type { margin-top:8px; }
+.lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+.lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+.ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+.ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+.ibox-text { font-size:14px; line-height:1.65; }
+.ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+.ibox.green { background:var(--green-bg); border:1px solid var(--green-bdr); }
+.ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+.ibox.yellow { background:var(--yellow-bg); border:1px solid var(--yellow-bdr); }
+.ibox.purple { background:var(--purple-bg); border:1px solid var(--purple-bdr); }
+.ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+.ibox.green .ibox-label, .ibox.green .ibox-text { color:var(--green); }
+.ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
+.ibox.yellow .ibox-label, .ibox.yellow .ibox-text { color:var(--yellow); }
+.ibox.purple .ibox-label, .ibox.purple .ibox-text { color:var(--purple); }
+.ibox code { background:#ffffffaa; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 6px; border-radius:3px; }
+.demo { margin-bottom:24px; }
+.demo-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-bottom:8px; }
+.sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.8; white-space:pre; margin:0; overflow-x:auto; }
+.exp-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 16px; margin-top:10px; }
+.exp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin-bottom:5px; }
+.exp-text { font-size:13px; color:var(--ink-2); line-height:1.6; }
+.exp-text code { background:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 5px; border-radius:3px; }
+.kw { color:#fbbf24; font-weight:500; }
+.fn { color:#a78bfa; }
+.str { color:#4ade80; }
+.num { color:#f472b6; }
+.cmt { color:#64748b; font-style:italic; }
+.tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
+.tbl { width:100%; border-collapse:collapse; font-size:13px; }
+.tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
+.tbl td { padding:9px 14px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:12px; vertical-align:middle; }
+.tbl tr:last-child td { border-bottom:none; }
+.cmp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+.cmp { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:14px; }
+.cmp h4 { font-size:12px; font-family:'JetBrains Mono',monospace; color:var(--accent); margin-bottom:8px; }
+.cmp p { font-size:12px; color:var(--ink-2); line-height:1.5; }
+.ba-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:10px; }
+.ba { border-radius:var(--r-sm); overflow:hidden; border:1px solid var(--border); }
+.ba-head { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:8px 14px; }
+.ba.bad .ba-head { background:var(--red-bg); color:var(--red); }
+.ba.good .ba-head { background:var(--green-bg); color:var(--green); }
+.ba pre.sql-out { border-radius:0; font-size:12px; }
+@media (max-width:640px){ .ba-grid, .cmp-grid { grid-template-columns:1fr; } }
+.ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
+.ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+.ex-block-sub { font-size:13px; color:#a8a29e; }
+.ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+.exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+.exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+.ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+.ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+.ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+.ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
+.ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
+.qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
+.qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
+.qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
+.qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
+.qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+.qi-btn:disabled { cursor:default; }
+.qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
+.qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
+.qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
+.qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+.qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
+.ri { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-bottom:12px; }
+.ri-q { padding:14px 18px; background:#fafaf9; }
+.ri-q-text { font-size:14px; color:var(--ink); margin-bottom:4px; }
+.ri-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 15px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); color:var(--accent); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; transition:background .12s,color .12s,border-color .12s; }
+.ri-btn:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+.ri-ans { display:none; padding:16px 18px; background:var(--accent-bg); border-top:1px solid var(--accent-bdr); }
+.ri-ans.show { display:block; }
+.ri-ans-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--accent-mid); margin-bottom:8px; }
+.ri-note { font-size:13px; color:var(--ink-2); margin-top:10px; line-height:1.55; }
+.doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; flex-wrap:wrap; }
+.doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
+.doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+.doc-nav .back { color:var(--ink-2); background:#fafaf9; border-color:var(--border); }
+.doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+.site-foot { border-top:1px solid var(--border); padding:20px 24px; margin-top:0; }
+.foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+/* TARGETES SUB-INDEX (pàgina selector) */
+.subcards { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-bottom:8px; }
+.subcard { background:var(--card); border:1.5px solid var(--border); border-radius:var(--r); padding:22px 22px 18px; text-decoration:none; color:var(--ink); display:flex; flex-direction:column; transition:border-color .15s,box-shadow .15s,transform .15s; }
+.subcard:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(0,0,0,.08); transform:translateY(-2px); }
+.subcard-num { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent-bdr); padding:2px 8px; border-radius:4px; letter-spacing:.04em; display:inline-block; margin-bottom:14px; width:fit-content; }
+.subcard-title { font-weight:600; font-size:16px; color:var(--ink); margin-bottom:8px; }
+.subcard-text { font-size:13px; color:var(--ink-2); flex:1; line-height:1.55; margin-bottom:16px; }
+.subcard-text code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); padding:1px 5px; border-radius:3px; color:var(--accent); }
+.subcard-foot { display:flex; align-items:center; justify-content:space-between; font-size:12px; }
+.subcard-go { color:var(--accent); font-weight:600; }
+@media (max-width:600px){ .schema-grid { grid-template-columns:1fr 1fr; } }
+
+  </style>
+</head>
+<body>
+<div class="merce-top"></div>
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">La Mercè</span><span class="brand-sub">Formació Professional</span></a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="breadcrumb"><a href="index.html">MP0484 Bases de dades</a><span>›</span><a href="index.html#aea1">AEA1 — Consultes SQL</a><span>›</span><a href="AEA1_RA3_consultes_complexes.html">Consultes complexes</a><span>›</span>Bones pràctiques i optimització</div>
+  
+<header class="page-header">
+  <div class="meta-row">
+    <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+    <span class="badge b-ra">AEA1 · RA3 · 4 de 4</span>
+    <span class="badge b-new">Optimització</span>
+  </div>
+  <h1 class="page-title">Bones pràctiques i optimització</h1>
+  <p class="page-sub">Una consulta <strong>correcta</strong> i una consulta <strong>eficient</strong> no sempre són el mateix. Aprèn a llegir com Oracle executa una consulta i a escriure SQL que escali bé.</p>
+  <div class="obj-box">
+    <div class="obj-icon">🎯</div>
+    <div><div class="obj-label">Criteri d'avaluació · RA3</div><div class="obj-text"><strong>3.8</strong> Optimització de consultes</div></div>
+  </div>
+</header>
+
+  
+<p class="lead">Quan les taules tenen poques files, gairebé qualsevol consulta respon a l'instant. Però quan creixen a milers o milions de files, el rendiment pot degradar-se dràsticament si no s'apliquen bones pràctiques. Aquest bloc no apareix als apunts oficials d'Oracle del curs i complementa la teoria amb criteris pràctics d'optimització.</p>
+<section class="section"><div class="sec-head"><span class="sec-num">1</span><div><h2 class="sec-title">El pla d'execució</h2><p class="sec-sub">Com sap Oracle com executarà la consulta?</p></div></div>
+<p class="lead">Abans d'executar una consulta, l'<strong>optimitzador d'Oracle (CBO, Cost-Based Optimizer)</strong> decideix quin és el camí més eficient per obtenir el resultat: quin ordre seguir per unir taules, si usar un índex o llegir tota la taula, etc. Aquesta decisió es pot consultar amb <code>EXPLAIN PLAN</code>.</p>
+<div class="demo"><div class="demo-label">Exemple 1 · Consultar el pla d'execució amb EXPLAIN PLAN</div><pre class="sql-out" id="e01"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>EXPLAIN PLAN FOR</code> no executa la consulta: només calcula i desa el pla que faria servir. Després es consulta amb la vista <code>DBMS_XPLAN.DISPLAY</code>. El pla mostra, entre altres coses, si Oracle farà un <strong>Full Table Scan</strong> (llegeix tota la taula) o un <strong>Index Range Scan</strong> (usa un índex per anar directament a les files que interessen).</div></div></div>
+<div class="cmp-grid">
+  <div class="cmp"><h4>Full Table Scan</h4><p>Oracle llegeix totes les files de la taula una per una. És ràpid en taules petites, però molt costós en taules grans si només necessitem unes poques files.</p></div>
+  <div class="cmp"><h4>Index Range Scan</h4><p>Oracle usa un índex per anar directament a les files que compleixen la condició, sense llegir tota la taula. Ideal quan el <code>WHERE</code> filtra un percentatge petit de files.</p></div>
+</div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">2</span><div><h2 class="sec-title">Índexs</h2><p class="sec-sub">Estructures que acceleren la cerca de files</p></div></div>
+<p class="lead">Un índex és una estructura addicional (per defecte, un arbre B-tree) que permet a Oracle localitzar files sense recórrer tota la taula, de manera similar a l'índex alfabètic d'un llibre.</p>
+<div class="demo"><div class="demo-label">Exemple 2 · Crear un índex sobre una columna usada sovint en WHERE/JOIN</div><pre class="sql-out" id="e02"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Es recomana indexar columnes que apareixen sovint a <code>WHERE</code>, <code>JOIN ... ON</code> o <code>ORDER BY</code>. Les claus primàries ja tenen un índex automàtic; les <strong>claus foranes, en canvi, NO s'indexen automàticament a Oracle</strong> i sovint és convenient fer-ho manualment, ja que s'utilitzen contínuament en JOINs.</div></div></div>
+<div class="ibox yellow"><div class="ibox-label">Quan NO val la pena indexar</div><div class="ibox-text">En taules molt petites (l'optimitzador pot preferir un Full Table Scan igualment), en columnes amb molt poca <strong>selectivitat</strong> (per exemple, una columna "actiu" amb només els valors 'S'/'N'), o en taules amb moltes escriptures (<code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code>) freqüents, ja que cada índex addicional alenteix les operacions d'escriptura.</div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">3</span><div><h2 class="sec-title">Escriure consultes "sargables"</h2><p class="sec-sub">No inutilitzis els teus propis índexs</p></div></div>
+<p class="lead">Una consulta és <em>sargable</em> (de l'anglès <em>Search ARGument ABLE</em>) quan Oracle pot aprofitar els índexs existents per resoldre-la. Certs patrons d'escriptura, tot i ser correctes, impedeixen que l'índex s'utilitzi.</p>
+<div class="demo">
+  <div class="demo-label">Exemple 3 · Aplicar una funció sobre la columna indexada (la inutilitza)</div>
+  <div class="ba-grid">
+    <div class="ba bad"><div class="ba-head">❌ No usa l'índex de LAST_NAME</div><pre class="sql-out" id="bad1"></pre></div>
+    <div class="ba good"><div class="ba-head">✅ Sí usa l'índex de LAST_NAME</div><pre class="sql-out" id="good1"></pre></div>
+  </div>
+  <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Quan apliquem <code>UPPER()</code> a la columna dins del <code>WHERE</code>, Oracle ha de calcular <code>UPPER(last_name)</code> per a <strong>cada fila</strong> abans de poder comparar-la, per la qual cosa l'índex normal sobre <code>last_name</code> no serveix. Si cal cercar sense distingir majúscules/minúscules de manera habitual, la solució és crear un <strong>índex basat en funció</strong> sobre <code>UPPER(last_name)</code>.</div></div>
+</div>
+<div class="demo"><div class="demo-label">Exemple 4 · Índex basat en funció com a solució</div><pre class="sql-out" id="e04"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Un <strong>índex basat en funció</strong> (<em>function-based index</em>) precalcula i indexa el resultat d'una expressió, no el valor brut de la columna. Així, una consulta que filtri per <code>UPPER(last_name)</code> sí que el podrà aprofitar.</div></div></div>
+<div class="demo">
+  <div class="demo-label">Exemple 5 · Conversió implícita de tipus (inutilitza l'índex)</div>
+  <div class="ba-grid">
+    <div class="ba bad"><div class="ba-head">❌ Compara un número amb text</div><pre class="sql-out" id="bad2"></pre></div>
+    <div class="ba good"><div class="ba-head">✅ Compara número amb número</div><pre class="sql-out" id="good2"></pre></div>
+  </div>
+  <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>EMPLOYEE_ID</code> és numèric, però aquí es compara amb el text <code>'100'</code>. Oracle ha de convertir implícitament una banda o l'altra per poder comparar, i això pot impedir l'ús de l'índex sobre la columna numèrica. La solució és escriure sempre literals del mateix tipus que la columna.</div></div>
+</div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">4</span><div><h2 class="sec-title">Triar l'estructura adequada</h2><p class="sec-sub">Diverses formes correctes, rendiments diferents</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 6 · SELECT * vs columnes concretes</div><pre class="sql-out" id="e06"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>SELECT *</code> obliga Oracle a llegir i transmetre <strong>totes</strong> les columnes, encara que no les facis servir, i pot impedir l'ús d'<strong>índexs de cobertura</strong> (índexs que per si sols ja contenen totes les columnes demanades, evitant accedir a la taula). Demanar només les columnes necessàries redueix l'I/O, el trànsit de xarxa i sol ser més ràpid.</div></div></div>
+<div class="ibox blue"><div class="ibox-label">EXISTS vs IN vs JOIN</div><div class="ibox-text">Les tres opcions poden donar el mateix resultat lògic, però l'optimitzador les tracta de manera diferent: <code>EXISTS</code> sol ser més eficient quan la subconsulta interior pot ser gran, perquè Oracle pot aturar-se en trobar la primera coincidència. <code>IN</code> és més llegible amb llistes petites de valors fixos. Un <code>JOIN</code> sol superar totes dues opcions quan també necessitem dades de la taula relacionada al resultat (no només comprovar-ne l'existència).</div></div>
+<div class="ibox blue"><div class="ibox-label">UNION vs UNION ALL</div><div class="ibox-text">Com es va veure a l'apartat d'operadors de conjunt, <code>UNION</code> ha d'ordenar internament el resultat per eliminar duplicats. Si saps que les consultes combinades no poden produir files repetides, usar <code>UNION ALL</code> estalvia aquest cost sense canviar el resultat.</div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">5</span><div><h2 class="sec-title">Paginació eficient i estadístiques</h2><p class="sec-sub">Mostrar resultats per pàgines i mantenir l'optimitzador informat</p></div></div>
+<div class="demo">
+  <div class="demo-label">Exemple 7 · Paginació: ROWNUM mal emprat vs FETCH FIRST</div>
+  <div class="ba-grid">
+    <div class="ba bad"><div class="ba-head">❌ ROWNUM amb ORDER BY (no fa el que sembla)</div><pre class="sql-out" id="bad3"></pre></div>
+    <div class="ba good"><div class="ba-head">✅ FETCH FIRST n ROWS ONLY (Oracle 12c+)</div><pre class="sql-out" id="good3"></pre></div>
+  </div>
+  <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">El <code>ROWNUM</code> s'assigna <strong>abans</strong> que l'<code>ORDER BY</code> ordeni el resultat, per la qual cosa <code>WHERE ROWNUM &lt;= 5</code> combinat directament amb un <code>ORDER BY</code> no garanteix els 5 salaris més alts reals (caldria embolicar-ho amb una subconsulta). La clàusula moderna <code>OFFSET ... FETCH FIRST ... ROWS ONLY</code> (des d'Oracle 12c) és més clara, evita aquest error i és l'estàndard SQL recomanat per paginar resultats.</div></div>
+</div>
+<div class="demo"><div class="demo-label">Exemple 8 · Mantenir actualitzades les estadístiques de l'optimitzador</div><pre class="sql-out" id="e08"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">L'optimitzador decideix el millor pla a partir d'<strong>estadístiques</strong> sobre les taules (nombre de files, distribució de valors...). Si aquestes estadístiques estan desactualitzades (per exemple, després d'una càrrega massiva de dades), l'optimitzador pot triar un pla poc eficient encara que existeixin els índexs adequats. <code>DBMS_STATS.GATHER_TABLE_STATS</code> les recalcula manualment quan cal.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">6</span><div><h2 class="sec-title">Resum: bones pràctiques i errors freqüents</h2><p class="sec-sub">Llista de comprovació abans de donar per bona una consulta</p></div></div>
+<div class="ibox green"><div class="ibox-label">✅ Bones pràctiques</div><div class="ibox-text">
+Selecciona només les columnes que necessites; evita <code>SELECT *</code> en producció.<br>
+Filtra amb <code>WHERE</code> tan aviat com puguis per reduir el nombre de files processades abans de fer JOINs o agrupaments.<br>
+Indexa les columnes usades freqüentment a <code>WHERE</code>, <code>JOIN ... ON</code> i claus foranes.<br>
+Evita funcions o conversions de tipus sobre columnes indexades dins del <code>WHERE</code>; si cal, crea un índex basat en funció.<br>
+Usa <code>EXISTS</code> en lloc de <code>IN</code> quan la subconsulta pugui retornar moltes files.<br>
+Tria <code>UNION ALL</code> en lloc de <code>UNION</code> quan sàpigues que no hi pot haver duplicats.<br>
+Pagina resultats grans amb <code>OFFSET ... FETCH FIRST ... ROWS ONLY</code> en lloc de carregar-ho tot.<br>
+Consulta el pla d'execució (<code>EXPLAIN PLAN</code>) quan una consulta sigui lenta, abans d'assumir-ne la causa.
+</div></div>
+<div class="ibox red"><div class="ibox-label">⚠️ Errors freqüents</div><div class="ibox-text">
+Usar <code>= NULL</code> en lloc de <code>IS NULL</code>.<br>
+Posar al <code>WHERE</code> una funció d'agregació (<code>AVG</code>, <code>SUM</code>...) — cal usar <code>HAVING</code>.<br>
+Oblidar que <code>WHERE</code> s'executa abans que <code>GROUP BY</code>, i que <code>GROUP BY</code> abans que <code>HAVING</code>.<br>
+Deixar columnes al <code>SELECT</code> que no estan agregades ni al <code>GROUP BY</code>.<br>
+Fer servir <code>NOT IN</code> amb una subconsulta que pot retornar <code>NULL</code> (deixa de retornar files sense avisar).<br>
+Comparar columnes numèriques amb literals de text (o a l'inrevés), provocant conversions implícites.<br>
+Crear índexs sobre totes les columnes "per si de cas", penalitzant les escriptures sense necessitat real.<br>
+Donar per fet que una consulta és lenta "perquè sí", sense consultar mai el pla d'execució.
+</div></div>
+</section>
+<div class="ex-block-head"><h2 class="ex-block-title">Exercicis — Bones pràctiques i optimització</h2><p class="ex-block-sub">Criteri 3.8 · BD HR d'Oracle</p></div>
+<div class="ex-block-body">
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Conceptes clau</div><div class="ex-level">Nivell mitjà · criteri 3.8</div></div></div>
+    <p class="ex-intro">Tria la resposta correcta per a cada situació.</p>
+    <div id="ex1-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Diagnosi de consultes</div><div class="ex-level">Nivell mitjà-alt · criteri 3.8</div></div></div>
+    <p class="ex-intro">Analitza cada fragment SQL i tria la resposta correcta.</p>
+    <div id="ex2-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Proposa la millora</div><div class="ex-level">Nivell avançat · criteri 3.8</div></div></div>
+    <p class="ex-intro">Pensa la solució per a cada situació i comprova-la amb la proposta.</p>
+    <div id="ex3-cont"></div>
+  </div>
+</div>
+
+<nav class="doc-nav">
+  <a class="back" href="AEA1_RA3_operadors_conjunt.html">← Operadors de conjunt</a>
+  <a href="index.html">Índex del mòdul →</a>
+</nav>
+
+</div>
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+<script>
+
+function colorSQL(t){
+  t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t=t.replace(/(--[^\n]*)/g,'<span class="cmt">$1</span>');
+  t=t.replace(/('[^']*')/g,'<span class="str">$1</span>');
+  t=t.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');
+  t=t.replace(/\b(SELECT|FROM|WHERE|AND|OR|NOT|IN|LIKE|BETWEEN|IS|NULL|ORDER\s+BY|GROUP\s+BY|HAVING|DISTINCT|AS|ASC|DESC|CASE|WHEN|THEN|ELSE|END|JOIN|INNER\s+JOIN|LEFT\s+OUTER\s+JOIN|LEFT\s+JOIN|RIGHT\s+OUTER\s+JOIN|RIGHT\s+JOIN|FULL\s+OUTER\s+JOIN|FULL\s+JOIN|CROSS\s+JOIN|NATURAL\s+JOIN|ON|USING|UNION|UNION\s+ALL|INTERSECT|MINUS|EXISTS|ANY|ALL|NULLS\s+LAST|NULLS\s+FIRST|FETCH\s+FIRST|FETCH\s+NEXT|ROWS\s+ONLY|OFFSET|CREATE|INDEX|EXPLAIN\s+PLAN\s+FOR|FOR)\b/gi,'<span class="kw">$1</span>');
+  t=t.replace(/\b(COUNT|SUM|AVG|MAX|MIN|ROUND|TRUNC|MOD|UPPER|LOWER|INITCAP|CONCAT|SUBSTR|LENGTH|TRIM|LTRIM|RTRIM|REPLACE|INSTR|LPAD|RPAD|NVL|NVL2|NULLIF|COALESCE|TO_CHAR|TO_DATE|TO_NUMBER|SYSDATE|MONTHS_BETWEEN|ADD_MONTHS|DECODE|GREATEST|LEAST|ABS|CEIL|FLOOR|ROWNUM|DBMS_STATS\.GATHER_TABLE_STATS)\b/gi,'<span class="fn">$1</span>');
+  return t;
+}
+
+
+const SQLS={
+  e01:`EXPLAIN PLAN FOR\nSELECT last_name, salary\nFROM   employees\nWHERE  department_id = 50;\n\nSELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);`,
+  e02:`CREATE INDEX idx_emp_dept_id\n  ON employees (department_id);`,
+  bad1:`SELECT last_name\nFROM   employees\nWHERE  UPPER(last_name) = 'KING';`,
+  good1:`SELECT last_name\nFROM   employees\nWHERE  last_name = 'King';`,
+  e04:`CREATE INDEX idx_emp_upper_lastname\n  ON employees (UPPER(last_name));\n\n-- Ara aquesta consulta SÍ pot usar l'índex:\nSELECT last_name\nFROM   employees\nWHERE  UPPER(last_name) = 'KING';`,
+  bad2:`SELECT last_name\nFROM   employees\nWHERE  employee_id = '100';`,
+  good2:`SELECT last_name\nFROM   employees\nWHERE  employee_id = 100;`,
+  e06:`-- Menys eficient: llegeix totes les columnes\nSELECT * FROM employees WHERE department_id = 60;\n\n-- Més eficient: només les columnes necessàries\nSELECT last_name, salary FROM employees WHERE department_id = 60;`,
+  bad3:`SELECT last_name, salary\nFROM   employees\nWHERE  ROWNUM <= 5\nORDER BY salary DESC;`,
+  good3:`SELECT last_name, salary\nFROM   employees\nORDER BY salary DESC\nFETCH FIRST 5 ROWS ONLY;`,
+  e08:`EXEC DBMS_STATS.GATHER_TABLE_STATS('HR', 'EMPLOYEES');`
+};
+
+const E1=[
+  {t:'Quina eina permet veure quin pla seguirà Oracle per executar una consulta, sense executar-la realment?',opts:['DESCRIBE','EXPLAIN PLAN','ANALYZE TABLE','SHOW PLAN'],ans:1,exp:'EXPLAIN PLAN FOR calcula i desa el pla d\'execució, que després es pot consultar amb DBMS_XPLAN.DISPLAY.'},
+  {t:'Quin tipus d\'accés llegeix totes les files d\'una taula, una per una?',opts:['Index Range Scan','Index Unique Scan','Full Table Scan','Hash Join'],ans:2,exp:'Un Full Table Scan recorre totes les files de la taula, sense usar cap índex.'},
+  {t:'Per què escriure WHERE UPPER(last_name) = \'KING\' pot ser ineficient si last_name té un índex normal?',opts:['No és ineficient, és igual','La funció UPPER() impedeix usar l\'índex normal sobre last_name','UPPER() no es pot usar al WHERE','Cal escriure-ho amb LIKE'],ans:1,exp:'Aplicar una funció a la columna indexada obliga a calcular-la per a cada fila, inutilitzant l\'índex (tret que existeixi un índex basat en funció).'},
+  {t:'Quina clàusula moderna es recomana per paginar resultats en lloc d\'un ús incorrecte de ROWNUM?',opts:['LIMIT','TOP','OFFSET ... FETCH FIRST ... ROWS ONLY','ROWCOUNT'],ans:2,exp:'OFFSET ... FETCH FIRST ... ROWS ONLY (Oracle 12c+) és l\'estàndard SQL i evita el parany de combinar ROWNUM amb ORDER BY.'},
+  {t:'Quina comanda actualitza les estadístiques que usa l\'optimitzador per triar el millor pla?',opts:['DBMS_STATS.GATHER_TABLE_STATS','ANALYZE INDEX REBUILD','REFRESH TABLE','UPDATE STATISTICS'],ans:0,exp:'DBMS_STATS.GATHER_TABLE_STATS recalcula les estadístiques d\'una taula perquè l\'optimitzador prengui decisions ben informades.'}
+];
+
+const E2=[
+  {q:'Aquesta comparació pot impedir l\'ús de l\'índex sobre EMPLOYEE_ID (numèric). Per què?',code:`SELECT last_name FROM employees WHERE employee_id = '100';`,opts:['No hi ha cap problema','Es compara un número amb un text, provocant conversió implícita','Falta el FROM','employee_id no es pot filtrar'],ans:1,exp:'EMPLOYEE_ID és numèric; comparar-lo amb el text \'100\' obliga a una conversió implícita que pot inutilitzar l\'índex.'},
+  {q:'Quina d\'aquestes dues consultes garanteix realment "els 5 salaris més alts"?',code:`-- A:\nSELECT last_name, salary FROM employees\nWHERE ROWNUM <= 5 ORDER BY salary DESC;\n\n-- B:\nSELECT last_name, salary FROM employees\nORDER BY salary DESC FETCH FIRST 5 ROWS ONLY;`,opts:['Opció A','Opció B','Les dues per igual','Cap de les dues'],ans:1,exp:'A ROWNUM s\'assigna abans d\'ordenar, així que "els primers 5 files" no coincideixen necessàriament amb els 5 salaris més alts. FETCH FIRST sí que ordena abans de limitar.'},
+  {q:'Per què SELECT * pot ser més lent que seleccionar columnes concretes, encara que el WHERE sigui idèntic?',code:`SELECT * FROM employees WHERE department_id = 60;`,opts:['Mai és més lent','Llegeix i transmet columnes innecessàries i pot impedir índexs de cobertura','SELECT * sempre fa un JOIN ocult','És un error de sintaxi'],ans:1,exp:'SELECT * obliga a accedir a totes les columnes, augmentant l\'I/O i el trànsit de xarxa, i pot impedir aprofitar un índex que ja contingués totes les columnes demanades.'}
+];
+
+const E3sol=[
+  {ctx:'Tens una consulta que filtra per LOWER(email) = \'jchen\' i s\'executa sovint. Proposa una solució perquè pugui aprofitar un índex.',code:`CREATE INDEX idx_emp_lower_email\n  ON employees (LOWER(email));\n\n-- Ara aquesta consulta sí pot usar l'índex:\nSELECT last_name\nFROM   employees\nWHERE  LOWER(email) = 'jchen';`,note:'Criteri 3.8 — índex basat en funció per fer sargable una consulta que aplica una funció sobre la columna filtrada.'},
+  {ctx:'Reescriu aquesta consulta de paginació perquè garanteixi realment els 10 empleats amb salari més alt, mostrant resultats de l\'11 al 20 (segona pàgina de 10).',code:`SELECT last_name, salary\nFROM   employees\nORDER BY salary DESC\nOFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY;`,note:'Criteri 3.8 — OFFSET ... FETCH NEXT ... ROWS ONLY pagina de manera fiable perquè ordena abans de limitar.'},
+  {ctx:'Explica, sense escriure cap consulta nova, per què aquesta consulta podria anar lenta encara que DEPARTMENT_ID tingui un índex, i com ho comprovaries.',code:`-- SELECT last_name FROM employees WHERE department_id = 270;\n-- (suposem que el departament 270 no existeix)\n\nEXPLAIN PLAN FOR\nSELECT last_name FROM employees WHERE department_id = 270;\n\nSELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);`,note:'Criteri 3.8 — encara que existeixi un índex, l\'optimitzador pot triar no usar-lo si les estadístiques estan desactualitzades o si estima que cal llegir gran part de la taula igualment; EXPLAIN PLAN permet comprovar-ho en lloc de suposar-ho.'}
+];
+
+Object.keys(SQLS).forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=colorSQL(SQLS[id]); });
+(function(){
+  const c=document.getElementById('ex1-cont');
+  E1.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E1',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="E1f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex2-cont');
+  E2.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E2',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.q}</div><pre class="sql-out" style="font-size:11px;margin-bottom:8px">${colorSQL(d.code)}</pre><div class="qi-opts">${opts}</div><div class="qi-fb" id="E2f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex3-cont');
+  E3sol.forEach((d,i)=>{
+    const div=document.createElement('div'); div.className='ri';
+    div.innerHTML=`<div class="ri-q"><div class="ri-q-text"><strong>${i+1}.</strong> ${d.ctx}</div><button class="ri-btn" onclick="reveal(this,'E3a${i}')">▶ Veure solució SQL</button></div><div class="ri-ans" id="E3a${i}"><div class="ri-ans-label">Solució</div><pre class="sql-out">${colorSQL(d.code)}</pre><div class="ri-note">${d.note}</div></div>`;
+    c.appendChild(div);
+  });
+})();
+const ALL={E1,E2};
+function checkQ(grp,btn,i,choice){
+  const d=ALL[grp][i],fb=document.getElementById(grp+'f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+function reveal(btn,id){document.getElementById(id).classList.add('show');btn.style.display='none';}
+
+</script>
+</body>
+</html>

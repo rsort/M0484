@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA1 · Subconsultes — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+  --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+  --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+  --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+  --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+  --yellow:#713f12; --yellow-bg:#fefce8; --yellow-bdr:#fef08a;
+  --purple:#5b21b6; --purple-bg:#f5f3ff; --purple-bdr:#ddd6fe;
+  --code-bg:#1e293b; --code-text:#e2e8f0; --r:10px; --r-sm:6px;
+}
+body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+.merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+.site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 24px; }
+.head-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+.brand { text-decoration:none; display:flex; flex-direction:column; }
+.brand-mark { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); }
+.brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+.head-course { font-size:13px; color:var(--ink-2); }
+.wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+.breadcrumb { font-size:13px; color:var(--ink-3); padding:14px 0 0; }
+.breadcrumb a { color:var(--ink-2); text-decoration:none; }
+.breadcrumb a:hover { color:var(--accent); }
+.breadcrumb span { margin:0 5px; }
+.page-header { padding:40px 0 32px; border-bottom:1.5px solid var(--border); margin-bottom:48px; }
+.meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+.badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+.b-course { background:var(--ink); color:#fff; }
+.b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+.b-act { background:var(--accent-mid); color:#fff; }
+.b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+.page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:10px; }
+.page-sub { font-size:16px; color:var(--ink-2); margin-bottom:24px; }
+.obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; }
+.obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+.obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+.obj-text { font-size:14px; color:var(--ink-2); }
+.schema-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:20px; }
+.schema-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; }
+.schema-card-head { background:var(--ink); color:#fff; padding:6px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:.04em; }
+.schema-card-body { padding:8px 12px; }
+.schema-card-body div { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-2); padding:2px 0; border-bottom:1px solid var(--border); }
+.schema-card-body div:last-child { border-bottom:none; }
+.schema-card-body .pk { color:var(--accent); font-weight:600; }
+.schema-card-body .fk { color:var(--blue); }
+.schema-mini { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 16px; margin-bottom:32px; font-size:13px; color:var(--ink-2); }
+.schema-mini a { color:var(--accent); font-weight:600; text-decoration:none; }
+.schema-mini a:hover { text-decoration:underline; }
+.schema-mini code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); color:var(--accent); padding:1px 6px; border-radius:3px; }
+.section { margin-bottom:60px; }
+.sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+.sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+.sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+.sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+.subhead { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin:32px 0 14px; padding-bottom:8px; border-bottom:1px dashed var(--accent-bdr); }
+.subhead:first-of-type { margin-top:8px; }
+.lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+.lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+.ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+.ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+.ibox-text { font-size:14px; line-height:1.65; }
+.ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+.ibox.green { background:var(--green-bg); border:1px solid var(--green-bdr); }
+.ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+.ibox.yellow { background:var(--yellow-bg); border:1px solid var(--yellow-bdr); }
+.ibox.purple { background:var(--purple-bg); border:1px solid var(--purple-bdr); }
+.ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+.ibox.green .ibox-label, .ibox.green .ibox-text { color:var(--green); }
+.ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
+.ibox.yellow .ibox-label, .ibox.yellow .ibox-text { color:var(--yellow); }
+.ibox.purple .ibox-label, .ibox.purple .ibox-text { color:var(--purple); }
+.ibox code { background:#ffffffaa; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 6px; border-radius:3px; }
+.demo { margin-bottom:24px; }
+.demo-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-bottom:8px; }
+.sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.8; white-space:pre; margin:0; overflow-x:auto; }
+.exp-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 16px; margin-top:10px; }
+.exp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin-bottom:5px; }
+.exp-text { font-size:13px; color:var(--ink-2); line-height:1.6; }
+.exp-text code { background:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 5px; border-radius:3px; }
+.kw { color:#fbbf24; font-weight:500; }
+.fn { color:#a78bfa; }
+.str { color:#4ade80; }
+.num { color:#f472b6; }
+.cmt { color:#64748b; font-style:italic; }
+.tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
+.tbl { width:100%; border-collapse:collapse; font-size:13px; }
+.tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
+.tbl td { padding:9px 14px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:12px; vertical-align:middle; }
+.tbl tr:last-child td { border-bottom:none; }
+.cmp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+.cmp { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:14px; }
+.cmp h4 { font-size:12px; font-family:'JetBrains Mono',monospace; color:var(--accent); margin-bottom:8px; }
+.cmp p { font-size:12px; color:var(--ink-2); line-height:1.5; }
+.ba-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:10px; }
+.ba { border-radius:var(--r-sm); overflow:hidden; border:1px solid var(--border); }
+.ba-head { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:8px 14px; }
+.ba.bad .ba-head { background:var(--red-bg); color:var(--red); }
+.ba.good .ba-head { background:var(--green-bg); color:var(--green); }
+.ba pre.sql-out { border-radius:0; font-size:12px; }
+@media (max-width:640px){ .ba-grid, .cmp-grid { grid-template-columns:1fr; } }
+.ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
+.ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+.ex-block-sub { font-size:13px; color:#a8a29e; }
+.ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+.exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+.exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+.ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+.ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+.ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+.ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
+.ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
+.qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
+.qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
+.qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
+.qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
+.qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+.qi-btn:disabled { cursor:default; }
+.qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
+.qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
+.qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
+.qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+.qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
+.ri { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-bottom:12px; }
+.ri-q { padding:14px 18px; background:#fafaf9; }
+.ri-q-text { font-size:14px; color:var(--ink); margin-bottom:4px; }
+.ri-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 15px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); color:var(--accent); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; transition:background .12s,color .12s,border-color .12s; }
+.ri-btn:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+.ri-ans { display:none; padding:16px 18px; background:var(--accent-bg); border-top:1px solid var(--accent-bdr); }
+.ri-ans.show { display:block; }
+.ri-ans-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--accent-mid); margin-bottom:8px; }
+.ri-note { font-size:13px; color:var(--ink-2); margin-top:10px; line-height:1.55; }
+.doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; flex-wrap:wrap; }
+.doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
+.doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+.doc-nav .back { color:var(--ink-2); background:#fafaf9; border-color:var(--border); }
+.doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+.site-foot { border-top:1px solid var(--border); padding:20px 24px; margin-top:0; }
+.foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+/* TARGETES SUB-INDEX (pàgina selector) */
+.subcards { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-bottom:8px; }
+.subcard { background:var(--card); border:1.5px solid var(--border); border-radius:var(--r); padding:22px 22px 18px; text-decoration:none; color:var(--ink); display:flex; flex-direction:column; transition:border-color .15s,box-shadow .15s,transform .15s; }
+.subcard:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(0,0,0,.08); transform:translateY(-2px); }
+.subcard-num { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent-bdr); padding:2px 8px; border-radius:4px; letter-spacing:.04em; display:inline-block; margin-bottom:14px; width:fit-content; }
+.subcard-title { font-weight:600; font-size:16px; color:var(--ink); margin-bottom:8px; }
+.subcard-text { font-size:13px; color:var(--ink-2); flex:1; line-height:1.55; margin-bottom:16px; }
+.subcard-text code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); padding:1px 5px; border-radius:3px; color:var(--accent); }
+.subcard-foot { display:flex; align-items:center; justify-content:space-between; font-size:12px; }
+.subcard-go { color:var(--accent); font-weight:600; }
+@media (max-width:600px){ .schema-grid { grid-template-columns:1fr 1fr; } }
+
+  </style>
+</head>
+<body>
+<div class="merce-top"></div>
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">La Mercè</span><span class="brand-sub">Formació Professional</span></a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="breadcrumb"><a href="index.html">MP0484 Bases de dades</a><span>›</span><a href="index.html#aea1">AEA1 — Consultes SQL</a><span>›</span><a href="AEA1_RA3_consultes_complexes.html">Consultes complexes</a><span>›</span>Subconsultes</div>
+  
+<header class="page-header">
+  <div class="meta-row">
+    <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+    <span class="badge b-ra">AEA1 · RA3 · 2 de 4</span>
+    <span class="badge b-new">Subconsultes</span>
+  </div>
+  <h1 class="page-title">Subconsultes</h1>
+  <p class="page-sub">Consultes <strong>SELECT</strong> dins d'altres consultes: una eina clau per resoldre problemes en diversos passos.</p>
+  <div class="obj-box">
+    <div class="obj-icon">🎯</div>
+    <div><div class="obj-label">Criteri d'avaluació · RA3</div><div class="obj-text"><strong>3.6</strong> Subconsultes</div></div>
+  </div>
+</header>
+
+  
+<p class="lead">Una subconsulta és una sentència <code>SELECT</code> dins d'una altra sentència SQL, normalment entre parèntesis. Sol executar-se abans que la consulta externa i el seu resultat s'usa com a valor o conjunt de valors.</p>
+<div class="cmp-grid">
+  <div class="cmp"><h4>Subconsulta d'una fila</h4><p>Retorna exactament un valor. S'usa amb operadors comparatius: <code>=</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>.</p></div>
+  <div class="cmp"><h4>Subconsulta de múltiples files</h4><p>Retorna diverses files. S'usa amb <code>IN</code>, <code>ANY</code>, <code>ALL</code>, <code>EXISTS</code>.</p></div>
+</div>
+<section class="section"><div class="sec-head"><span class="sec-num">1</span><div><h2 class="sec-title">Subconsultes d'una sola fila</h2><p class="sec-sub">Comparar amb un únic valor calculat</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 1 · Subconsulta d'una fila amb =</div><pre class="sql-out" id="e01"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">La subconsulta interna s'executa primer i retorna un únic valor: el salari de l'empleat 'Abel'. La consulta externa fa servir aquest valor per comparar-lo amb <code>salary</code> de cada empleat.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 2 · Subconsulta d'una fila amb una funció de grup</div><pre class="sql-out" id="e02"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Quan la subconsulta usa una funció de grup com <code>MIN</code>, <code>MAX</code> o <code>AVG</code> sense <code>GROUP BY</code>, sempre retorna exactament una fila, per això es pot comparar amb seguretat amb <code>=</code>, <code>&gt;</code> o <code>&lt;</code>.</div></div></div>
+<div class="ibox red"><div class="ibox-label">⚠️ Error habitual</div><div class="ibox-text">Si una subconsulta pensada per retornar una sola fila en retorna més d'una, Oracle llança l'error <code>ORA-01427: single-row subquery returns more than one row</code>. Per exemple, si dos empleats es diuen 'Abel', l'exemple 1 fallaria.</div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">2</span><div><h2 class="sec-title">Subconsultes de múltiples files: IN</h2><p class="sec-sub">Comparar amb una llista de valors calculada</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 3 · IN amb una subconsulta</div><pre class="sql-out" id="e03"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>IN (subconsulta)</code> comprova si el valor de la fila actual coincideix amb <strong>algun</strong> dels valors retornats per la subconsulta. Es poden anidar diverses subconsultes, com aquí: empleats → departaments → ubicacions → ciutat 'Seattle'.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 4 · NOT IN i el parany dels valors NULL</div><pre class="sql-out" id="e04"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>NOT IN (subconsulta)</code> sembla l'oposat lògic d'<code>IN</code>, però amaga un parany important: si la subconsulta retorna <strong>encara que sigui un sol valor NULL</strong>, tot el <code>NOT IN</code> deixa de retornar files (perquè comparar qualsevol cosa amb NULL dona un resultat desconegut, mai cert). Per evitar-ho, cal afegir <code>WHERE columna IS NOT NULL</code> a la subconsulta, o usar <code>NOT EXISTS</code> en el seu lloc.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">3</span><div><h2 class="sec-title">EXISTS i NOT EXISTS</h2><p class="sec-sub">Comprovar si la subconsulta retorna alguna fila</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 5 · EXISTS</div><pre class="sql-out" id="e05"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>EXISTS (subconsulta)</code> és cert si la subconsulta retorna <strong>almenys una fila</strong>; no li importa quants valors ni quins són, només si n'hi ha. Per això s'hi sol escriure <code>SELECT 1</code> en lloc de columnes concretes: no es fan servir, només es comprova l'existència.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 6 · NOT EXISTS</div><pre class="sql-out" id="e06"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>NOT EXISTS</code> és cert quan la subconsulta <strong>no</strong> retorna cap fila. A diferència de <code>NOT IN</code>, <code>NOT EXISTS</code> es comporta correctament encara que aparegui algun NULL a la subconsulta, per això és l'alternativa recomanada per buscar "els que no tenen" o "els que no han fet".</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">4</span><div><h2 class="sec-title">ANY i ALL</h2><p class="sec-sub">Comparar amb qualsevol o amb tots els valors d'una llista</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 7 · ANY</div><pre class="sql-out" id="e07"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>&gt; ANY (subconsulta)</code> significa "més gran que <strong>com a mínim un</strong> dels valors retornats", cosa que equival a ser més gran que el valor més petit de la llista. <code>= ANY</code> és equivalent a <code>IN</code>.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 8 · ALL</div><pre class="sql-out" id="e08"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>&gt; ALL (subconsulta)</code> significa "més gran que <strong>tots</strong> els valors retornats", cosa que equival a ser més gran que el valor més gran de la llista (el màxim).</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">5</span><div><h2 class="sec-title">Subconsultes al FROM i subconsultes correlacionades</h2><p class="sec-sub">Dos usos avançats molt habituals</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 9 · Subconsulta al FROM (inline view)</div><pre class="sql-out" id="e09"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Una subconsulta també es pot col·locar al <code>FROM</code>, com si fos una taula temporal (s'anomena <em>inline view</em>). Aquí calculem primer el salari mitjà per departament i després el comparem amb el salari de cada empleat. Cal donar-li sempre un àlies (<code>dept_avg</code>).</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 10 · Subconsulta correlacionada</div><pre class="sql-out" id="e10"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Una subconsulta <strong>correlacionada</strong> fa referència a una columna de la consulta externa (aquí <code>e.department_id</code>), per la qual cosa Oracle l'ha d'executar <strong>una vegada per cada fila</strong> de la consulta externa, no una sola vegada com les subconsultes normals. És potent però pot ser costosa en taules grans; sovint es pot reescriure com un JOIN equivalent.</div></div></div>
+</section>
+<div class="ex-block-head"><h2 class="ex-block-title">Exercicis — Subconsultes</h2><p class="ex-block-sub">Criteri 3.6 · BD HR d'Oracle</p></div>
+<div class="ex-block-body">
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Conceptes clau</div><div class="ex-level">Nivell mitjà · criteri 3.6</div></div></div>
+    <p class="ex-intro">Tria la resposta correcta per a cada situació.</p>
+    <div id="ex1-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Analitza el resultat</div><div class="ex-level">Nivell mitjà-alt · criteri 3.6</div></div></div>
+    <p class="ex-intro">Analitza el fragment SQL i tria la resposta correcta.</p>
+    <div id="ex2-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Escriu la consulta SQL</div><div class="ex-level">Nivell avançat · criteri 3.6</div></div></div>
+    <p class="ex-intro">Escriu la consulta SQL per a cada enunciat i comprova-la amb la solució.</p>
+    <div id="ex3-cont"></div>
+  </div>
+</div>
+
+<nav class="doc-nav">
+  <a class="back" href="AEA1_RA3_joins.html">← JOINs</a>
+  <a href="AEA1_RA3_operadors_conjunt.html">Operadors de conjunt →</a>
+</nav>
+
+</div>
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+<script>
+
+function colorSQL(t){
+  t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t=t.replace(/(--[^\n]*)/g,'<span class="cmt">$1</span>');
+  t=t.replace(/('[^']*')/g,'<span class="str">$1</span>');
+  t=t.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');
+  t=t.replace(/\b(SELECT|FROM|WHERE|AND|OR|NOT|IN|LIKE|BETWEEN|IS|NULL|ORDER\s+BY|GROUP\s+BY|HAVING|DISTINCT|AS|ASC|DESC|CASE|WHEN|THEN|ELSE|END|JOIN|INNER\s+JOIN|LEFT\s+OUTER\s+JOIN|LEFT\s+JOIN|RIGHT\s+OUTER\s+JOIN|RIGHT\s+JOIN|FULL\s+OUTER\s+JOIN|FULL\s+JOIN|CROSS\s+JOIN|NATURAL\s+JOIN|ON|USING|UNION|UNION\s+ALL|INTERSECT|MINUS|EXISTS|ANY|ALL|NULLS\s+LAST|NULLS\s+FIRST|FETCH\s+FIRST|FETCH\s+NEXT|ROWS\s+ONLY|OFFSET|CREATE|INDEX|EXPLAIN\s+PLAN\s+FOR|FOR)\b/gi,'<span class="kw">$1</span>');
+  t=t.replace(/\b(COUNT|SUM|AVG|MAX|MIN|ROUND|TRUNC|MOD|UPPER|LOWER|INITCAP|CONCAT|SUBSTR|LENGTH|TRIM|LTRIM|RTRIM|REPLACE|INSTR|LPAD|RPAD|NVL|NVL2|NULLIF|COALESCE|TO_CHAR|TO_DATE|TO_NUMBER|SYSDATE|MONTHS_BETWEEN|ADD_MONTHS|DECODE|GREATEST|LEAST|ABS|CEIL|FLOOR|ROWNUM|DBMS_STATS\.GATHER_TABLE_STATS)\b/gi,'<span class="fn">$1</span>');
+  return t;
+}
+
+
+const SQLS={
+  e01:`SELECT last_name, salary\nFROM   employees\nWHERE  salary > (SELECT salary\n                 FROM   employees\n                 WHERE  last_name = 'Abel')\nORDER BY salary DESC;`,
+  e02:`SELECT last_name, salary\nFROM   employees\nWHERE  salary = (SELECT MIN(salary) FROM employees);`,
+  e03:`SELECT last_name, department_id\nFROM   employees\nWHERE  department_id IN (SELECT department_id\n                          FROM   departments\n                          WHERE  location_id IN (SELECT location_id\n                                                  FROM   locations\n                                                  WHERE  city = 'Seattle'));`,
+  e04:`-- Perillós si commission_pct té algun NULL: no retornaria CAP fila\nSELECT last_name\nFROM   employees\nWHERE  employee_id NOT IN (SELECT manager_id\n                           FROM   employees\n                           WHERE  manager_id IS NOT NULL);`,
+  e05:`SELECT e.last_name, e.job_id\nFROM   employees e\nWHERE  EXISTS (SELECT 1\n               FROM   job_history jh\n               WHERE  jh.employee_id = e.employee_id);`,
+  e06:`SELECT e.last_name, e.job_id\nFROM   employees e\nWHERE  NOT EXISTS (SELECT 1\n                   FROM   job_history jh\n                   WHERE  jh.employee_id = e.employee_id);`,
+  e07:`SELECT last_name, salary\nFROM   employees\nWHERE  salary > ANY (SELECT salary\n                     FROM   employees\n                     WHERE  department_id = 20);`,
+  e08:`SELECT last_name, salary\nFROM   employees\nWHERE  salary > ALL (SELECT salary\n                     FROM   employees\n                     WHERE  department_id = 20);`,
+  e09:`SELECT e.last_name, e.salary,\n       ROUND(dept_avg.avg_sal, 2) AS avg_dept\nFROM   employees e\n       JOIN (SELECT department_id, AVG(salary) avg_sal\n             FROM   employees\n             GROUP BY department_id) dept_avg\n         ON e.department_id = dept_avg.department_id\nWHERE  e.salary > dept_avg.avg_sal\nORDER BY e.department_id, e.salary DESC;`,
+  e10:`SELECT e.last_name, e.salary, e.department_id\nFROM   employees e\nWHERE  e.salary > (SELECT AVG(e2.salary)\n                   FROM   employees e2\n                   WHERE  e2.department_id = e.department_id);`
+};
+
+const E1=[
+  {t:'Quina condició és més segura per buscar files "que no tenen" una correspondència, evitant el parany dels NULL?',opts:['NOT IN','NOT EXISTS','!= ANY','<> ALL'],ans:1,exp:'NOT EXISTS funciona correctament encara que la subconsulta retorni algun NULL; NOT IN pot deixar de retornar files en aquest cas.'},
+  {t:'Una subconsulta sense GROUP BY que fa servir MIN(salary). Quantes files pot retornar com a màxim?',opts:['Tantes com files tingui la taula','Exactament una','Cap, sempre dona error','Depèn del WHERE extern'],ans:1,exp:'Una funció de grup sense GROUP BY sempre col·lapsa el resultat en una única fila.'},
+  {t:'Quin operador és equivalent a IN quan es compara amb =?',opts:['= ALL','= ANY','EXISTS','NOT EXISTS'],ans:1,exp:'= ANY (subconsulta) és equivalent a IN (subconsulta): cert si coincideix amb algun dels valors.'},
+  {t:'On es col·loca una subconsulta que actua com una taula temporal amb àlies?',opts:['Al SELECT','Al WHERE','Al FROM','A l\'ORDER BY'],ans:2,exp:'Una subconsulta al FROM (inline view) es tracta com una taula més, i necessita un àlies obligatori.'},
+  {t:'Quina característica defineix una subconsulta correlacionada?',opts:['Sempre retorna una sola fila','Fa referència a una columna de la consulta externa','No es pot fer servir amb EXISTS','S\'executa només una vegada, abans que la consulta externa'],ans:1,exp:'Una subconsulta correlacionada depèn d\'un valor de la fila actual de la consulta externa, per la qual cosa s\'executa una vegada per cada fila externa.'}
+];
+
+const E2=[
+  {q:'Si la subconsulta retorna un NULL entre els seus resultats, què passa amb aquesta consulta?',code:`SELECT last_name\nFROM   employees\nWHERE  employee_id NOT IN (SELECT manager_id FROM employees);`,opts:['Funciona igualment, ignora el NULL','No retorna cap fila','Dona error de sintaxi','Retorna totes les files'],ans:1,exp:'Si manager_id conté algun NULL (com sol passar amb el president), NOT IN no pot determinar la comparació i el resultat global queda buit.'},
+  {q:'Quants empleats com a mínim retorna aquesta consulta si el departament 20 té 2 empleats amb salaris 6000 i 13000?',code:`SELECT last_name\nFROM   employees\nWHERE  salary > ALL (SELECT salary FROM employees WHERE department_id = 20);`,opts:['Els que guanyen més de 6000','Els que guanyen més de 13000 (el màxim)','Tots els empleats','Cap'],ans:1,exp:'> ALL exigeix ser més gran que el valor més gran de la llista, és a dir, més que 13000.'},
+  {q:'Aquesta consulta és vàlida sintàcticament?',code:`SELECT last_name\nFROM   employees\nWHERE  salary = (SELECT salary FROM employees WHERE department_id = 50);`,opts:['Sí, sempre','Només si el departament 50 té exactament un empleat','Mai, = no es pot usar amb subconsultes','Només amb EXISTS'],ans:1,exp:'= exigeix que la subconsulta retorni com a màxim una fila; si el departament 50 té diversos empleats, donaria error ORA-01427.'}
+];
+
+const E3sol=[
+  {ctx:'Mostra els empleats que guanyen menys que el salari mínim del departament 50.',code:`SELECT last_name, salary\nFROM   employees\nWHERE  salary < (SELECT MIN(salary)\n                 FROM   employees\n                 WHERE  department_id = 50);`,note:'Criteri 3.6 — subconsulta d\'una fila amb una funció de grup (MIN).'},
+  {ctx:'Mostra els departaments que no tenen cap empleat assignat actualment.',code:`SELECT department_name\nFROM   departments d\nWHERE  NOT EXISTS (SELECT 1\n                   FROM   employees e\n                   WHERE  e.department_id = d.department_id);`,note:'Criteri 3.6 — NOT EXISTS amb subconsulta correlacionada; alternativa segura a NOT IN.'},
+  {ctx:'Mostra els empleats que guanyen més que el salari mitjà del seu propi departament.',code:`SELECT e.last_name, e.salary, e.department_id\nFROM   employees e\nWHERE  e.salary > (SELECT AVG(e2.salary)\n                   FROM   employees e2\n                   WHERE  e2.department_id = e.department_id);`,note:'Criteri 3.6 — subconsulta correlacionada: es recalcula per a cada empleat de la consulta externa.'},
+  {ctx:'Mostra el nom de cada empleat i el salari mitjà del seu departament, fent servir una subconsulta al FROM.',code:`SELECT e.last_name,\n       ROUND(dept_avg.avg_sal, 2) AS salari_mig_dept\nFROM   employees e\n       JOIN (SELECT department_id, AVG(salary) avg_sal\n             FROM   employees\n             GROUP BY department_id) dept_avg\n         ON e.department_id = dept_avg.department_id;`,note:'Criteri 3.6 — subconsulta al FROM (inline view) que precalcula un agregat per departament.'}
+];
+
+Object.keys(SQLS).forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=colorSQL(SQLS[id]); });
+(function(){
+  const c=document.getElementById('ex1-cont');
+  E1.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E1',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="E1f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex2-cont');
+  E2.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E2',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.q}</div><pre class="sql-out" style="font-size:11px;margin-bottom:8px">${colorSQL(d.code)}</pre><div class="qi-opts">${opts}</div><div class="qi-fb" id="E2f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex3-cont');
+  E3sol.forEach((d,i)=>{
+    const div=document.createElement('div'); div.className='ri';
+    div.innerHTML=`<div class="ri-q"><div class="ri-q-text"><strong>${i+1}.</strong> ${d.ctx}</div><button class="ri-btn" onclick="reveal(this,'E3a${i}')">▶ Veure solució SQL</button></div><div class="ri-ans" id="E3a${i}"><div class="ri-ans-label">Solució</div><pre class="sql-out">${colorSQL(d.code)}</pre><div class="ri-note">${d.note}</div></div>`;
+    c.appendChild(div);
+  });
+})();
+const ALL={E1,E2};
+function checkQ(grp,btn,i,choice){
+  const d=ALL[grp][i],fb=document.getElementById(grp+'f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+function reveal(btn,id){document.getElementById(id).classList.add('show');btn.style.display='none';}
+
+</script>
+</body>
+</html>

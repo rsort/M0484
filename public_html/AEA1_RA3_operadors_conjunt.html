@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AEA1 · Consultes complexes SQL — MP0484 Bases de dades</title>
+  <title>AEA1 · Operadors de conjunt — MP0484 Bases de dades</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -170,71 +170,70 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
   </div>
 </header>
 <div class="wrap">
-  <div class="breadcrumb"><a href="index.html">MP0484 Bases de dades</a><span>›</span><a href="index.html#aea1">AEA1 — Consultes SQL</a><span>›</span>Consultes complexes</div>
+  <div class="breadcrumb"><a href="index.html">MP0484 Bases de dades</a><span>›</span><a href="index.html#aea1">AEA1 — Consultes SQL</a><span>›</span><a href="AEA1_RA3_consultes_complexes.html">Consultes complexes</a><span>›</span>Operadors de conjunt</div>
   
 <header class="page-header">
   <div class="meta-row">
     <span class="badge b-course">DAW · MP0484 Bases de dades</span>
-    <span class="badge b-ra">AEA1 · RA3 · Part 2/2</span>
-    <span class="badge b-act">18 hores</span>
-    <span class="badge b-new">Consultes complexes</span>
+    <span class="badge b-ra">AEA1 · RA3 · 3 de 4</span>
+    <span class="badge b-new">Operadors de conjunt</span>
   </div>
-  <h1 class="page-title">Consultes complexes SQL</h1>
-  <p class="page-sub">Unions entre taules (<strong>JOINs</strong>), subconsultes, operadors de conjunt i bones pràctiques d'optimització. Base de dades <strong>HR</strong> d'Oracle.</p>
+  <h1 class="page-title">Operadors de conjunt</h1>
+  <p class="page-sub">Combinar el resultat de diverses sentències <strong>SELECT</strong> amb <strong>UNION</strong>, <strong>INTERSECT</strong> i <strong>MINUS</strong>.</p>
   <div class="obj-box">
     <div class="obj-icon">🎯</div>
-    <div>
-      <div class="obj-label">Criteris d'avaluació · RA3</div>
-      <div class="obj-text">
-        <strong>3.3</strong> Composicions internes (JOIN) ·
-        <strong>3.4</strong> Composicions externes (OUTER JOIN) ·
-        <strong>3.6</strong> Subconsultes ·
-        <strong>3.7</strong> Múltiples seleccions (UNION, INTERSECT, MINUS) ·
-        <strong>3.8</strong> Optimització de consultes
-      </div>
-    </div>
+    <div><div class="obj-label">Criteri d'avaluació · RA3</div><div class="obj-text"><strong>3.7</strong> Múltiples seleccions (UNION, INTERSECT, MINUS)</div></div>
   </div>
 </header>
 
   
-<section class="section">
-  <p class="lead" style="margin-bottom:24px;">Aquest bloc es divideix en quatre apartats. Cadascun té teoria, exemples comentats pas a pas i exercicis interactius. Recomanem seguir l'ordre proposat.</p>
-  <div class="subcards">
-
-    <a class="subcard" href="AEA1_RA3_joins.html">
-      <span class="subcard-num">1 · Unions</span>
-      <h3 class="subcard-title">Unions entre taules (JOINs)</h3>
-      <p class="subcard-text"><code>INNER JOIN</code>, <code>JOIN ... USING</code>, <code>NATURAL JOIN</code>, unions de diverses taules, <em>self-join</em> i les variants externes <code>LEFT</code>/<code>RIGHT</code>/<code>FULL OUTER JOIN</code>.</p>
-      <span class="subcard-foot"><span class="crit" style="color:var(--ink-3)">Criteris 3.3, 3.4</span><span class="subcard-go">Obrir →</span></span>
-    </a>
-
-    <a class="subcard" href="AEA1_RA3_subconsultes.html">
-      <span class="subcard-num">2 · Subconsultes</span>
-      <h3 class="subcard-title">Subconsultes</h3>
-      <p class="subcard-text">Subconsultes d'una fila i de múltiples files, <code>IN</code>/<code>NOT IN</code>, <code>EXISTS</code>/<code>NOT EXISTS</code>, <code>ANY</code>/<code>ALL</code>, subconsultes al <code>FROM</code> i subconsultes correlacionades.</p>
-      <span class="subcard-foot"><span class="crit" style="color:var(--ink-3)">Criteri 3.6</span><span class="subcard-go">Obrir →</span></span>
-    </a>
-
-    <a class="subcard" href="AEA1_RA3_operadors_conjunt.html">
-      <span class="subcard-num">3 · Conjunts</span>
-      <h3 class="subcard-title">Operadors de conjunt</h3>
-      <p class="subcard-text"><code>UNION</code>, <code>UNION ALL</code>, <code>INTERSECT</code> i <code>MINUS</code> per combinar el resultat de diverses sentències <code>SELECT</code>.</p>
-      <span class="subcard-foot"><span class="crit" style="color:var(--ink-3)">Criteri 3.7</span><span class="subcard-go">Obrir →</span></span>
-    </a>
-
-    <a class="subcard" href="AEA1_RA3_optimitzacio.html">
-      <span class="subcard-num">4 · Rendiment</span>
-      <h3 class="subcard-title">Bones pràctiques i optimització</h3>
-      <p class="subcard-text">Plans d'execució, índexs, <em>sargability</em>, conversions implícites, <code>EXISTS</code> vs <code>IN</code>, paginació amb <code>FETCH FIRST</code> i estadístiques de l'optimitzador.</p>
-      <span class="subcard-foot"><span class="crit" style="color:var(--ink-3)">Criteri 3.8</span><span class="subcard-go">Obrir →</span></span>
-    </a>
-
-  </div>
+<p class="lead">Els operadors de conjunt combinen els resultats de dues o més sentències <code>SELECT</code> "verticalment" (afegint files), a diferència dels JOIN, que combinen taules "horitzontalment" (afegint columnes).</p>
+<div class="ibox blue"><div class="ibox-label">Regla de compatibilitat</div><div class="ibox-text">Totes les consultes combinades han de tenir el <strong>mateix nombre de columnes</strong>, amb <strong>tipus de dades compatibles</strong> en el mateix ordre. Els noms de columna del resultat final són els de la <strong>primera</strong> consulta.</div></div>
+<div class="tbl-wrap">
+  <table class="tbl">
+    <thead><tr><th>Operador</th><th>Descripció</th><th>Elimina duplicats?</th></tr></thead>
+    <tbody>
+      <tr><td><code>UNION</code></td><td>Totes les files d'ambdues consultes</td><td>Sí</td></tr>
+      <tr><td><code>UNION ALL</code></td><td>Totes les files d'ambdues consultes</td><td>No</td></tr>
+      <tr><td><code>INTERSECT</code></td><td>Només les files presents a les dues consultes</td><td>Sí</td></tr>
+      <tr><td><code>MINUS</code></td><td>Files de la primera que no estan a la segona</td><td>Sí</td></tr>
+    </tbody>
+  </table>
+</div>
+<section class="section"><div class="sec-head"><span class="sec-num">1</span><div><h2 class="sec-title">UNION</h2><p class="sec-sub">Combinar files de dues consultes, sense duplicats</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 1 · UNION</div><pre class="sql-out" id="e01"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>UNION</code> combina el resultat de les dues consultes i <strong>elimina les files duplicades</strong> (compara totes les columnes a la vegada). Per fer-ho, Oracle ha d'ordenar internament el resultat per detectar els duplicats, cosa que té un cost de rendiment en taules grans.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">2</span><div><h2 class="sec-title">UNION ALL</h2><p class="sec-sub">Combinar files conservant els duplicats (més ràpid)</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 2 · UNION ALL</div><pre class="sql-out" id="e02"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>UNION ALL</code> fa exactament el mateix que <code>UNION</code> però <strong>no elimina duplicats</strong>, per la qual cosa s'evita el cost d'ordenar i comparar files. Quan saps que les dues consultes no poden tenir files repetides (o no t'importa si n'hi ha), <code>UNION ALL</code> és sempre preferible per rendiment.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">3</span><div><h2 class="sec-title">INTERSECT</h2><p class="sec-sub">Quedar-nos només amb les files comunes</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 3 · INTERSECT</div><pre class="sql-out" id="e03"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>INTERSECT</code> retorna només les files que apareixen al resultat de <strong>totes dues</strong> consultes alhora. Aquí trobem els càrrecs (<code>JOB_ID</code>) que algun empleat té actualment <strong>i que també</strong> apareixen a l'historial de càrrecs.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">4</span><div><h2 class="sec-title">MINUS</h2><p class="sec-sub">Quedar-nos amb les files de la primera consulta que no són a la segona</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 4 · MINUS</div><pre class="sql-out" id="e04"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>MINUS</code> retorna les files de la <strong>primera</strong> consulta que <strong>no apareixen</strong> al resultat de la segona. L'ordre importa: <code>A MINUS B</code> no és el mateix que <code>B MINUS A</code>. Aquí busquem els càrrecs actuals que mai han estat a l'historial, és a dir, ningú els ha abandonat encara.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">5</span><div><h2 class="sec-title">ORDER BY amb operadors de conjunt</h2><p class="sec-sub">Una sola ordenació, al final de tot</p></div></div>
+<div class="ibox yellow"><div class="ibox-label">Atenció</div><div class="ibox-text">Amb operadors de conjunt només hi pot haver <strong>un <code>ORDER BY</code></strong>, situat al final de l'última consulta, i ha de fer referència a la <strong>posició</strong> (<code>ORDER BY 1</code>) o al <strong>nom de columna de la primera consulta</strong>, ja que és aquest nom el que s'aplica al resultat combinat.</div></div>
+<div class="demo"><div class="demo-label">Exemple 5 · Consulta completa amb les quatre comparacions</div><pre class="sql-out" id="e05"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Aquesta consulta combinada mostra els quatre operadors aplicats al mateix parell de taules, perquè es vegi clarament com canvia el resultat segons quin s'utilitzi.</div></div></div>
 </section>
+<div class="ex-block-head"><h2 class="ex-block-title">Exercicis — Operadors de conjunt</h2><p class="ex-block-sub">Criteri 3.7 · BD HR d'Oracle</p></div>
+<div class="ex-block-body">
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Conceptes clau</div><div class="ex-level">Nivell bàsic-mitjà · criteri 3.7</div></div></div>
+    <p class="ex-intro">Tria l'operador o la resposta correcta per a cada situació.</p>
+    <div id="ex1-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Analitza el resultat</div><div class="ex-level">Nivell mitjà · criteri 3.7</div></div></div>
+    <p class="ex-intro">Calcula mentalment quantes files retornaria cada consulta.</p>
+    <div id="ex2-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Escriu la consulta SQL</div><div class="ex-level">Nivell avançat · criteri 3.7</div></div></div>
+    <p class="ex-intro">Escriu la consulta SQL per a cada enunciat i comprova-la amb la solució.</p>
+    <div id="ex3-cont"></div>
+  </div>
+</div>
 
 <nav class="doc-nav">
-  <a class="back" href="AEA1_RA3_consultes_simples.html">← Consultes simples</a>
-  <a href="index.html">Índex del mòdul →</a>
+  <a class="back" href="AEA1_RA3_subconsultes.html">← Subconsultes</a>
+  <a href="AEA1_RA3_optimitzacio.html">Bones pràctiques i optimització →</a>
 </nav>
 
 </div>
@@ -256,6 +255,70 @@ function colorSQL(t){
   return t;
 }
 
+
+const SQLS={
+  e01:`SELECT job_id FROM employees\nUNION\nSELECT job_id FROM job_history\nORDER BY 1;`,
+  e02:`SELECT job_id FROM employees\nUNION ALL\nSELECT job_id FROM job_history;`,
+  e03:`SELECT job_id FROM employees\nINTERSECT\nSELECT job_id FROM job_history;`,
+  e04:`SELECT job_id FROM employees\nMINUS\nSELECT job_id FROM job_history;`,
+  e05:`-- UNION: tots els job_id diferents (actuals + històrics)\nSELECT job_id FROM employees\nUNION\nSELECT job_id FROM job_history;\n\n-- UNION ALL: el mateix, però amb repeticions\nSELECT job_id FROM employees\nUNION ALL\nSELECT job_id FROM job_history;\n\n-- INTERSECT: job_id que són actuals I han estat a l'historial\nSELECT job_id FROM employees\nINTERSECT\nSELECT job_id FROM job_history;\n\n-- MINUS: job_id actuals que MAI han estat a l'historial\nSELECT job_id FROM employees\nMINUS\nSELECT job_id FROM job_history;`
+};
+
+const E1=[
+  {t:'Quin operador combina dues consultes i elimina les files duplicades?',opts:['UNION ALL','UNION','MINUS','INTERSECT'],ans:1,exp:'UNION combina els resultats i elimina duplicats. UNION ALL els conserva.'},
+  {t:'Quin operador retorna només les files comunes a totes dues consultes?',opts:['UNION','MINUS','INTERSECT','UNION ALL'],ans:2,exp:'INTERSECT actua com la intersecció de conjunts: només el que hi ha a totes dues consultes alhora.'},
+  {t:'Si vols les files que estan a la consulta A però no a la consulta B, quin operador uses?',opts:['A INTERSECT B','A UNION B','A MINUS B','B MINUS A'],ans:2,exp:'A MINUS B retorna les files de A que no apareixen a B. L\'ordre importa.'},
+  {t:'Per rendiment, quin operador és preferible quan saps que no hi pot haver duplicats entre les dues consultes?',opts:['UNION','UNION ALL','INTERSECT','MINUS'],ans:1,exp:'UNION ALL evita el cost d\'ordenar i comparar files per eliminar duplicats, innecessari si no n\'hi pot haver.'},
+  {t:'On s\'ha de col·locar l\'ORDER BY quan combinem diverses consultes amb operadors de conjunt?',opts:['Després de cada SELECT per separat','Només al final de l\'última consulta','Al principi de la primera consulta','No es pot fer servir ORDER BY amb operadors de conjunt'],ans:1,exp:'Amb operadors de conjunt només hi pot haver un ORDER BY, situat al final, referint-se a la posició o al nom de columna de la primera consulta.'}
+];
+
+const E2=[
+  {q:'Si EMPLOYEES té els job_id (SA_REP, IT_PROG, SA_REP, FI_MGR) i JOB_HISTORY té (SA_REP, AD_ASST), quantes files retorna aquesta consulta?',code:`SELECT job_id FROM employees\nUNION\nSELECT job_id FROM job_history;`,opts:['6','4','3 valors únics: SA_REP, IT_PROG, FI_MGR, AD_ASST = 4','2'],ans:2,exp:'UNION elimina duplicats: el conjunt de valors únics combinats és SA_REP, IT_PROG, FI_MGR, AD_ASST = 4 files.'},
+  {q:'Amb les mateixes dades de l\'exercici anterior, quantes files retorna aquesta consulta?',code:`SELECT job_id FROM employees\nUNION ALL\nSELECT job_id FROM job_history;`,opts:['4','6 (4 de employees + 2 de job_history, sense eliminar res)','3','2'],ans:1,exp:'UNION ALL no elimina res: simplement concatena els resultats de les dues consultes (4 + 2 = 6 files).'},
+  {q:'Aquesta consulta és sintàcticament correcta?',code:`SELECT first_name, last_name FROM employees\nUNION\nSELECT department_name FROM departments;`,opts:['Sí, sempre es pot combinar qualsevol SELECT','No: el nombre de columnes no coincideix (2 vs 1)','Sí, però només amb UNION ALL','No, UNION només funciona amb la mateixa taula'],ans:1,exp:'Les consultes combinades han de tenir el mateix nombre de columnes amb tipus compatibles; aquí la primera en té 2 i la segona només 1.'}
+];
+
+const E3sol=[
+  {ctx:'Mostra els JOB_ID que apareixen a EMPLOYEES però no a JOB_HISTORY (càrrecs que mai s\'han abandonat).',code:`SELECT job_id FROM employees\nMINUS\nSELECT job_id FROM job_history\nORDER BY 1;`,note:'Criteri 3.7 — MINUS retorna files de la primera consulta que no estan a la segona. Equivalent a NOT IN però més clar de llegir.'},
+  {ctx:'Mostra, sense repeticions, tots els EMPLOYEE_ID que apareixen com a empleat actual o que han estat alguna vegada a l\'historial de càrrecs.',code:`SELECT employee_id FROM employees\nUNION\nSELECT employee_id FROM job_history\nORDER BY 1;`,note:'Criteri 3.7 — UNION combina i deduplica els identificadors de totes dues taules.'},
+  {ctx:'Mostra els EMPLOYEE_ID que tenen registres a l\'historial de càrrecs i que continuen sent empleats actius.',code:`SELECT employee_id FROM employees\nINTERSECT\nSELECT employee_id FROM job_history\nORDER BY 1;`,note:'Criteri 3.7 — INTERSECT troba els identificadors presents a totes dues taules alhora.'}
+];
+
+Object.keys(SQLS).forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=colorSQL(SQLS[id]); });
+(function(){
+  const c=document.getElementById('ex1-cont');
+  E1.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E1',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="E1f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex2-cont');
+  E2.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E2',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.q}</div><pre class="sql-out" style="font-size:11px;margin-bottom:8px">${colorSQL(d.code)}</pre><div class="qi-opts">${opts}</div><div class="qi-fb" id="E2f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex3-cont');
+  E3sol.forEach((d,i)=>{
+    const div=document.createElement('div'); div.className='ri';
+    div.innerHTML=`<div class="ri-q"><div class="ri-q-text"><strong>${i+1}.</strong> ${d.ctx}</div><button class="ri-btn" onclick="reveal(this,'E3a${i}')">▶ Veure solució SQL</button></div><div class="ri-ans" id="E3a${i}"><div class="ri-ans-label">Solució</div><pre class="sql-out">${colorSQL(d.code)}</pre><div class="ri-note">${d.note}</div></div>`;
+    c.appendChild(div);
+  });
+})();
+const ALL={E1,E2};
+function checkQ(grp,btn,i,choice){
+  const d=ALL[grp][i],fb=document.getElementById(grp+'f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+function reveal(btn,id){document.getElementById(id).classList.add('show');btn.style.display='none';}
 
 </script>
 </body>

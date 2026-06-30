@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA1 · Unions entre taules (JOINs) — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+  --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+  --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+  --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+  --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+  --yellow:#713f12; --yellow-bg:#fefce8; --yellow-bdr:#fef08a;
+  --purple:#5b21b6; --purple-bg:#f5f3ff; --purple-bdr:#ddd6fe;
+  --code-bg:#1e293b; --code-text:#e2e8f0; --r:10px; --r-sm:6px;
+}
+body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+.merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+.site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 24px; }
+.head-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+.brand { text-decoration:none; display:flex; flex-direction:column; }
+.brand-mark { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); }
+.brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+.head-course { font-size:13px; color:var(--ink-2); }
+.wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+.breadcrumb { font-size:13px; color:var(--ink-3); padding:14px 0 0; }
+.breadcrumb a { color:var(--ink-2); text-decoration:none; }
+.breadcrumb a:hover { color:var(--accent); }
+.breadcrumb span { margin:0 5px; }
+.page-header { padding:40px 0 32px; border-bottom:1.5px solid var(--border); margin-bottom:48px; }
+.meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+.badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+.b-course { background:var(--ink); color:#fff; }
+.b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+.b-act { background:var(--accent-mid); color:#fff; }
+.b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+.page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:10px; }
+.page-sub { font-size:16px; color:var(--ink-2); margin-bottom:24px; }
+.obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; }
+.obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+.obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+.obj-text { font-size:14px; color:var(--ink-2); }
+.schema-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:20px; }
+.schema-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; }
+.schema-card-head { background:var(--ink); color:#fff; padding:6px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:.04em; }
+.schema-card-body { padding:8px 12px; }
+.schema-card-body div { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-2); padding:2px 0; border-bottom:1px solid var(--border); }
+.schema-card-body div:last-child { border-bottom:none; }
+.schema-card-body .pk { color:var(--accent); font-weight:600; }
+.schema-card-body .fk { color:var(--blue); }
+.schema-mini { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 16px; margin-bottom:32px; font-size:13px; color:var(--ink-2); }
+.schema-mini a { color:var(--accent); font-weight:600; text-decoration:none; }
+.schema-mini a:hover { text-decoration:underline; }
+.schema-mini code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); color:var(--accent); padding:1px 6px; border-radius:3px; }
+.section { margin-bottom:60px; }
+.sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+.sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+.sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+.sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+.subhead { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin:32px 0 14px; padding-bottom:8px; border-bottom:1px dashed var(--accent-bdr); }
+.subhead:first-of-type { margin-top:8px; }
+.lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+.lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+.ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+.ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+.ibox-text { font-size:14px; line-height:1.65; }
+.ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+.ibox.green { background:var(--green-bg); border:1px solid var(--green-bdr); }
+.ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+.ibox.yellow { background:var(--yellow-bg); border:1px solid var(--yellow-bdr); }
+.ibox.purple { background:var(--purple-bg); border:1px solid var(--purple-bdr); }
+.ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+.ibox.green .ibox-label, .ibox.green .ibox-text { color:var(--green); }
+.ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
+.ibox.yellow .ibox-label, .ibox.yellow .ibox-text { color:var(--yellow); }
+.ibox.purple .ibox-label, .ibox.purple .ibox-text { color:var(--purple); }
+.ibox code { background:#ffffffaa; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 6px; border-radius:3px; }
+.demo { margin-bottom:24px; }
+.demo-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-bottom:8px; }
+.sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.8; white-space:pre; margin:0; overflow-x:auto; }
+.exp-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 16px; margin-top:10px; }
+.exp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin-bottom:5px; }
+.exp-text { font-size:13px; color:var(--ink-2); line-height:1.6; }
+.exp-text code { background:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 5px; border-radius:3px; }
+.kw { color:#fbbf24; font-weight:500; }
+.fn { color:#a78bfa; }
+.str { color:#4ade80; }
+.num { color:#f472b6; }
+.cmt { color:#64748b; font-style:italic; }
+.tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
+.tbl { width:100%; border-collapse:collapse; font-size:13px; }
+.tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
+.tbl td { padding:9px 14px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:12px; vertical-align:middle; }
+.tbl tr:last-child td { border-bottom:none; }
+.cmp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+.cmp { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:14px; }
+.cmp h4 { font-size:12px; font-family:'JetBrains Mono',monospace; color:var(--accent); margin-bottom:8px; }
+.cmp p { font-size:12px; color:var(--ink-2); line-height:1.5; }
+.ba-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:10px; }
+.ba { border-radius:var(--r-sm); overflow:hidden; border:1px solid var(--border); }
+.ba-head { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:8px 14px; }
+.ba.bad .ba-head { background:var(--red-bg); color:var(--red); }
+.ba.good .ba-head { background:var(--green-bg); color:var(--green); }
+.ba pre.sql-out { border-radius:0; font-size:12px; }
+@media (max-width:640px){ .ba-grid, .cmp-grid { grid-template-columns:1fr; } }
+.ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
+.ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+.ex-block-sub { font-size:13px; color:#a8a29e; }
+.ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+.exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+.exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+.ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+.ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+.ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+.ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
+.ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
+.qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
+.qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
+.qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
+.qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
+.qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+.qi-btn:disabled { cursor:default; }
+.qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
+.qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
+.qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
+.qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+.qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
+.ri { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-bottom:12px; }
+.ri-q { padding:14px 18px; background:#fafaf9; }
+.ri-q-text { font-size:14px; color:var(--ink); margin-bottom:4px; }
+.ri-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 15px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); color:var(--accent); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; transition:background .12s,color .12s,border-color .12s; }
+.ri-btn:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+.ri-ans { display:none; padding:16px 18px; background:var(--accent-bg); border-top:1px solid var(--accent-bdr); }
+.ri-ans.show { display:block; }
+.ri-ans-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--accent-mid); margin-bottom:8px; }
+.ri-note { font-size:13px; color:var(--ink-2); margin-top:10px; line-height:1.55; }
+.doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; flex-wrap:wrap; }
+.doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
+.doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+.doc-nav .back { color:var(--ink-2); background:#fafaf9; border-color:var(--border); }
+.doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+.site-foot { border-top:1px solid var(--border); padding:20px 24px; margin-top:0; }
+.foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+/* TARGETES SUB-INDEX (pàgina selector) */
+.subcards { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-bottom:8px; }
+.subcard { background:var(--card); border:1.5px solid var(--border); border-radius:var(--r); padding:22px 22px 18px; text-decoration:none; color:var(--ink); display:flex; flex-direction:column; transition:border-color .15s,box-shadow .15s,transform .15s; }
+.subcard:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(0,0,0,.08); transform:translateY(-2px); }
+.subcard-num { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent-bdr); padding:2px 8px; border-radius:4px; letter-spacing:.04em; display:inline-block; margin-bottom:14px; width:fit-content; }
+.subcard-title { font-weight:600; font-size:16px; color:var(--ink); margin-bottom:8px; }
+.subcard-text { font-size:13px; color:var(--ink-2); flex:1; line-height:1.55; margin-bottom:16px; }
+.subcard-text code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); padding:1px 5px; border-radius:3px; color:var(--accent); }
+.subcard-foot { display:flex; align-items:center; justify-content:space-between; font-size:12px; }
+.subcard-go { color:var(--accent); font-weight:600; }
+@media (max-width:600px){ .schema-grid { grid-template-columns:1fr 1fr; } }
+
+  </style>
+</head>
+<body>
+<div class="merce-top"></div>
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">La Mercè</span><span class="brand-sub">Formació Professional</span></a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="breadcrumb"><a href="index.html">MP0484 Bases de dades</a><span>›</span><a href="index.html#aea1">AEA1 — Consultes SQL</a><span>›</span><a href="AEA1_RA3_consultes_complexes.html">Consultes complexes</a><span>›</span>JOINs</div>
+  
+<header class="page-header">
+  <div class="meta-row">
+    <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+    <span class="badge b-ra">AEA1 · RA3 · 1 de 4</span>
+    <span class="badge b-new">JOINs</span>
+  </div>
+  <h1 class="page-title">Unions entre taules (JOINs)</h1>
+  <p class="page-sub">Combinar informació de diverses taules amb <strong>INNER JOIN</strong>, <strong>OUTER JOIN</strong> i <em>self-join</em>.</p>
+  <div class="obj-box">
+    <div class="obj-icon">🎯</div>
+    <div><div class="obj-label">Criteris d'avaluació · RA3</div><div class="obj-text"><strong>3.3</strong> Composicions internes (JOIN) · <strong>3.4</strong> Composicions externes (OUTER JOIN)</div></div>
+  </div>
+</header>
+
+  
+<p class="lead">Quan la informació que necessitem es troba repartida en diverses taules, hem d'unir-les. Oracle SQL segueix l'estàndard <strong>SQL:1999</strong> amb les clàusules <code>JOIN ... ON</code>, <code>JOIN ... USING</code> i <code>NATURAL JOIN</code>.</p>
+<div class="cmp-grid">
+  <div class="cmp"><h4>INNER JOIN</h4><p>Retorna només les files que tenen coincidència en les dues taules. Les files sense parella queden fora.</p></div>
+  <div class="cmp"><h4>LEFT OUTER JOIN</h4><p>Retorna totes les files de la taula esquerra, amb NULL on no hi ha coincidència a la dreta.</p></div>
+  <div class="cmp"><h4>RIGHT OUTER JOIN</h4><p>Retorna totes les files de la taula dreta, amb NULL on no hi ha coincidència a l'esquerra.</p></div>
+  <div class="cmp"><h4>FULL OUTER JOIN</h4><p>Retorna totes les files de les dues taules, amb NULL on no hi ha coincidència en cap dels dos costats.</p></div>
+</div>
+<section class="section"><div class="sec-head"><span class="sec-num">1</span><div><h2 class="sec-title">INNER JOIN</h2><p class="sec-sub">Unir taules quedant-nos només amb les coincidències</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 1 · INNER JOIN amb ON</div><pre class="sql-out" id="e01"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>JOIN ... ON condició</code> és la forma més flexible: permet qualsevol condició d'unió, fins i tot amb noms de columna diferents a cada taula. És imprescindible qualificar les columnes amb l'àlies de taula (<code>e.department_id</code>) quan el mateix nom existeix a totes dues taules.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 2 · INNER JOIN amb USING</div><pre class="sql-out" id="e02"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>JOIN ... USING(columna)</code> s'usa quan la columna d'unió té <strong>exactament el mateix nom</strong> a les dues taules. És més concisa que <code>ON</code>, però amb una restricció important: la columna usada a <code>USING</code> <strong>no es pot qualificar</strong> amb cap àlies de taula (ni al <code>SELECT</code> ni a cap altra clàusula).</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 3 · NATURAL JOIN i per què cal anar amb compte</div><pre class="sql-out" id="e03"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>NATURAL JOIN</code> uneix automàticament per <strong>totes</strong> les columnes que tenen el mateix nom a les dues taules, sense haver-les d'indicar. És molt curt d'escriure, però perillós: si en el futur s'afegeix una columna nova amb un nom coincident per casualitat, la condició d'unió canviaria sense que ens n'adonéssim. Per això, a la pràctica professional es recomana <code>JOIN ... ON</code> o <code>JOIN ... USING</code> abans que <code>NATURAL JOIN</code>.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">2</span><div><h2 class="sec-title">Unions de diverses taules i self-join</h2><p class="sec-sub">Encadenar JOINs i unir una taula amb ella mateixa</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 4 · JOIN encadenat de 3 taules</div><pre class="sql-out" id="e04"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Es poden encadenar tants <code>JOIN</code> com calgui per recórrer relacions entre diverses taules: aquí anem d'empleat a departament, de departament a ubicació, i d'ubicació a país. Cada nou <code>JOIN</code> afegeix una taula més al resultat.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 5 · Self-join (autounió)</div><pre class="sql-out" id="e05"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">L'autounió (<em>self-join</em>) uneix la taula amb ella mateixa: imprescindible per a relacions jeràrquiques com <code>MANAGER_ID</code>, que fa referència a <code>EMPLOYEE_ID</code> de la mateixa taula <code>EMPLOYEES</code>. Cal donar un àlies diferent a cada "còpia" de la taula (aquí <code>emp</code> i <code>mgr</code>) perquè Oracle pugui distingir-les.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">3</span><div><h2 class="sec-title">JOINs externs (OUTER JOIN)</h2><p class="sec-sub">Conservar files encara que no tinguin coincidència</p></div></div>
+<div class="demo"><div class="demo-label">Exemple 6 · LEFT OUTER JOIN</div><pre class="sql-out" id="e06"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>LEFT OUTER JOIN</code> conserva <strong>totes</strong> les files de la taula que apareix a l'esquerra (<code>EMPLOYEES</code>), encara que no tinguin coincidència a la taula dreta. Els empleats sense departament assignat (<code>DEPARTMENT_ID</code> a <code>NULL</code>) també surten, amb <code>NULL</code> a les columnes de <code>DEPARTMENTS</code>. Amb <code>INNER JOIN</code> aquests empleats desapareixerien del resultat.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 7 · RIGHT OUTER JOIN</div><pre class="sql-out" id="e07"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>RIGHT OUTER JOIN</code> és el simètric del <code>LEFT</code>: conserva totes les files de la taula de la <strong>dreta</strong> (<code>DEPARTMENTS</code>), encara que no tinguin cap empleat assignat. És equivalent a escriure un <code>LEFT OUTER JOIN</code> intercanviant l'ordre de les taules; per claredat, la majoria de programadors prefereixen fer servir sempre <code>LEFT</code> i reordenar el <code>FROM</code>.</div></div></div>
+<div class="demo"><div class="demo-label">Exemple 8 · FULL OUTER JOIN</div><pre class="sql-out" id="e08"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>FULL OUTER JOIN</code> conserva totes les files de <strong>totes dues</strong> taules: tant els empleats sense departament com els departaments sense empleats apareixen al resultat, amb <code>NULL</code> on no hi ha coincidència.</div></div></div>
+</section><section class="section"><div class="sec-head"><span class="sec-num">4</span><div><h2 class="sec-title">CROSS JOIN: el producte cartesià</h2><p class="sec-sub">Per saber-ho identificar i evitar-lo per error</p></div></div>
+<div class="ibox red"><div class="ibox-label">⚠️ Compte</div><div class="ibox-text">Si t'oblides de la condició <code>ON</code>/<code>USING</code> en un <code>JOIN</code>, Oracle no dona error: simplement combina <strong>totes les files</strong> d'una taula amb <strong>totes les files</strong> de l'altra (producte cartesià). Amb taules grans, això pot generar milions de files per error i bloquejar el servidor.</div></div>
+<div class="demo"><div class="demo-label">Exemple 9 · CROSS JOIN explícit</div><pre class="sql-out" id="e09"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>CROSS JOIN</code> genera el producte cartesià de manera explícita i intencionada (cada fila de la primera taula combinada amb cada fila de la segona). Té usos legítims, com generar totes les combinacions possibles de dues llistes petites, però gairebé mai és el que volem quan relacionem taules de negoci com EMPLOYEES i DEPARTMENTS.</div></div></div>
+</section>
+<div class="ex-block-head"><h2 class="ex-block-title">Exercicis — JOINs</h2><p class="ex-block-sub">Criteris 3.3 i 3.4 · BD HR d'Oracle</p></div>
+<div class="ex-block-body">
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Quin tipus de JOIN?</div><div class="ex-level">Nivell mitjà · criteris 3.3 i 3.4</div></div></div>
+    <p class="ex-intro">Tria el tipus de JOIN adequat per a cada cas.</p>
+    <div id="ex1-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Analitza el resultat</div><div class="ex-level">Nivell mitjà · criteris 3.3 i 3.4</div></div></div>
+    <p class="ex-intro">Analitza el fragment SQL i tria la resposta correcta.</p>
+    <div id="ex2-cont"></div>
+  </div>
+  <div class="exercise">
+    <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Escriu la consulta SQL</div><div class="ex-level">Nivell avançat · criteris 3.3 i 3.4</div></div></div>
+    <p class="ex-intro">Escriu la consulta SQL per a cada enunciat i comprova-la amb la solució.</p>
+    <div id="ex3-cont"></div>
+  </div>
+</div>
+
+<nav class="doc-nav">
+  <a class="back" href="AEA1_RA3_consultes_complexes.html">← Consultes complexes</a>
+  <a href="AEA1_RA3_subconsultes.html">Subconsultes →</a>
+</nav>
+
+</div>
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+<script>
+
+function colorSQL(t){
+  t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t=t.replace(/(--[^\n]*)/g,'<span class="cmt">$1</span>');
+  t=t.replace(/('[^']*')/g,'<span class="str">$1</span>');
+  t=t.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');
+  t=t.replace(/\b(SELECT|FROM|WHERE|AND|OR|NOT|IN|LIKE|BETWEEN|IS|NULL|ORDER\s+BY|GROUP\s+BY|HAVING|DISTINCT|AS|ASC|DESC|CASE|WHEN|THEN|ELSE|END|JOIN|INNER\s+JOIN|LEFT\s+OUTER\s+JOIN|LEFT\s+JOIN|RIGHT\s+OUTER\s+JOIN|RIGHT\s+JOIN|FULL\s+OUTER\s+JOIN|FULL\s+JOIN|CROSS\s+JOIN|NATURAL\s+JOIN|ON|USING|UNION|UNION\s+ALL|INTERSECT|MINUS|EXISTS|ANY|ALL|NULLS\s+LAST|NULLS\s+FIRST|FETCH\s+FIRST|FETCH\s+NEXT|ROWS\s+ONLY|OFFSET|CREATE|INDEX|EXPLAIN\s+PLAN\s+FOR|FOR)\b/gi,'<span class="kw">$1</span>');
+  t=t.replace(/\b(COUNT|SUM|AVG|MAX|MIN|ROUND|TRUNC|MOD|UPPER|LOWER|INITCAP|CONCAT|SUBSTR|LENGTH|TRIM|LTRIM|RTRIM|REPLACE|INSTR|LPAD|RPAD|NVL|NVL2|NULLIF|COALESCE|TO_CHAR|TO_DATE|TO_NUMBER|SYSDATE|MONTHS_BETWEEN|ADD_MONTHS|DECODE|GREATEST|LEAST|ABS|CEIL|FLOOR|ROWNUM|DBMS_STATS\.GATHER_TABLE_STATS)\b/gi,'<span class="fn">$1</span>');
+  return t;
+}
+
+
+const SQLS={
+  e01:`SELECT e.last_name, e.salary, d.department_name\nFROM   employees   e\n       JOIN departments d ON e.department_id = d.department_id\nWHERE  e.salary > 8000\nORDER BY d.department_name, e.last_name;`,
+  e02:`SELECT e.last_name, department_id, d.department_name\nFROM   employees   e\n       JOIN departments d USING (department_id);`,
+  e03:`-- NATURAL JOIN: uneix per TOTES les columnes amb el mateix nom\nSELECT last_name, department_id, department_name\nFROM   employees\n       NATURAL JOIN departments;`,
+  e04:`SELECT e.last_name, d.department_name, l.city, c.country_name\nFROM   employees   e\n       JOIN departments d ON e.department_id = d.department_id\n       JOIN locations   l ON d.location_id   = l.location_id\n       JOIN countries   c ON l.country_id    = c.country_id\nORDER BY c.country_name, l.city;`,
+  e05:`SELECT emp.last_name AS empleat,\n       mgr.last_name AS cap\nFROM   employees emp\n       JOIN employees mgr ON emp.manager_id = mgr.employee_id\nORDER BY mgr.last_name, emp.last_name;`,
+  e06:`SELECT e.last_name, e.department_id, d.department_name\nFROM   employees   e\n       LEFT OUTER JOIN departments d ON e.department_id = d.department_id\nORDER BY d.department_name NULLS LAST;`,
+  e07:`SELECT e.last_name, d.department_name\nFROM   employees   e\n       RIGHT OUTER JOIN departments d ON e.department_id = d.department_id\nORDER BY d.department_name;`,
+  e08:`SELECT e.last_name, d.department_name\nFROM   employees   e\n       FULL OUTER JOIN departments d ON e.department_id = d.department_id\nORDER BY d.department_name NULLS LAST;`,
+  e09:`-- Producte cartesià explícit: totes les combinacions JOB x DEPARTMENT\nSELECT j.job_title, d.department_name\nFROM   jobs j\n       CROSS JOIN departments d;`
+};
+
+const E1=[
+  {t:'Vols veure tots els empleats, fins i tot els que no tenen departament assignat.',opts:['INNER JOIN','LEFT OUTER JOIN','RIGHT OUTER JOIN','CROSS JOIN'],ans:1,exp:'LEFT OUTER JOIN inclou totes les files de la taula esquerra (employees) fins i tot si no tenen coincidència a la taula dreta (departments).'},
+  {t:'Vols veure la llista d\'empleats amb el nom del seu cap directe (MANAGER_ID = EMPLOYEE_ID).',opts:['JOIN amb USING','Self-join (autounió)','FULL OUTER JOIN','NATURAL JOIN'],ans:1,exp:'L\'autounió uneix la taula EMPLOYEES amb ella mateixa, donant àlies diferents a cada instància.'},
+  {t:'Vols veure tots els departaments, fins i tot els que no tenen cap empleat assignat.',opts:['LEFT OUTER JOIN employees','RIGHT OUTER JOIN employees','INNER JOIN','CROSS JOIN'],ans:1,exp:'RIGHT OUTER JOIN inclou totes les files de la taula dreta (departments). Alternativament, un LEFT OUTER JOIN posant departments com a taula principal.'},
+  {t:'Les dues taules tenen una columna LOCATION_ID del mateix nom. Vols una unió neta sense ambigüitat.',opts:['JOIN ... ON e.location_id = d.location_id','JOIN ... USING (location_id)','NATURAL JOIN','Les opcions A i B són vàlides'],ans:3,exp:'Tant ON com USING funcionen. USING és més concís quan la columna té el mateix nom; ON és més flexible per a condicions complexes.'},
+  {t:'T\'has oblidat d\'escriure la condició ON en un JOIN entre EMPLOYEES (107 files) i DEPARTMENTS (27 files). Quantes files aproximadament obtindràs?',opts:['107','27','107 + 27 = 134','107 × 27 = 2.889'],ans:3,exp:'Sense condició d\'unió, Oracle fa un producte cartesià: cada fila d\'una taula es combina amb totes les files de l\'altra.'}
+];
+
+const E2=[
+  {q:'Aquesta consulta dona error de compilació. Per què?',code:`SELECT e.last_name, d.department_name\nFROM   employees e\n       JOIN departments d USING (department_id)\nWHERE  e.department_id = 80;`,opts:['No hi ha cap error','La columna usada a USING no es pot qualificar amb un àlies','Falta l\'ON','USING no existeix a Oracle'],ans:1,exp:'Quan s\'usa USING, la columna compartida (department_id) no es pot prefixar amb e. ni d.: cal escriure simplement department_id = 80.'},
+  {q:'Quantes files com a màxim pot retornar aquest INNER JOIN si EMPLOYEES té 107 files i 3 d\'elles tenen DEPARTMENT_ID a NULL?',code:`SELECT e.last_name, d.department_name\nFROM   employees e\n       JOIN departments d ON e.department_id = d.department_id;`,opts:['107','104 com a màxim','110','Depèn només de DEPARTMENTS'],ans:1,exp:'INNER JOIN descarta les files sense coincidència; els 3 empleats amb DEPARTMENT_ID NULL mai trobaran parella i queden fora, per tant com a màxim hi haurà 104 files.'}
+];
+
+const E3sol=[
+  {ctx:'Llista el cognom, salari i nom del departament de tots els empleats del departament "Sales", ordenats per salari descendent.',code:`SELECT   e.last_name, e.salary, d.department_name\nFROM     employees e\n         JOIN departments d ON e.department_id = d.department_id\nWHERE    d.department_name = 'Sales'\nORDER BY e.salary DESC;`,note:'Criteri 3.3 — INNER JOIN entre employees i departments, filtrant per nom de departament.'},
+  {ctx:'Mostra el cognom de l\'empleat i el cognom del seu cap directe. Mostra també els empleats sense cap (president).',code:`SELECT emp.last_name AS empleat,\n       NVL(mgr.last_name, '-- Sense cap --') AS cap\nFROM   employees emp\n       LEFT OUTER JOIN employees mgr ON emp.manager_id = mgr.employee_id\nORDER BY cap NULLS LAST, emp.last_name;`,note:'Criteri 3.4 — Self-join amb LEFT OUTER JOIN per incloure el president, que no té cap. NVL mostra un text significatiu quan manager_id és NULL.'},
+  {ctx:'Mostra totes les ciutats (LOCATIONS) amb el nom del departament que hi té la seu, incloent-hi les ciutats que no tenen cap departament assignat.',code:`SELECT   l.city, d.department_name\nFROM     locations   l\n         LEFT OUTER JOIN departments d ON l.location_id = d.location_id\nORDER BY l.city;`,note:'Criteri 3.4 — LEFT OUTER JOIN des de la taula "sense forats" (locations) cap a la que pot no tenir coincidència (departments).'}
+];
+
+Object.keys(SQLS).forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=colorSQL(SQLS[id]); });
+(function(){
+  const c=document.getElementById('ex1-cont');
+  E1.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E1',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.t}</div><div class="qi-opts">${opts}</div><div class="qi-fb" id="E1f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex2-cont');
+  E2.forEach((d,i)=>{
+    const opts=d.opts.map((o,j)=>`<button class="qi-btn" onclick="checkQ('E2',this,${i},${j})">${o}</button>`).join('');
+    const div=document.createElement('div'); div.className='qi';
+    div.innerHTML=`<div class="qi-text">${i+1}. ${d.q}</div><pre class="sql-out" style="font-size:11px;margin-bottom:8px">${colorSQL(d.code)}</pre><div class="qi-opts">${opts}</div><div class="qi-fb" id="E2f${i}"></div>`;
+    c.appendChild(div);
+  });
+})();
+(function(){
+  const c=document.getElementById('ex3-cont');
+  E3sol.forEach((d,i)=>{
+    const div=document.createElement('div'); div.className='ri';
+    div.innerHTML=`<div class="ri-q"><div class="ri-q-text"><strong>${i+1}.</strong> ${d.ctx}</div><button class="ri-btn" onclick="reveal(this,'E3a${i}')">▶ Veure solució SQL</button></div><div class="ri-ans" id="E3a${i}"><div class="ri-ans-label">Solució</div><pre class="sql-out">${colorSQL(d.code)}</pre><div class="ri-note">${d.note}</div></div>`;
+    c.appendChild(div);
+  });
+})();
+const ALL={E1,E2};
+function checkQ(grp,btn,i,choice){
+  const d=ALL[grp][i],fb=document.getElementById(grp+'f'+i);
+  const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
+  if(choice===d.ans){btn.classList.add('ok');fb.className='qi-fb ok';fb.textContent='✓ Correcte! '+d.exp;}
+  else{btn.classList.add('fail');btns[d.ans].classList.add('ok');fb.className='qi-fb fail';fb.textContent='✗ Incorrecte. '+d.exp;}
+}
+function reveal(btn,id){document.getElementById(id).classList.add('show');btn.style.display='none';}
+
+</script>
+</body>
+</html>
