@@ -141,7 +141,7 @@
     <div class="meta-row">
       <span class="badge b-course">DAW · MP0484 Bases de dades</span>
       <span class="badge b-ra">AEA4 · RA6 · Part 1/3</span>
-      <span class="badge b-act">10 hores</span>
+      <span class="badge b-act">15 hores</span>
       <span class="badge b-new">Model E/R</span>
     </div>
     <h1 class="page-title">Model Entitat-Relació</h1>
@@ -155,7 +155,8 @@
           <strong>6.2</strong> Taules del disseny lògic ·
           <strong>6.3</strong> Camps de les taules ·
           <strong>6.4</strong> Relacions entre taules ·
-          <strong>6.5</strong> Camps clau
+          <strong>6.5</strong> Camps clau ·
+          <strong>6.6</strong> Restriccions del model
         </div>
       </div>
     </div>
@@ -167,6 +168,8 @@
       <a class="toc-item" href="#s1"><span class="toc-num">1</span>Notació del model E/R</a>
       <a class="toc-item" href="#s2"><span class="toc-num">2</span>Cardinalitat i relacions</a>
       <a class="toc-item" href="#s3"><span class="toc-num">3</span>Relacions especials</a>
+      <a class="toc-item" href="#s4"><span class="toc-num">4</span>Especialització i generalització</a>
+      <a class="toc-item" href="#s5"><span class="toc-num">5</span>Agregacions d'entitats</a>
       <a class="toc-item" href="#ex"><span class="toc-num">★</span>Exercicis</a>
     </div>
   </nav>
@@ -290,6 +293,185 @@
     </div>
   </section>
 
+
+  <!-- SECCIÓ 4: ESPECIALITZACIÓ I GENERALITZACIÓ -->
+  <section class="section" id="s4">
+    <div class="sec-head">
+      <span class="sec-num">4</span>
+      <div>
+        <h2 class="sec-title">Especialització i generalització</h2>
+        <p class="sec-sub">Criteri 6.6 — Jerarquies, herència i restriccions (D/E · T/P)</p>
+      </div>
+    </div>
+    <p class="lead">Les extensions del model E/R permeten representar situacions en què diverses entitats comparteixen característiques comunes (atributs i relacions), però cadascuna en té de pròpies. El mecanisme s'anomena <strong>especialització</strong> (descendent) o <strong>generalització</strong> (ascendent), i el resultat és sempre el mateix: una <strong>superentitat</strong> i diverses <strong>subentitats</strong>.</p>
+
+    <!-- SVG: jerarquia PERSONA → PROFESSOR | ALUMNE → INFORMATIC | ADMINISTRATIU -->
+    <svg width="100%" viewBox="0 0 680 300" role="img" style="display:block;margin:0 0 24px">
+      <title>Exemple de jerarquia d'entitats i herència múltiple</title>
+      <desc>PERSONA és superentitat d'ALUMNE i PROFESSOR. PROFESSOR és alhora superentitat d'INFORMATIC i ADMINISTRATIU. Les subentitats hereten els atributs de tots els nivells superiors.</desc>
+      <defs>
+        <marker id="tri" viewBox="0 0 10 10" refX="5" refY="10" markerWidth="8" markerHeight="8" orient="auto">
+          <polygon points="0,10 5,0 10,10" fill="#e7e5e4" stroke="#a8a29e" stroke-width="1"/>
+        </marker>
+      </defs>
+      <!-- PERSONA (superentitat nivell 1) -->
+      <rect x="255" y="10" width="170" height="40" rx="6" fill="#fff" stroke="#1c1917" stroke-width="2"/>
+      <text font-family="'DM Sans',sans-serif" font-size="14" font-weight="600" fill="#1c1917" x="340" y="35" text-anchor="middle">PERSONA</text>
+      <!-- Línia cap al triangle ES nivell 1 -->
+      <line x1="340" y1="50" x2="340" y2="78" stroke="#a8a29e" stroke-width="1.5"/>
+      <!-- Triangle ES nivell 1 (D,T) -->
+      <polygon points="310,78 370,78 340,108" fill="#f7f5f0" stroke="#a8a29e" stroke-width="1.5"/>
+      <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#57534e" x="340" y="97" text-anchor="middle">ES</text>
+      <text font-family="'DM Sans',sans-serif" font-size="10" fill="#9a3412" x="340" y="118" text-anchor="middle">D, T</text>
+      <!-- Línia esquerra → ALUMNE -->
+      <line x1="320" y1="108" x2="140" y2="158" stroke="#a8a29e" stroke-width="1.5"/>
+      <!-- Línia dreta → PROFESSOR -->
+      <line x1="360" y1="108" x2="510" y2="158" stroke="#a8a29e" stroke-width="1.5"/>
+      <!-- ALUMNE -->
+      <rect x="50" y="158" width="170" height="40" rx="6" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5"/>
+      <text font-family="'DM Sans',sans-serif" font-size="13" font-weight="600" fill="#1e40af" x="135" y="183" text-anchor="middle">ALUMNE</text>
+      <!-- PROFESSOR -->
+      <rect x="430" y="158" width="200" height="40" rx="6" fill="#fff7ed" stroke="#9a3412" stroke-width="1.5"/>
+      <text font-family="'DM Sans',sans-serif" font-size="13" font-weight="600" fill="#9a3412" x="530" y="183" text-anchor="middle">PROFESSOR</text>
+      <!-- Línia cap al triangle ES nivell 2 -->
+      <line x1="530" y1="198" x2="530" y2="220" stroke="#a8a29e" stroke-width="1.5"/>
+      <!-- Triangle ES nivell 2 (E,P) -->
+      <polygon points="500,220 560,220 530,250" fill="#f7f5f0" stroke="#a8a29e" stroke-width="1.5"/>
+      <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#57534e" x="530" y="239" text-anchor="middle">ES</text>
+      <text font-family="'DM Sans',sans-serif" font-size="10" fill="#9a3412" x="530" y="260" text-anchor="middle">E, P</text>
+      <!-- Línia → INFORMATIC -->
+      <line x1="515" y1="250" x2="440" y2="275" stroke="#a8a29e" stroke-width="1.5"/>
+      <!-- Línia → ADMINISTRATIU -->
+      <line x1="545" y1="250" x2="620" y2="275" stroke="#a8a29e" stroke-width="1.5"/>
+      <!-- INFORMATIC -->
+      <rect x="370" y="275" width="130" height="35" rx="6" fill="#f0fdf4" stroke="#166534" stroke-width="1.5"/>
+      <text font-family="'DM Sans',sans-serif" font-size="12" font-weight="600" fill="#166534" x="435" y="297" text-anchor="middle">INFORMATIC</text>
+      <!-- ADMINISTRATIU -->
+      <rect x="555" y="275" width="115" height="35" rx="6" fill="#f0fdf4" stroke="#166534" stroke-width="1.5"/>
+      <text font-family="'DM Sans',sans-serif" font-size="11" font-weight="600" fill="#166534" x="612" y="297" text-anchor="middle">ADMINISTRATIU</text>
+    </svg>
+
+    <div class="ibox blue">
+      <div class="ibox-label">Especialització vs. Generalització</div>
+      <div class="ibox-text">
+        <strong>Especialització</strong> (descendent): partint d'una superentitat existent, es detecten subconjunts d'instàncies amb atributs propis → es creen subentitats. Ex: de PROFESSOR es detecten INFORMATIC i ADMINISTRATIU.<br>
+        <strong>Generalització</strong> (ascendent): s'observen entitats semblants que comparteixen atributs → es crea una superentitat que les agrupa. Ex: d'ALUMNE i PROFESSOR s'obté PERSONA.<br>
+        El resultat diagramàtic és idèntic en tots dos casos: un <strong>triangle amb l'etiqueta ES</strong>.
+      </div>
+    </div>
+
+    <p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-bottom:12px;">Restriccions de les subentitats</p>
+    <p class="lead">Cada especialització porta dues restriccions que es combinen i s'indiquen dins o al costat del triangle:</p>
+
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Restricció</th><th>Lletra</th><th>Significat</th><th>Exemple</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Disjunta</strong></td><td class="mono">D</td><td>Una instància de la superentitat pot pertànyer com a màxim a <em>una</em> subentitat.</td><td>Un professor no pot ser alhora INFORMATIC i ADMINISTRATIU.</td></tr>
+          <tr><td><strong>Encavalcada</strong></td><td class="mono">E</td><td>Una instància de la superentitat pot pertànyer a <em>més d'una</em> subentitat simultàniament.</td><td>Un professor pot ser alhora INFORMATIC i ADMINISTRATIU.</td></tr>
+          <tr><td><strong>Total</strong></td><td class="mono">T</td><td>Tota instància de la superentitat ha de pertànyer a <em>almenys una</em> subentitat.</td><td>Tot PROFESSOR és necessàriament INFORMATIC o ADMINISTRATIU (o tots dos).</td></tr>
+          <tr><td><strong>Parcial</strong></td><td class="mono">P</td><td>Hi pot haver instàncies de la superentitat que <em>no pertanyin</em> a cap subentitat.</td><td>Hi pot haver professors que no siguin ni INFORMATIC ni ADMINISTRATIU.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Combinació</th><th>Etiqueta</th><th>Significat pràctic</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Disjunta i Total</strong></td><td class="mono">D, T</td><td>Tota instància pertany a exactament una subentitat. La superentitat queda "particionada" completament.</td></tr>
+          <tr><td><strong>Disjunta i Parcial</strong></td><td class="mono">D, P</td><td>Algunes instàncies no pertanyen a cap subentitat; les que sí hi pertanyen, a una sola.</td></tr>
+          <tr><td><strong>Encavalcada i Total</strong></td><td class="mono">E, T</td><td>Tota instància pertany a almenys una subentitat, i n'hi pot pertànyer a més d'una.</td></tr>
+          <tr><td><strong>Encavalcada i Parcial</strong></td><td class="mono">E, P</td><td>Hi pot haver instàncies sense subentitat, i les que en tenen poden pertànyer a més d'una.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ibox yellow">
+      <div class="ibox-label">Herència de propietats</div>
+      <div class="ibox-text">
+        Les subentitats <strong>hereten</strong> tots els atributs i relacions de la superentitat. En una jerarquia encadenada (PERSONA → PROFESSOR → INFORMATIC), INFORMATIC hereta els atributs de PROFESSOR <em>i</em> els de PERSONA, però no els d'ALUMNE (no en és descendent). Això s'anomena <strong>herència múltiple</strong>.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓ 5: AGREGACIONS -->
+  <section class="section" id="s5">
+    <div class="sec-head">
+      <span class="sec-num">5</span>
+      <div>
+        <h2 class="sec-title">Agregacions d'entitats</h2>
+        <p class="sec-sub">Criteri 6.6 — Quan una relació necessita relacionar-se amb una altra entitat</p>
+      </div>
+    </div>
+    <p class="lead">El model E/R bàsic no permet que una <strong>relació participi directament en una altra relació</strong>. L'<strong>agregació</strong> supera aquesta limitació tractant un conjunt {entitat – relació – entitat} com si fos una entitat de nivell superior, que pot participar en noves relacions.</p>
+
+    <div class="ibox blue">
+      <div class="ibox-label">Quan cal una agregació?</div>
+      <div class="ibox-text">
+        Quan tenim una relació M:N entre dues entitats (ex: ALUMNE <em>practica</em> ESPORT) i volem relacionar <em>aquella relació concreta</em> amb una tercera entitat (ex: PROFESSOR que <em>entrena</em> la pràctica), sense eliminar la relació original ni crear redundàncies.<br>
+        Si simplement afegíssim una relació ternària ALUMNE–ESPORT–PROFESSOR, perdríem les parelles ALUMNE–ESPORT que <em>no</em> tenen entrenador.
+      </div>
+    </div>
+
+    <!-- SVG: Agregació PRACTICA (ALUMNE practica ESPORT) → Entrena → PROFESSOR -->
+    <svg width="100%" viewBox="0 0 680 240" role="img" style="display:block;margin:0 0 24px">
+      <title>Exemple d'agregació d'entitats</title>
+      <desc>La relació PRACTICA entre ALUMNE i ESPORT s'encapsula com a agregació. La nova entitat agregada PRACTICA es relaciona amb PROFESSOR mitjançant la relació Entrena (0,1 i 1,N).</desc>
+      <!-- Requadre d'agregació -->
+      <rect x="60" y="40" width="380" height="160" rx="10" fill="none" stroke="#a8a29e" stroke-width="1.5" stroke-dasharray="8 4"/>
+      <text font-family="'DM Sans',sans-serif" font-size="11" font-weight="600" fill="#a8a29e" x="250" y="215" text-anchor="middle">agregació PRACTICA</text>
+
+      <!-- ALUMNE -->
+      <rect x="80" y="95" width="120" height="40" rx="6" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5"/>
+      <text font-family="'DM Sans',sans-serif" font-size="13" font-weight="600" fill="#1e40af" x="140" y="120" text-anchor="middle">ALUMNE</text>
+      <!-- Línia ALUMNE → rombe -->
+      <line x1="200" y1="115" x2="236" y2="115" stroke="#57534e" stroke-width="1.2"/>
+      <text font-family="'DM Sans',sans-serif" font-size="11" fill="#57534e" x="207" y="108">(0,n)</text>
+      <!-- Rombe PRACTICA -->
+      <polygon points="250,90 294,115 250,140 206,115" fill="#fff7ed" stroke="#9a3412" stroke-width="1.5"/>
+      <text font-family="'DM Sans',sans-serif" font-size="11" font-weight="600" fill="#9a3412" x="250" y="119" text-anchor="middle">practica</text>
+      <!-- Línia rombe → ESPORT -->
+      <line x1="294" y1="115" x2="330" y2="115" stroke="#57534e" stroke-width="1.2"/>
+      <text font-family="'DM Sans',sans-serif" font-size="11" fill="#57534e" x="298" y="108">(0,n)</text>
+      <!-- ESPORT -->
+      <rect x="330" y="95" width="100" height="40" rx="6" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5"/>
+      <text font-family="'DM Sans',sans-serif" font-size="13" font-weight="600" fill="#1e40af" x="380" y="120" text-anchor="middle">ESPORT</text>
+
+      <!-- Línia agregació → rombe Entrena -->
+      <line x1="440" y1="115" x2="510" y2="115" stroke="#57534e" stroke-width="1.5"/>
+      <text font-family="'DM Sans',sans-serif" font-size="11" fill="#57534e" x="447" y="108">(0,1)</text>
+      <!-- Rombe ENTRENA -->
+      <polygon points="530,90 570,115 530,140 490,115" fill="#f0fdf4" stroke="#166534" stroke-width="1.5"/>
+      <text font-family="'DM Sans',sans-serif" font-size="11" font-weight="600" fill="#166534" x="530" y="119" text-anchor="middle">entrena</text>
+      <!-- Línia rombe → PROFESSOR -->
+      <line x1="570" y1="115" x2="608" y2="115" stroke="#57534e" stroke-width="1.5"/>
+      <text font-family="'DM Sans',sans-serif" font-size="11" fill="#57534e" x="575" y="108">(1,n)</text>
+      <!-- PROFESSOR -->
+      <rect x="608" y="95" width="60" height="40" rx="6" fill="#fff7ed" stroke="#9a3412" stroke-width="1.5"/>
+      <text font-family="'DM Sans',sans-serif" font-size="11" font-weight="600" fill="#9a3412" x="638" y="120" text-anchor="middle">PROF.</text>
+    </svg>
+
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Element</th><th>Descripció</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Relació de base</strong></td><td>La relació M:N entre dues entitats que volem "elevar" (ex: ALUMNE <em>practica</em> ESPORT).</td></tr>
+          <tr><td><strong>Agregació</strong></td><td>El conjunt {entitat–relació–entitat} encapsulat dins un requadre discontinu. Rep el nom de la relació de base (PRACTICA).</td></tr>
+          <tr><td><strong>Nova relació</strong></td><td>La relació que surt de l'agregació cap a la tercera entitat (PRACTICA <em>entrena</em> PROFESSOR).</td></tr>
+          <tr><td><strong>Avantatge clau</strong></td><td>Les parelles ALUMNE–ESPORT sense entrenador es conserven (la relació <em>practica</em> no desapareix).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ibox green">
+      <div class="ibox-label">Agregació vs. Entitat feble</div>
+      <div class="ibox-text">
+        La tècnica de les agregacions engloba la de les entitats febles: qualsevol entitat feble es pot substituir per una agregació, però no a l'inrevés. Com que les entitats febles resulten suficients per a la majoria de situacions i són més senzilles, s'han de preferir quan siguin vàlides.
+      </div>
+    </div>
+  </section>
+
   <!-- EXERCICIS -->
   <div class="ex-block-head" id="ex">
     <h2 class="ex-block-title">Exercicis — Model E/R</h2>
@@ -303,6 +485,14 @@
       </div></div>
       <p class="ex-intro">Tria la resposta correcta per a cada pregunta sobre el model E/R.</p>
       <div id="ex1-cont"></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div>
+        <div class="ex-name">Especialitzacions, generalitzacions i agregacions</div>
+        <div class="ex-level">Nivell mitjà · criteri 6.6</div>
+      </div></div>
+      <p class="ex-intro">Tria la resposta correcta sobre les extensions del model E/R.</p>
+      <div id="ex2-cont"></div>
     </div>
   </div>
 
@@ -346,8 +536,23 @@ function buildQI(data,contId,prefix){
     c.appendChild(div);
   });
 }
+const E2=[
+  {t:'Una especialització D,T entre VEHICLE i les subentitats COTXE, MOTO i CAMIÓ significa:',
+   opts:['Un vehicle pot ser alhora COTXE i MOTO','Tot vehicle és exactament un dels tres tipus, i no pot ser-ne cap altre simultàniament','Hi pot haver vehicles que no siguin ni COTXE ni MOTO ni CAMIÓ','Les subentitats no hereten els atributs de VEHICLE'],
+   ans:1,exp:'D (disjunta) = no pot pertànyer a més d'una subentitat. T (total) = tota instància de la superentitat pertany a almenys una subentitat. Combinades: cada VEHICLE és exactament un tipus.'},
+  {t:'Tenim PROFESSOR i ALUMNE com a subentitats de PERSONA (E,P). Quina afirmació és correcta?',
+   opts:['Tot professor és necessàriament alumne al mateix temps','Tota persona és professor o alumne','Una persona pot ser professor i alumne simultàniament, però també pot no ser cap dels dos','Una persona ha de ser exactament un dels dos'],
+   ans:2,exp:'E (encavalcada) = una instància pot pertànyer a més d'una subentitat. P (parcial) = hi pot haver instàncies de la superentitat que no pertanyin a cap subentitat (ex: personal d'administració).'},
+  {t:'En quina situació cal usar una AGREGACIÓ en lloc d'una relació ternària?',
+   opts:['Quan tres entitats es relacionen simultàniament','Quan volem relacionar una relació M:N existent amb una tercera entitat, conservant les parelles sense correspondència','Quan dues entitats febles comparteixen la mateixa entitat propietària','Quan la relació té més de dos atributs propis'],
+   ans:1,exp:'L'agregació s'usa quan la relació ternària crearia redundàncies: les parelles de la relació base (M:N) que no tenen la tercera entitat associada desapareixerien. L'agregació les conserva encapsulant la relació base com a entitat.'},
+  {t:'INFORMATIC i ADMINISTRATIU són subentitats de PROFESSOR, que és subentitat de PERSONA. Quins atributs hereten INFORMATIC i ADMINISTRATIU?',
+   opts:['Només els de PROFESSOR','Només els de PERSONA','Els de PROFESSOR i els de PERSONA (herència múltiple)','Només els seus propis'],
+   ans:2,exp:'En una jerarquia encadenada, les entitats dels nivells inferiors hereten les característiques de tots els nivells superiors dels quals descenden. INFORMATIC hereta de PROFESSOR i de PERSONA, però no d'ALUMNE.'}
+];
 buildQI(E1,'ex1-cont','G1');
-const ALL={G1:E1};
+buildQI(E2,'ex2-cont','G2');
+const ALL={G1:E1,G2:E2};
 function checkQ(grp,btn,i,choice){
   const d=ALL[grp][i],fb=document.getElementById(grp+'f'+i);
   const btns=btn.closest('.qi-opts').querySelectorAll('.qi-btn'); btns.forEach(b=>b.disabled=true);
