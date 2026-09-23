@@ -6,9 +6,8 @@
   <title>AEA1 · Consultes simples SQL — MP0484 Bases de dades</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
   <style>
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
@@ -23,12 +22,12 @@
 body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
 .merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
 .site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 24px; }
-.head-inner { max-width:860px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+.head-inner { max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
 .brand { text-decoration:none; display:flex; flex-direction:column; }
 .brand-mark { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); }
 .brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
 .head-course { font-size:13px; color:var(--ink-2); }
-.wrap { max-width:860px; margin:0 auto; padding:0 24px 80px; }
+.wrap { max-width:900px; margin:0 auto; padding:0 24px 80px; }
 .breadcrumb { font-size:13px; color:var(--ink-3); padding:14px 0 0; }
 .breadcrumb a { color:var(--ink-2); text-decoration:none; }
 .breadcrumb a:hover { color:var(--accent); }
@@ -46,27 +45,31 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 .obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
 .obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
 .obj-text { font-size:14px; color:var(--ink-2); }
-.schema-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:20px; }
+.toc { background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:20px 24px; margin-bottom:52px; }
+.toc-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-3); margin-bottom:14px; }
+.toc-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px 24px; }
+.toc-item { font-size:13px; color:var(--blue); text-decoration:none; padding:3px 0; display:flex; align-items:center; gap:6px; }
+.toc-item:hover { color:var(--accent); }
+.toc-num { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-3); min-width:20px; }
+/* SCHEMA */
+.schema-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-bottom:24px; }
 .schema-card { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; }
-.schema-card-head { background:var(--ink); color:#fff; padding:6px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; letter-spacing:.04em; }
+.schema-card-head { background:var(--ink); color:#fff; padding:6px 12px; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; }
 .schema-card-body { padding:8px 12px; }
 .schema-card-body div { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-2); padding:2px 0; border-bottom:1px solid var(--border); }
 .schema-card-body div:last-child { border-bottom:none; }
 .schema-card-body .pk { color:var(--accent); font-weight:600; }
 .schema-card-body .fk { color:var(--blue); }
-.schema-mini { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 16px; margin-bottom:32px; font-size:13px; color:var(--ink-2); }
-.schema-mini a { color:var(--accent); font-weight:600; text-decoration:none; }
-.schema-mini a:hover { text-decoration:underline; }
-.schema-mini code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); color:var(--accent); padding:1px 6px; border-radius:3px; }
-.section { margin-bottom:60px; }
+/* SECTION */
+.section { margin-bottom:64px; }
 .sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
 .sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
 .sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
 .sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
-.subhead { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin:32px 0 14px; padding-bottom:8px; border-bottom:1px dashed var(--accent-bdr); }
-.subhead:first-of-type { margin-top:8px; }
+.subhead { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin:28px 0 12px; padding-bottom:6px; border-bottom:1px dashed var(--accent-bdr); }
 .lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
-.lead code, p code, li code, td code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+.lead code, p code, li code, td code, .ibox-text code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+/* IBOX */
 .ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
 .ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
 .ibox-text { font-size:14px; line-height:1.65; }
@@ -74,80 +77,83 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 .ibox.green { background:var(--green-bg); border:1px solid var(--green-bdr); }
 .ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
 .ibox.yellow { background:var(--yellow-bg); border:1px solid var(--yellow-bdr); }
-.ibox.purple { background:var(--purple-bg); border:1px solid var(--purple-bdr); }
 .ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
 .ibox.green .ibox-label, .ibox.green .ibox-text { color:var(--green); }
 .ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
 .ibox.yellow .ibox-label, .ibox.yellow .ibox-text { color:var(--yellow); }
-.ibox.purple .ibox-label, .ibox.purple .ibox-text { color:var(--purple); }
-.ibox code { background:#ffffffaa; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 6px; border-radius:3px; }
+/* DEMO / SQL */
 .demo { margin-bottom:24px; }
 .demo-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-bottom:8px; }
-.sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.8; white-space:pre; margin:0; overflow-x:auto; }
+.sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.8; white-space:pre; margin:0; overflow-x:auto; display:block; }
 .exp-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 16px; margin-top:10px; }
 .exp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin-bottom:5px; }
 .exp-text { font-size:13px; color:var(--ink-2); line-height:1.6; }
-.exp-text code { background:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; padding:1px 5px; border-radius:3px; }
 .kw { color:#fbbf24; font-weight:500; }
 .fn { color:#a78bfa; }
 .str { color:#4ade80; }
 .num { color:#f472b6; }
 .cmt { color:#64748b; font-style:italic; }
+/* TABLE */
 .tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
 .tbl { width:100%; border-collapse:collapse; font-size:13px; }
 .tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
-.tbl td { padding:9px 14px; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:12px; vertical-align:middle; }
+.tbl td { padding:9px 14px; border-bottom:1px solid var(--border); vertical-align:top; font-size:13px; }
+.tbl td.mono { font-family:'JetBrains Mono',monospace; font-size:12px; }
 .tbl tr:last-child td { border-bottom:none; }
+/* EXERCICIS */
 .ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; }
 .ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
 .ex-block-sub { font-size:13px; color:#a8a29e; }
 .ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
-.exercise { margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid var(--border); }
+.exercise { margin-bottom:32px; padding-bottom:32px; border-bottom:1px solid var(--border); }
 .exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
-.ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; }
+.ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:12px; }
 .ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
 .ex-name { font-weight:600; font-size:15px; color:var(--ink); }
 .ex-level { font-size:12px; color:var(--ink-3); margin-top:2px; }
-.ex-intro { font-size:13px; color:var(--ink-2); margin-bottom:16px; }
-.qi { padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--border); background:#fafaf9; margin-bottom:10px; }
-.qi-text { font-size:14px; margin-bottom:10px; color:var(--ink); }
-.qi-opts { display:flex; gap:8px; flex-wrap:wrap; }
-.qi-btn { padding:6px 14px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#fff; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--ink-2); transition:border-color .12s,background .12s; }
-.qi-btn:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
-.qi-btn:disabled { cursor:default; }
-.qi-btn.ok { background:var(--green-bg); border-color:var(--green-bdr); color:var(--green); }
-.qi-btn.fail { background:var(--red-bg); border-color:var(--red-bdr); color:var(--red); }
-.qi-fb { font-size:12px; margin-top:10px; padding:7px 11px; border-radius:var(--r-sm); display:none; }
-.qi-fb.ok { display:block; background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
-.qi-fb.fail { display:block; background:var(--red-bg); color:var(--red); border:1px solid var(--red-bdr); }
-.ri { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-bottom:12px; }
-.ri-q { padding:14px 18px; background:#fafaf9; }
-.ri-q-text { font-size:14px; color:var(--ink); margin-bottom:4px; }
-.ri-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:6px 15px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); color:var(--accent); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; transition:background .12s,color .12s,border-color .12s; }
+.ex-enunciat { font-size:14px; color:var(--ink); margin-bottom:14px; line-height:1.6; }
+.ex-enunciat code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+/* Solució desplegable */
+.ri { border:1px solid var(--border); border-radius:var(--r-sm); overflow:hidden; margin-top:10px; }
+.ri-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 15px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); color:var(--accent); cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; transition:background .12s,color .12s,border-color .12s; }
 .ri-btn:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
-.ri-ans { display:none; padding:16px 18px; background:var(--accent-bg); border-top:1px solid var(--accent-bdr); }
+.ri-ans { display:none; padding:16px 18px; background:var(--accent-bg); }
 .ri-ans.show { display:block; }
 .ri-ans-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--accent-mid); margin-bottom:8px; }
 .ri-note { font-size:13px; color:var(--ink-2); margin-top:10px; line-height:1.55; }
+/* NAV */
 .doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; flex-wrap:wrap; }
 .doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
 .doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
 .doc-nav .back { color:var(--ink-2); background:#fafaf9; border-color:var(--border); }
 .doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
-.site-foot { border-top:1px solid var(--border); padding:20px 24px; margin-top:0; }
-.foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
-/* TARGETES SUB-INDEX (pàgina selector) */
-.subcards { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-bottom:8px; }
-.subcard { background:var(--card); border:1.5px solid var(--border); border-radius:var(--r); padding:22px 22px 18px; text-decoration:none; color:var(--ink); display:flex; flex-direction:column; transition:border-color .15s,box-shadow .15s,transform .15s; }
-.subcard:hover { border-color:var(--accent); box-shadow:0 4px 16px rgba(0,0,0,.08); transform:translateY(-2px); }
-.subcard-num { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent-bdr); padding:2px 8px; border-radius:4px; letter-spacing:.04em; display:inline-block; margin-bottom:14px; width:fit-content; }
-.subcard-title { font-weight:600; font-size:16px; color:var(--ink); margin-bottom:8px; }
-.subcard-text { font-size:13px; color:var(--ink-2); flex:1; line-height:1.55; margin-bottom:16px; }
-.subcard-text code { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent-bg); padding:1px 5px; border-radius:3px; color:var(--accent); }
-.subcard-foot { display:flex; align-items:center; justify-content:space-between; font-size:12px; }
-.subcard-go { color:var(--accent); font-weight:600; }
-@media (max-width:600px){ .schema-grid { grid-template-columns:1fr 1fr; } }
-
+.site-foot { border-top:1px solid var(--border); padding:20px 24px; }
+.foot-inner { max-width:900px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+/* Botó d'enllaç a la solució — ocult per defecte */
+.sol-link { display:none; margin-top:10px; }
+.sol-link.visible { display:inline-flex; }
+.sol-link a {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 15px; border:1.5px solid var(--blue-bdr);
+  border-radius:var(--r-sm); background:var(--blue-bg);
+  color:var(--blue); font-size:12px; font-family:'DM Sans',sans-serif;
+  font-weight:600; text-decoration:none;
+  transition:background .12s,color .12s,border-color .12s;
+}
+.sol-link a:hover { background:var(--blue); color:#fff; border-color:var(--blue); }
+/* Indicador d'estat al títol del bloc */
+.ex-block-head { cursor:default; user-select:none; }
+.ex-block-head .unlock-hint {
+  font-size:11px; color:#64748b; font-weight:400; margin-left:10px;
+  font-family:'DM Sans',sans-serif; letter-spacing:0;
+}
+.ex-block-head.unlocked .unlock-hint { color:#4ade80; }
+/* Avís visible per l'alumne */
+.sol-locked-msg {
+  font-size:13px; color:var(--ink-3); font-style:italic;
+  margin-top:8px; display:block;
+}
+@media (max-width:600px){ .toc-grid { grid-template-columns:1fr; } .schema-grid { grid-template-columns:1fr 1fr; } .doc-nav { flex-direction:column; } }
   </style>
 </head>
 <body>
@@ -160,90 +166,568 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 </header>
 <div class="wrap">
   <div class="breadcrumb"><a href="index.html">MP0484 Bases de dades</a><span>›</span><a href="index.html#aea1">AEA1 — Consultes SQL</a><span>›</span>Consultes simples</div>
-  
-<header class="page-header">
-  <div class="meta-row">
-    <span class="badge b-course">DAW · MP0484 Bases de dades</span>
-    <span class="badge b-ra">AEA1 · RA3 · Part 1/2</span>
-    <span class="badge b-act">18 hores</span>
-    <span class="badge b-new">Consultes simples</span>
-  </div>
-  <h1 class="page-title">Consultes simples SQL</h1>
-  <p class="page-sub">La sentència <strong>SELECT</strong>, filtratge, ordenació, funcions d'una fila, conversió, expressions condicionals i agregació amb GROUP BY / HAVING. Base de dades <strong>HR</strong> d'Oracle.</p>
-  <div class="obj-box">
-    <div class="obj-icon">🎯</div>
-    <div>
-      <div class="obj-label">Criteris d'avaluació · RA3</div>
-      <div class="obj-text">
-        <strong>3.1</strong> Identificar eines i sentències per fer consultes ·
-        <strong>3.2</strong> Consultes simples sobre una taula ·
-        <strong>3.5</strong> Consultes de resum (GROUP BY / HAVING)
+
+  <header class="page-header">
+    <div class="meta-row">
+      <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+      <span class="badge b-ra">AEA1 · RA3 · Part 1/2</span>
+      <span class="badge b-act">18 hores</span>
+      <span class="badge b-new">Consultes simples</span>
+    </div>
+    <h1 class="page-title">Consultes simples SQL</h1>
+    <p class="page-sub">La sentència <strong>SELECT</strong>, filtratge, ordenació, funcions d'una fila, conversió, expressions condicionals i agregació. Totes les consultes afecten una sola taula de la BD <strong>HR</strong> d'Oracle.</p>
+    <div class="obj-box">
+      <div class="obj-icon">🎯</div>
+      <div>
+        <div class="obj-label">Criteris d'avaluació · RA3</div>
+        <div class="obj-text">
+          <strong>3.1</strong> Identificar eines i sentències per fer consultes ·
+          <strong>3.2</strong> Consultes simples sobre una taula ·
+          <strong>3.5</strong> Consultes de resum (GROUP BY / HAVING)
+        </div>
       </div>
     </div>
+  </header>
+
+  <nav class="toc">
+    <div class="toc-title">Contingut d'aquest document</div>
+    <div class="toc-grid">
+      <a class="toc-item" href="#s0"><span class="toc-num">0</span>Esquema HR d'Oracle</a>
+      <a class="toc-item" href="#s1"><span class="toc-num">1</span>SELECT bàsic · àlies · concatenació</a>
+      <a class="toc-item" href="#ex1"><span class="toc-num">★</span>Exercicis T1 — SELECT bàsic</a>
+      <a class="toc-item" href="#s2"><span class="toc-num">2</span>WHERE, ORDER BY i operadors</a>
+      <a class="toc-item" href="#ex2"><span class="toc-num">★</span>Exercicis T2 — Filtratge i ordenació</a>
+      <a class="toc-item" href="#s3"><span class="toc-num">3</span>Funcions d'una sola fila</a>
+      <a class="toc-item" href="#ex3"><span class="toc-num">★</span>Exercicis T3 — Funcions de fila</a>
+      <a class="toc-item" href="#s4"><span class="toc-num">4</span>Conversió i expressions condicionals</a>
+      <a class="toc-item" href="#ex4"><span class="toc-num">★</span>Exercicis T4 — Conversió i condicionals</a>
+      <a class="toc-item" href="#s5"><span class="toc-num">5</span>Funcions de grup i GROUP BY</a>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- SECCIÓ 0: ESQUEMA HR -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <section class="section" id="s0">
+    <div class="sec-head"><span class="sec-num">0</span><div>
+      <h2 class="sec-title">L'esquema HR d'Oracle</h2>
+      <p class="sec-sub">Base de dades de recursos humans que fem servir a tot el curs</p>
+    </div></div>
+    <p class="lead">Tots els exemples i exercicis usen l'esquema <strong>HR (Human Resources)</strong> d'Oracle, que modela una empresa fictícia amb empleats, departaments, càrrecs i ubicacions arreu del món. Les consultes <em>simples</em> accedeixen a una sola taula.</p>
+    <div class="schema-grid">
+      <div class="schema-card"><div class="schema-card-head">EMPLOYEES</div><div class="schema-card-body">
+        <div class="pk">&#128273; EMPLOYEE_ID</div><div>FIRST_NAME</div><div>LAST_NAME</div><div>EMAIL</div>
+        <div>PHONE_NUMBER</div><div>HIRE_DATE</div><div class="fk">&#128279; JOB_ID</div>
+        <div>SALARY</div><div>COMMISSION_PCT</div>
+        <div class="fk">&#128279; MANAGER_ID</div><div class="fk">&#128279; DEPARTMENT_ID</div>
+      </div></div>
+      <div class="schema-card"><div class="schema-card-head">DEPARTMENTS</div><div class="schema-card-body">
+        <div class="pk">&#128273; DEPARTMENT_ID</div><div>DEPARTMENT_NAME</div>
+        <div class="fk">&#128279; MANAGER_ID</div><div class="fk">&#128279; LOCATION_ID</div>
+      </div></div>
+      <div class="schema-card"><div class="schema-card-head">JOBS</div><div class="schema-card-body">
+        <div class="pk">&#128273; JOB_ID</div><div>JOB_TITLE</div><div>MIN_SALARY</div><div>MAX_SALARY</div>
+      </div></div>
+      <div class="schema-card"><div class="schema-card-head">LOCATIONS</div><div class="schema-card-body">
+        <div class="pk">&#128273; LOCATION_ID</div><div>STREET_ADDRESS</div><div>POSTAL_CODE</div>
+        <div>CITY</div><div>STATE_PROVINCE</div><div class="fk">&#128279; COUNTRY_ID</div>
+      </div></div>
+      <div class="schema-card"><div class="schema-card-head">COUNTRIES</div><div class="schema-card-body">
+        <div class="pk">&#128273; COUNTRY_ID</div><div>COUNTRY_NAME</div><div class="fk">&#128279; REGION_ID</div>
+      </div></div>
+      <div class="schema-card"><div class="schema-card-head">REGIONS</div><div class="schema-card-body">
+        <div class="pk">&#128273; REGION_ID</div><div>REGION_NAME</div>
+      </div></div>
+      <div class="schema-card"><div class="schema-card-head">JOB_HISTORY</div><div class="schema-card-body">
+        <div class="pk">&#128273; EMPLOYEE_ID</div><div class="pk">&#128273; START_DATE</div>
+        <div>END_DATE</div><div class="fk">&#128279; JOB_ID</div><div class="fk">&#128279; DEPARTMENT_ID</div>
+      </div></div>
+    </div>
+    <div class="ibox blue"><div class="ibox-label">Llegenda</div><div class="ibox-text">&#128273; Clau primària (PRIMARY KEY) · &#128279; Clau forana (FOREIGN KEY)</div></div>
+    <div class="ibox yellow"><div class="ibox-label">Consultar l'estructura d'una taula</div><div class="ibox-text">Utilitza la comanda <code>DESCRIBE nom_taula</code> (o <code>DESC nom_taula</code>) a SQL*Plus o SQL Developer per veure les columnes i els seus tipus. Exemple: <code>DESCRIBE employees</code></div></div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- SECCIÓ 1: SELECT BÀSIC -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <section class="section" id="s1">
+    <div class="sec-head"><span class="sec-num">1</span><div>
+      <h2 class="sec-title">La sentència SELECT · àlies · concatenació · DISTINCT</h2>
+      <p class="sec-sub">Criteri 3.1 · 3.2 — Recuperació bàsica de dades</p>
+    </div></div>
+    <p class="lead">La sentència <code>SELECT</code> és la base de tot SQL. Permet triar quines <strong>columnes</strong> mostrar (projecció), de quina <strong>taula</strong> i, opcionalment, renomenar les capçaleres amb <strong>àlies</strong>.</p>
+
+    <div class="ibox blue"><div class="ibox-label">Sintaxi bàsica</div><div class="ibox-text">
+      <code>SELECT * | {[DISTINCT] columna | expressió [àlies], ...}</code><br>
+      <code>FROM taula;</code><br><br>
+      <strong>SELECT</strong> indica les columnes a mostrar. <strong>FROM</strong> identifica la taula. <strong>*</strong> selecciona totes les columnes. <strong>DISTINCT</strong> elimina duplicats.
+    </div></div>
+
+    <div class="subhead">Exemples — SELECT bàsic i DISTINCT</div>
+    <div class="demo"><div class="demo-label">Exemple 1 · Totes les columnes / columnes concretes</div>
+      <code class="sql-out" id="e1a"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>SELECT *</code> retorna totes les columnes. En producció, és preferible llistar només les columnes necessàries. Les sentències SQL no distingeixen majúscules/minúscules i es poden escriure en diverses línies.</div></div>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 2 · Àlies de columna</div>
+      <code class="sql-out" id="e1b"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">L'àlies canvia la capçalera del resultat. Amb <code>AS</code> o sense. Si l'àlies conté espais o caràcters especials, cal posar-lo entre cometes dobles: <code>"Hire Date"</code>.</div></div>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 3 · Operador de concatenació ||</div>
+      <code class="sql-out" id="e1c"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">L'operador <code>||</code> uneix cadenes de text. Els literals de text van entre cometes simples. El resultat és una sola columna amb l'àlies indicat.</div></div>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 4 · Expressions aritmètiques i DISTINCT</div>
+      <code class="sql-out" id="e1d"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>DISTINCT</code> elimina les files duplicades del resultat. Les expressions aritmètiques (<code>*</code>, <code>/</code>, <code>+</code>, <code>-</code>) es poden usar al <code>SELECT</code>. L'ordre de prioritat és el matemàtic estàndard; useu parèntesis per controlar-lo.</div></div>
+    </div>
+  </section>
+
+  <!-- EXERCICIS T1 -->
+  <div class="ex-block-head" id="ex1" data-topic="t1">
+    <h2 class="ex-block-title" data-topic="t1">Exercicis T1<span class="unlock-hint">[doble clic per activar solucions]</span> — Recuperació de dades</h2>
+    <p class="ex-block-sub">SELECT bàsic, àlies, concatenació i DISTINCT · criteri 3.1, 3.2</p>
   </div>
-</header>
+  <div class="ex-block-body" id="ex1-body"></div>
 
-  
-<section class="section">
-  <p class="lead" style="margin-bottom:24px;">Aquest bloc es divideix en quatre apartats. Cadascun té teoria, exemples comentats pas a pas i exercicis interactius. Recomanem seguir l'ordre proposat.</p>
-  <div class="subcards">
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- SECCIÓ 2: WHERE i ORDER BY -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <section class="section" id="s2">
+    <div class="sec-head"><span class="sec-num">2</span><div>
+      <h2 class="sec-title">Filtratge amb WHERE i ordenació amb ORDER BY</h2>
+      <p class="sec-sub">Criteri 3.2 — Restricció i ordenació de files</p>
+    </div></div>
+    <p class="lead">La clàusula <code>WHERE</code> filtra les files que compleixen una condició. <code>ORDER BY</code> ordena el resultat. S'executen en aquest ordre: <code>FROM</code> → <code>WHERE</code> → <code>SELECT</code> → <code>ORDER BY</code>.</p>
 
-    <a class="subcard" href="AEA1_RA3_select.html">
-      <span class="subcard-num">1 · Base</span>
-      <h3 class="subcard-title">La sentència SELECT</h3>
-      <p class="subcard-text">Esquema HR, <code>SELECT</code>/<code>FROM</code>, filtratge amb <code>WHERE</code>, operadors de comparació i lògics, <code>BETWEEN</code>/<code>IN</code>/<code>LIKE</code>/<code>IS NULL</code>, <code>ORDER BY</code>, <code>DISTINCT</code> i expressions aritmètiques.</p>
-      <span class="subcard-foot"><span class="crit" style="color:var(--ink-3)">Criteris 3.1, 3.2</span><span class="subcard-go">Obrir →</span></span>
-    </a>
+    <div class="subhead">Operadors de comparació i lògics</div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Operador</th><th>Descripció</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">=  !=  &lt;&gt;</td><td>Igualtat / diferència</td><td><code>WHERE salary = 5000</code></td></tr>
+        <tr><td class="mono">&lt;  &gt;  &lt;=  &gt;=</td><td>Comparació numèrica</td><td><code>WHERE salary &gt; 12000</code></td></tr>
+        <tr><td class="mono">BETWEEN a AND b</td><td>Rang inclusiu</td><td><code>WHERE salary BETWEEN 5000 AND 12000</code></td></tr>
+        <tr><td class="mono">IN (v1, v2, ...)</td><td>Pertany a una llista</td><td><code>WHERE department_id IN (20, 50)</code></td></tr>
+        <tr><td class="mono">LIKE 'patró'</td><td>Coincidència de patró (<code>%</code> = 0 o més caràcters; <code>_</code> = exactament 1)</td><td><code>WHERE last_name LIKE 'S%'</code></td></tr>
+        <tr><td class="mono">IS NULL / IS NOT NULL</td><td>Valor nul / no nul</td><td><code>WHERE commission_pct IS NULL</code></td></tr>
+        <tr><td class="mono">AND  OR  NOT</td><td>Operadors lògics</td><td><code>WHERE salary &gt; 5000 AND dept_id = 80</code></td></tr>
+      </tbody>
+    </table></div>
 
-    <a class="subcard" href="AEA1_RA3_funcions_fila.html">
-      <span class="subcard-num">2 · Funcions</span>
-      <h3 class="subcard-title">Funcions d'una sola fila</h3>
-      <p class="subcard-text">Funcions de caràcter (<code>UPPER</code>, <code>SUBSTR</code>, <code>INSTR</code>...), numèriques (<code>ROUND</code>, <code>MOD</code>...) i de data (<code>SYSDATE</code>, <code>MONTHS_BETWEEN</code>...) aplicades fila a fila.</p>
-      <span class="subcard-foot"><span class="crit" style="color:var(--ink-3)">Criteri 3.2</span><span class="subcard-go">Obrir →</span></span>
-    </a>
+    <div class="subhead">Exemples</div>
+    <div class="demo"><div class="demo-label">Exemple 5 · WHERE amb operadors comparatius</div>
+      <code class="sql-out" id="e2a"></code>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 6 · BETWEEN, IN, LIKE, IS NULL</div>
+      <code class="sql-out" id="e2b"></code>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 7 · ORDER BY (ASC / DESC / per posició)</div>
+      <code class="sql-out" id="e2c"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>ORDER BY</code> accepta el nom de la columna, l'àlies o la seva posició numèrica al <code>SELECT</code>. Per defecte ordena ascendent (<code>ASC</code>). Es poden ordenar per diverses columnes separades per comes.</div></div>
+    </div>
+  </section>
 
-    <a class="subcard" href="AEA1_RA3_conversio_condicionals.html">
-      <span class="subcard-num">3 · Funcions</span>
-      <h3 class="subcard-title">Funcions de conversió i expressions condicionals</h3>
-      <p class="subcard-text"><code>TO_CHAR</code>, <code>TO_DATE</code>, <code>TO_NUMBER</code> i conversió implícita; lògica condicional amb <code>CASE</code>, <code>DECODE</code>, <code>NVL</code>, <code>NVL2</code>, <code>COALESCE</code> i <code>NULLIF</code>.</p>
-      <span class="subcard-foot"><span class="crit" style="color:var(--ink-3)">Criteri 3.2</span><span class="subcard-go">Obrir →</span></span>
-    </a>
-
-    <a class="subcard" href="AEA1_RA3_grup_agrupaments.html">
-      <span class="subcard-num">4 · Resum</span>
-      <h3 class="subcard-title">Funcions de grup i agrupaments</h3>
-      <p class="subcard-text"><code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MAX</code>, <code>MIN</code>; agrupar dades amb <code>GROUP BY</code> i filtrar grups amb <code>HAVING</code>. Ordre d'execució d'una consulta.</p>
-      <span class="subcard-foot"><span class="crit" style="color:var(--ink-3)">Criteri 3.5</span><span class="subcard-go">Obrir →</span></span>
-    </a>
-
+  <!-- EXERCICIS T2 -->
+  <div class="ex-block-head" id="ex2" data-topic="t2">
+    <h2 class="ex-block-title" data-topic="t2">Exercicis T2<span class="unlock-hint"></span> — Restricció i ordenació</h2>
+    <p class="ex-block-sub">WHERE, BETWEEN, IN, LIKE, IS NULL, ORDER BY · criteri 3.2</p>
   </div>
-</section>
+  <div class="ex-block-body" id="ex2-body"></div>
 
-<nav class="doc-nav">
-  <a class="back" href="index.html">← Índex del mòdul</a>
-  <a href="AEA1_RA3_consultes_complexes.html">Consultes complexes →</a>
-</nav>
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- SECCIÓ 3: FUNCIONS D'UNA FILA -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <section class="section" id="s3">
+    <div class="sec-head"><span class="sec-num">3</span><div>
+      <h2 class="sec-title">Funcions d'una sola fila</h2>
+      <p class="sec-sub">Criteri 3.2 — Caràcter, numèriques i de data</p>
+    </div></div>
+    <p class="lead">Les funcions d'una sola fila operen sobre cada fila individualment i retornen un resultat per fila. Es divideixen en funcions de <strong>caràcter</strong>, <strong>numèriques</strong> i de <strong>data</strong>.</p>
 
+    <div class="subhead">Funcions de caràcter principals</div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Funció</th><th>Descripció</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">UPPER(s)</td><td>Converteix a majúscules</td><td><code>UPPER('hola') → 'HOLA'</code></td></tr>
+        <tr><td class="mono">LOWER(s)</td><td>Converteix a minúscules</td><td><code>LOWER('HOLA') → 'hola'</code></td></tr>
+        <tr><td class="mono">INITCAP(s)</td><td>Primera lletra de cada paraula en majúscula</td><td><code>INITCAP('joan mas') → 'Joan Mas'</code></td></tr>
+        <tr><td class="mono">LENGTH(s)</td><td>Longitud de la cadena</td><td><code>LENGTH('hola') → 4</code></td></tr>
+        <tr><td class="mono">SUBSTR(s,i,n)</td><td>Subcadena des de la posició i, n caràcters</td><td><code>SUBSTR('Oracle',1,3) → 'Ora'</code></td></tr>
+        <tr><td class="mono">INSTR(s,sub)</td><td>Posició de la primera ocurrència de sub</td><td><code>INSTR('Oracle','a') → 3</code></td></tr>
+        <tr><td class="mono">LPAD(s,n,c)</td><td>Omple per l'esquerra fins a longitud n amb el caràcter c</td><td><code>LPAD(5000,10,'$') → '$$$$$5000'</code></td></tr>
+        <tr><td class="mono">RPAD(s,n,c)</td><td>Omple per la dreta fins a longitud n</td><td><code>RPAD('ABC',6,'*') → 'ABC***'</code></td></tr>
+        <tr><td class="mono">TRIM(s)</td><td>Elimina espais dels dos extrems</td><td><code>TRIM(' hola ') → 'hola'</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="subhead">Funcions numèriques</div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Funció</th><th>Descripció</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">ROUND(n,d)</td><td>Arrodoneix n a d decimals</td><td><code>ROUND(45.926,2) → 45.93</code></td></tr>
+        <tr><td class="mono">TRUNC(n,d)</td><td>Trunca n a d decimals (sense arrodonir)</td><td><code>TRUNC(45.926,2) → 45.92</code></td></tr>
+        <tr><td class="mono">MOD(n,m)</td><td>Residu de n/m</td><td><code>MOD(1600,300) → 100</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="subhead">Funcions de data</div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Funció</th><th>Descripció</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">SYSDATE</td><td>Data i hora actuals del servidor</td><td><code>SELECT SYSDATE FROM dual</code></td></tr>
+        <tr><td class="mono">MONTHS_BETWEEN(d1,d2)</td><td>Nombre de mesos entre dues dates</td><td><code>MONTHS_BETWEEN(SYSDATE, hire_date)</code></td></tr>
+        <tr><td class="mono">ADD_MONTHS(d,n)</td><td>Afegeix n mesos a una data</td><td><code>ADD_MONTHS(hire_date, 6)</code></td></tr>
+        <tr><td class="mono">NEXT_DAY(d,dia)</td><td>Primer dia de la setmana indicat, posterior a d</td><td><code>NEXT_DAY(hire_date,'MONDAY')</code></td></tr>
+        <tr><td class="mono">LAST_DAY(d)</td><td>Últim dia del mes de d</td><td><code>LAST_DAY(SYSDATE)</code></td></tr>
+        <tr><td class="mono">ROUND(d,'MONTH')</td><td>Arrodoneix la data al mes o any més proper</td><td><code>ROUND(SYSDATE,'YEAR')</code></td></tr>
+        <tr><td class="mono">TRUNC(d,'MONTH')</td><td>Trunca la data al primer dia del mes o any</td><td><code>TRUNC(hire_date,'YEAR')</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="demo"><div class="demo-label">Exemple 8 · Funcions de caràcter i de data combinades</div>
+      <code class="sql-out" id="e3a"></code>
+    </div>
+  </section>
+
+  <!-- EXERCICIS T3 -->
+  <div class="ex-block-head" id="ex3" data-topic="t3">
+    <h2 class="ex-block-title" data-topic="t3">Exercicis T3<span class="unlock-hint"></span> — Funcions d'una sola fila</h2>
+    <p class="ex-block-sub">ROUND, INITCAP, LENGTH, SUBSTR, MONTHS_BETWEEN, LPAD, RPAD · criteri 3.2</p>
+  </div>
+  <div class="ex-block-body" id="ex3-body"></div>
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- SECCIÓ 4: CONVERSIÓ I CONDICIONALS -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <section class="section" id="s4">
+    <div class="sec-head"><span class="sec-num">4</span><div>
+      <h2 class="sec-title">Funcions de conversió i expressions condicionals</h2>
+      <p class="sec-sub">Criteri 3.2 — TO_CHAR, TO_DATE, NVL, CASE, DECODE</p>
+    </div></div>
+    <p class="lead">Les funcions de conversió transformen valors d'un tipus de dada a un altre. Les expressions condicionals permeten retornar valors diferents en funció d'una condició, sense necessitat d'instruccions de control de flux.</p>
+
+    <div class="subhead">Funcions de conversió</div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Funció</th><th>Descripció</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">TO_CHAR(d,'format')</td><td>Data → text amb format</td><td><code>TO_CHAR(hire_date,'DD/MM/YYYY')</code></td></tr>
+        <tr><td class="mono">TO_CHAR(n,'format')</td><td>Número → text amb format</td><td><code>TO_CHAR(salary,'$99,999.00')</code></td></tr>
+        <tr><td class="mono">TO_DATE(s,'format')</td><td>Text → data</td><td><code>TO_DATE('01/01/2024','DD/MM/YYYY')</code></td></tr>
+        <tr><td class="mono">TO_NUMBER(s)</td><td>Text → número</td><td><code>TO_NUMBER('1234')</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="ibox blue"><div class="ibox-label">Formats de data freqüents (TO_CHAR)</div><div class="ibox-text">
+      <code>DD</code> dia · <code>MM</code> mes numèric · <code>MON</code> mes abreujat · <code>MONTH</code> mes complet · <code>YYYY</code> any 4 dígits · <code>DAY</code> nom del dia · <code>HH24:MI:SS</code> hora · El prefix <code>fm</code> elimina els espais en blanc.
+    </div></div>
+
+    <div class="subhead">Funcions de control de valors nuls i condicionals</div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Funció</th><th>Descripció</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">NVL(expr, subst)</td><td>Substitueix NULL per subst</td><td><code>NVL(commission_pct, 0)</code></td></tr>
+        <tr><td class="mono">NVL2(expr, si_no_null, si_null)</td><td>Retorna valors diferent si és o no NULL</td><td><code>NVL2(commission_pct, 'Sí', 'No')</code></td></tr>
+        <tr><td class="mono">NULLIF(a, b)</td><td>Retorna NULL si a=b, o a si a≠b</td><td><code>NULLIF(LENGTH(first_name), LENGTH(last_name))</code></td></tr>
+        <tr><td class="mono">COALESCE(v1, v2, ...)</td><td>Primer valor no NULL de la llista</td><td><code>COALESCE(commission_pct, 0)</code></td></tr>
+        <tr><td class="mono">DECODE(expr, v1,r1, v2,r2, ..., def)</td><td>Equivalent a CASE-WHEN simplificat</td><td><code>DECODE(job_id,'IT_PROG','C','SA_REP','D','0')</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="demo"><div class="demo-label">Exemple 9 · TO_CHAR, NVL i expressió CASE</div>
+      <code class="sql-out" id="e4a"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>CASE WHEN ... THEN ... ELSE ... END</code> és l'expressió condicional estàndard SQL. <code>DECODE</code> és la versió Oracle equivalent però menys portable. Ambdues retornen un valor diferent per a cada condició.</div></div>
+    </div>
+  </section>
+
+  <!-- EXERCICIS T4 -->
+  <div class="ex-block-head" id="ex4" data-topic="t4">
+    <h2 class="ex-block-title" data-topic="t4">Exercicis T4<span class="unlock-hint"></span> — Conversió i expressions condicionals</h2>
+    <p class="ex-block-sub">TO_CHAR, NVL, DECODE, CASE · criteri 3.2</p>
+  </div>
+  <div class="ex-block-body" id="ex4-body"></div>
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!-- SECCIÓ 5: GROUP BY / HAVING -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <section class="section" id="s5">
+    <div class="sec-head"><span class="sec-num">5</span><div>
+      <h2 class="sec-title">Funcions de grup i agrupaments</h2>
+      <p class="sec-sub">Criteri 3.5 — COUNT, SUM, AVG, MAX, MIN · GROUP BY · HAVING</p>
+    </div></div>
+    <p class="lead">Les funcions de grup operen sobre conjunts de files i retornen <strong>un sol valor</strong>. Amb <code>GROUP BY</code> es calcula un agregat per a cada grup. <code>HAVING</code> filtra els grups resultants.</p>
+
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Funció</th><th>Descripció</th><th>Nota</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">COUNT(*)</td><td>Nombre total de files (inclou NULLs)</td><td>—</td></tr>
+        <tr><td class="mono">COUNT(col)</td><td>Nombre de files amb valor no NULL a col</td><td>Ignora NULLs</td></tr>
+        <tr><td class="mono">SUM(col)</td><td>Suma dels valors de col</td><td>Ignora NULLs</td></tr>
+        <tr><td class="mono">AVG(col)</td><td>Mitjana dels valors de col</td><td>Ignora NULLs</td></tr>
+        <tr><td class="mono">MAX(col)</td><td>Valor màxim de col</td><td>Funciona amb dates i text</td></tr>
+        <tr><td class="mono">MIN(col)</td><td>Valor mínim de col</td><td>Funciona amb dates i text</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="ibox red"><div class="ibox-label">Regla fonamental</div><div class="ibox-text">
+      Tota columna al <code>SELECT</code> que <strong>no</strong> estigui dins d'una funció de grup <strong>ha d'aparèixer</strong> al <code>GROUP BY</code>. En cas contrari, Oracle retorna un error.<br>
+      <code>WHERE</code> no pot contenir funcions de grup → usar <code>HAVING</code>.
+    </div></div>
+
+    <div class="demo"><div class="demo-label">Exemple 10 · Funcions de grup, GROUP BY i HAVING</div>
+      <code class="sql-out" id="e5a"></code>
+      <div class="exp-box"><div class="exp-label">Ordre d'execució d'una consulta</div><div class="exp-text"><code>FROM</code> → <code>WHERE</code> (filtra files) → <code>GROUP BY</code> (agrupa) → <code>HAVING</code> (filtra grups) → <code>SELECT</code> → <code>ORDER BY</code></div></div>
+    </div>
+  </section>
+
+  <nav class="doc-nav">
+    <a class="back" href="index.html">&#8592; Índex del mòdul</a>
+    <a href="AEA1_RA3_consultes_complexes.html">Consultes complexes &#8594;</a>
+  </nav>
 </div>
+
 <footer class="site-foot">
   <div class="foot-inner">
     <span>Institut La Mercè · Formació Professional</span>
     <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
   </div>
 </footer>
-<script>
 
-function colorSQL(t){
+<script>
+/* ── Color SQL ── */
+function cSQL(t){
   t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   t=t.replace(/(--[^\n]*)/g,'<span class="cmt">$1</span>');
   t=t.replace(/('[^']*')/g,'<span class="str">$1</span>');
   t=t.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');
-  t=t.replace(/\b(SELECT|FROM|WHERE|AND|OR|NOT|IN|LIKE|BETWEEN|IS|NULL|ORDER\s+BY|GROUP\s+BY|HAVING|DISTINCT|AS|ASC|DESC|CASE|WHEN|THEN|ELSE|END)\b/gi,'<span class="kw">$1</span>');
-  t=t.replace(/\b(COUNT|SUM|AVG|MAX|MIN|ROUND|TRUNC|MOD|UPPER|LOWER|INITCAP|CONCAT|SUBSTR|LENGTH|TRIM|LTRIM|RTRIM|REPLACE|INSTR|LPAD|RPAD|NVL|NVL2|NULLIF|COALESCE|TO_CHAR|TO_DATE|TO_NUMBER|SYSDATE|MONTHS_BETWEEN|ADD_MONTHS|DECODE|GREATEST|LEAST|ABS|CEIL|FLOOR|ROWNUM)\b/gi,'<span class="fn">$1</span>');
+  t=t.replace(/\b(SELECT|FROM|WHERE|AND|OR|NOT|IN|LIKE|BETWEEN|IS|NULL|ORDER\s+BY|GROUP\s+BY|HAVING|DISTINCT|AS|ASC|DESC|CASE|WHEN|THEN|ELSE|END|NOT\s+IN|NOT\s+BETWEEN|NOT\s+LIKE)\b/gi,'<span class="kw">$1</span>');
+  t=t.replace(/\b(COUNT|SUM|AVG|MAX|MIN|ROUND|TRUNC|MOD|UPPER|LOWER|INITCAP|SUBSTR|LENGTH|INSTR|LPAD|RPAD|TRIM|LTRIM|RTRIM|NVL|NVL2|NULLIF|COALESCE|TO_CHAR|TO_DATE|TO_NUMBER|SYSDATE|MONTHS_BETWEEN|ADD_MONTHS|NEXT_DAY|LAST_DAY|DECODE|DUAL)\b/gi,'<span class="fn">$1</span>');
   return t;
 }
 
+/* ── Exemples de teoria ── */
+const SQLS={
+  e1a:`SELECT *\nFROM   departments;\n\n-- Columnes concretes\nSELECT department_id, department_name\nFROM   departments;`,
+  e1b:`SELECT employee_id                    AS "Emp #",\n       last_name                        "Employee",\n       job_id                           "Job",\n       hire_date                        "Hire Date"\nFROM   employees;`,
+  e1c:`SELECT last_name || ', ' || job_id   AS "Employee and Title"\nFROM   employees;`,
+  e1d:`SELECT DISTINCT job_id\nFROM   employees;\n\n-- Expressió aritmètica\nSELECT employee_id, last_name, salary, salary * 12 AS annual_salary\nFROM   employees;`,
+  e2a:`SELECT last_name, salary\nFROM   employees\nWHERE  salary > 12000;\n\n-- Igualtat sobre text (cometes simples)\nSELECT last_name, department_id\nFROM   employees\nWHERE  employee_id = 176;`,
+  e2b:`-- BETWEEN (inclusiu)\nSELECT last_name, salary\nFROM   employees\nWHERE  salary BETWEEN 5000 AND 12000;\n\n-- IN\nSELECT last_name, department_id\nFROM   employees\nWHERE  department_id IN (20, 50);\n\n-- LIKE: % = 0 o més caràcters, _ = exactament 1\nSELECT last_name\nFROM   employees\nWHERE  last_name LIKE '__a%';   -- tercera lletra 'a'\n\n-- IS NULL\nSELECT last_name, job_id\nFROM   employees\nWHERE  manager_id IS NULL;`,
+  e2c:`SELECT last_name, salary, commission_pct\nFROM   employees\nWHERE  commission_pct IS NOT NULL\nORDER BY 2 DESC, 3 DESC;   -- posició numèrica al SELECT`,
+  e3a:`SELECT INITCAP(last_name)              "Name",\n       LENGTH(last_name)               "Length",\n       ROUND(MONTHS_BETWEEN(SYSDATE,\n             hire_date))                "Months Worked"\nFROM   employees\nWHERE  UPPER(last_name) LIKE 'J%'\n    OR UPPER(last_name) LIKE 'M%'\n    OR UPPER(last_name) LIKE 'A%'\nORDER BY last_name;`,
+  e4a:`-- TO_CHAR i NVL\nSELECT last_name,\n       TO_CHAR(salary, 'fm$99,999.00')   AS salary_fmt,\n       NVL(TO_CHAR(commission_pct), 'No Commission') AS comm\nFROM   employees;\n\n-- CASE\nSELECT job_id,\n       CASE job_id\n         WHEN 'AD_PRES'  THEN 'A'\n         WHEN 'ST_MAN'   THEN 'B'\n         WHEN 'IT_PROG'  THEN 'C'\n         WHEN 'SA_REP'   THEN 'D'\n         WHEN 'ST_CLERK' THEN 'E'\n         ELSE '0'\n       END AS grade\nFROM   employees;`,
+  e5a:`-- Funcions de grup bàsiques\nSELECT COUNT(*)              AS total_empleats,\n       ROUND(AVG(salary),2)  AS salari_mig,\n       MAX(salary)           AS salari_max,\n       MIN(salary)           AS salari_min,\n       SUM(salary)           AS suma\nFROM   employees;\n\n-- GROUP BY + HAVING\nSELECT   department_id,\n         COUNT(*)             AS num_emp,\n         ROUND(AVG(salary),2) AS avg_sal\nFROM     employees\nGROUP BY department_id\nHAVING   COUNT(*) > 5\nORDER BY avg_sal DESC;`
+};
+Object.keys(SQLS).forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.innerHTML=cSQL(SQLS[id]);
+});
 
+/* ── Contrasenya professor — per tema independent ── */
+const PROF_PASS = 'merce2526';  // ← canvia cada curs
+
+const SOL_FILES = {
+  't1': 'AEA1_RA3_sol_T1.html',
+  't2': 'AEA1_RA3_sol_T2.html',
+  't3': 'AEA1_RA3_sol_T3.html',
+  't4': 'AEA1_RA3_sol_T4.html'
+};
+
+function isTopicUnlocked(topicId) {
+  return sessionStorage.getItem('prof_unlocked_' + topicId) === '1';
+}
+function applyTopicUnlock(topicId) {
+  const solFile = SOL_FILES[topicId];
+  // Mostrar botons del tema
+  document.querySelectorAll('.sol-link[data-topic="' + topicId + '"]')
+    .forEach(el => el.classList.add('visible'));
+  // Ocultar missatge de bloqueig
+  document.querySelectorAll('.sol-locked-msg[data-topic="' + topicId + '"]')
+    .forEach(el => el.style.display = 'none');
+  // Marcar el bloc com activat
+  const head = document.querySelector('.ex-block-head[data-topic="' + topicId + '"]');
+  if (head) {
+    head.classList.add('unlocked');
+    const hint = head.querySelector('.unlock-hint');
+    if (hint) hint.textContent = '[solucions activades]';
+  }
+}
+function tryUnlock(topicId) {
+  if (isTopicUnlocked(topicId)) return;
+  const pwd = prompt('Codi d\'accés per activar les solucions del tema ' + topicId.toUpperCase() + ':');
+  if (pwd === PROF_PASS) {
+    sessionStorage.setItem('prof_unlocked_' + topicId, '1');
+    applyTopicUnlock(topicId);
+  } else if (pwd !== null) {
+    alert('Codi incorrecte.');
+  }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  // Doble clic a cada títol de bloc
+  document.querySelectorAll('.ex-block-title[data-topic]').forEach(el => {
+    el.addEventListener('dblclick', () => tryUnlock(el.dataset.topic));
+  });
+  // Restaurar estat de sessió per cada tema
+  Object.keys(SOL_FILES).forEach(tid => {
+    if (isTopicUnlocked(tid)) applyTopicUnlock(tid);
+  });
+});
+
+/* ══════════════════════════════════════════════════
+   EXERCICIS T1
+══════════════════════════════════════════════════ */
+const T1=[
+  {n:1, txt:'La sentència <code>SELECT last_name, job_id, salary AS Sal FROM employees;</code> s\'executa correctament. Vertader o Fals?',
+   sol:`-- VERTADER. La sentència és sintàcticament correcta.\nSELECT last_name, job_id, salary AS Sal\nFROM employees;`,
+   note:'La paraula clau AS per a l\'àlies és opcional; tant "salary AS Sal" com "salary Sal" funcionen.'},
+  {n:2, txt:'La sentència <code>SELECT * FROM job_grades;</code> s\'executa correctament. Vertader o Fals?',
+   sol:`-- FALS. La taula JOB_GRADES no existeix a l'esquema HR.\n-- La taula correcta és JOB_HISTORY.\nSELECT * FROM job_history;`,
+   note:'És important verificar el nom exacte de les taules amb DESCRIBE o consultant l\'esquema HR.'},
+  {n:3, txt:'Identifica els quatre errors de la sentència:<br><code>SELECT employee_id, last_name<br>sal x 12 ANNUAL SALARY<br>FROM employees;</code>',
+   sol:`-- 1. La columna no es diu SAL sinó SALARY\n-- 2. L'operador de multiplicació és * no x\n-- 3. L'àlies ANNUAL SALARY té espai → cal "ANNUAL SALARY"\n-- 4. Falta una coma després de LAST_NAME\n\nSELECT employee_id, last_name,\n       salary * 12 "ANNUAL SALARY"\nFROM   employees;`,
+   note:''},
+  {n:4, txt:'Determina l\'estructura de la taula DEPARTMENTS i el seu contingut.',
+   sol:`-- a) Estructura\nDESCRIBE departments\n\n-- b) Contingut\nSELECT *\nFROM   departments;`,
+   note:'DESCRIBE (o DESC) mostra les columnes, el tipus de dada i si admeten NULLs.'},
+  {n:5, txt:'Determina l\'estructura de la taula EMPLOYEES.',
+   sol:`DESCRIBE employees`,
+   note:''},
+  {n:6, txt:'El departament de RRHH vol una consulta que mostri el cognom, ID de càrrec, data de contractació i ID d\'empleat de cada empleat, amb l\'ID en primer lloc. Assigna l\'àlies STARTDATE a HIRE_DATE.',
+   sol:`SELECT employee_id, last_name, job_id,\n       hire_date StartDate\nFROM   employees;`,
+   note:'L\'àlies sense espais pot anar sense cometes dobles.'},
+  {n:7, txt:'Mostra tots els JOB_ID únics de la taula EMPLOYEES.',
+   sol:`SELECT DISTINCT job_id\nFROM   employees;`,
+   note:'DISTINCT elimina les files duplicades del resultat.'},
+  {n:8, txt:'Modifica la consulta de l\'exercici 6 assignant les capçaleres: <em>Emp #</em>, <em>Employee</em>, <em>Job</em> i <em>Hire Date</em>.',
+   sol:`SELECT employee_id "Emp #", last_name "Employee",\n       job_id "Job", hire_date "Hire Date"\nFROM   employees;`,
+   note:'Quan l\'àlies conté espais o caràcters especials cal posar-lo entre cometes dobles.'},
+  {n:9, txt:'Mostra el cognom concatenat amb el JOB_ID (separat per una coma i un espai). Assigna el nom <em>Employee and Title</em> a la columna.',
+   sol:`SELECT last_name || ', ' || job_id "Employee and Title"\nFROM   employees;`,
+   note:'L\'operador || uneix cadenes. Els literals van entre cometes simples.'},
+  {n:10, txt:'Mostra totes les dades de EMPLOYEES concatenades en una sola columna separada per comes. Assigna el títol THE_OUTPUT.',
+   sol:`SELECT employee_id||','||first_name||','||last_name\n       ||','||email||','||phone_number||','||job_id\n       ||','||manager_id||','||hire_date\n       ||','||salary||','||commission_pct\n       ||','||department_id  THE_OUTPUT\nFROM   employees;`,
+   note:''}
+];
+
+/* ══════════════════════════════════════════════════
+   EXERCICIS T2
+══════════════════════════════════════════════════ */
+const T2=[
+  {n:1, txt:'Mostra el cognom i el salari dels empleats que guanyen més de 12.000 €.',
+   sol:`SELECT last_name, salary\nFROM   employees\nWHERE  salary > 12000;`},
+  {n:2, txt:'Mostra el cognom i el número de departament de l\'empleat amb ID 176.',
+   sol:`SELECT last_name, department_id\nFROM   employees\nWHERE  employee_id = 176;`},
+  {n:3, txt:'Mostra el cognom i el salari dels empleats amb salari fora del rang 5.000–12.000.',
+   sol:`SELECT last_name, salary\nFROM   employees\nWHERE  salary NOT BETWEEN 5000 AND 12000;`,
+   note:'NOT BETWEEN és equivalent a salary < 5000 OR salary > 12000.'},
+  {n:4, txt:'Mostra el cognom, JOB_ID i data de contractació dels empleats amb cognom Matos o Taylor. Ordena per data de contractació ascendent.',
+   sol:`SELECT last_name, job_id, hire_date\nFROM   employees\nWHERE  last_name IN ('Matos', 'Taylor')\nORDER BY hire_date;`},
+  {n:5, txt:'Mostra el cognom i el departament dels empleats dels departaments 20 o 50, ordenats alfabèticament pel cognom.',
+   sol:`SELECT last_name, department_id\nFROM   employees\nWHERE  department_id IN (20, 50)\nORDER BY last_name ASC;`},
+  {n:6, txt:'Mostra el cognom (com <em>Employee</em>) i el salari (com <em>Monthly Salary</em>) dels empleats amb salari entre 5.000 i 12.000 dels departaments 20 o 50.',
+   sol:`SELECT last_name "Employee", salary "Monthly Salary"\nFROM   employees\nWHERE  salary BETWEEN 5000 AND 12000\n  AND  department_id IN (20, 50);`},
+  {n:7, txt:'Mostra el cognom i la data de contractació de tots els empleats contractats l\'any 2004.',
+   sol:`SELECT last_name, hire_date\nFROM   employees\nWHERE  hire_date LIKE '%04';`,
+   note:'El format de data Oracle per defecte és DD-MON-YY, per tant l\'any s\'emmagatzema com a 2 dígits al final.'},
+  {n:8, txt:'Mostra el cognom i el JOB_ID de tots els empleats sense supervisor.',
+   sol:`SELECT last_name, job_id\nFROM   employees\nWHERE  manager_id IS NULL;`,
+   note:'Sempre cal usar IS NULL i mai = NULL per comparar amb el valor nul.'},
+  {n:9, txt:'Mostra el cognom, salari i comissió dels empleats que perceben comissió. Ordena descendent per salari i comissió usant la posició numèrica de la columna.',
+   sol:`SELECT last_name, salary, commission_pct\nFROM   employees\nWHERE  commission_pct IS NOT NULL\nORDER BY 2 DESC, 3 DESC;`,
+   note:'ORDER BY 2 significa "ordena per la columna 2 del SELECT", en aquest cas SALARY.'},
+  {n:10, txt:'Mostra el cognom i el salari dels empleats que guanyen més d\'una quantitat introduïda per l\'usuari.',
+   sol:`SELECT last_name, salary\nFROM   employees\nWHERE  salary > &sal_amt;`,
+   note:'La variable de substitució &sal_amt mostra un diàleg a SQL*Plus/SQL Developer. Introdueix 12000 com a prova.'},
+  {n:11, txt:'Mostra l\'ID, cognom, salari i departament dels empleats d\'un supervisor introduït per l\'usuari. Ordena per una columna també a triar per l\'usuari.',
+   sol:`SELECT employee_id, last_name, salary, department_id\nFROM   employees\nWHERE  manager_id = &mgr_num\nORDER BY &order_col;`,
+   note:'Prova amb manager_id=103 (order by last_name), 108 (order by salary), 124 (order by employee_id).'},
+  {n:12, txt:'Mostra els cognoms dels empleats la tercera lletra dels quals sigui una "a".',
+   sol:`SELECT last_name\nFROM   employees\nWHERE  last_name LIKE '__a%';`,
+   note:'Dos guions baixos __ representen exactament dos caràcters qualsevol abans de la "a".'},
+  {n:13, txt:'Mostra els cognoms dels empleats que tinguin una "a" i una "e" al seu cognom.',
+   sol:`SELECT last_name\nFROM   employees\nWHERE  last_name LIKE '%a%'\n  AND  last_name LIKE '%e%';`},
+  {n:14, txt:'Mostra cognom, càrrec i salari dels empleats que siguin SA_REP o ST_CLERK i el salari dels quals no sigui 2.500, 3.500 ni 7.000.',
+   sol:`SELECT last_name, job_id, salary\nFROM   employees\nWHERE  job_id IN ('SA_REP', 'ST_CLERK')\n  AND  salary NOT IN (2500, 3500, 7000);`},
+  {n:15, txt:'Mostra el cognom (com <em>Employee</em>), salari (com <em>Monthly Salary</em>) i comissió dels empleats amb comissió del 20%.',
+   sol:`SELECT last_name "Employee", salary "Monthly Salary",\n       commission_pct\nFROM   employees\nWHERE  commission_pct = .20;`}
+];
+
+/* ══════════════════════════════════════════════════
+   EXERCICIS T3
+══════════════════════════════════════════════════ */
+const T3=[
+  {n:1, txt:'Mostra la data actual del sistema. Etiqueta la columna com a <em>Date</em>.',
+   sol:`SELECT sysdate "Date"\nFROM   dual;`,
+   note:'DUAL és una taula d\'una sola fila que Oracle proporciona per fer càlculs sense referenciar cap taula real.'},
+  {n:2, txt:'Mostra el número d\'empleat, cognom, salari i el salari augmentat un 15,5% (enter) com a <em>New Salary</em>.',
+   sol:`SELECT employee_id, last_name, salary,\n       ROUND(salary * 1.155, 0) "New Salary"\nFROM   employees;`,
+   note:'ROUND(n, 0) arrodoneix al nombre enter més proper.'},
+  {n:3, txt:'Executa la consulta de l\'exercici anterior (desa-la mentalment com lab_03_02).',
+   sol:`SELECT employee_id, last_name, salary,\n       ROUND(salary * 1.155, 0) "New Salary"\nFROM   employees;`},
+  {n:4, txt:'Afegeix a la consulta anterior una columna que mostri l\'increment (nou salari - salari antic). Etiqueta-la <em>Increase</em>.',
+   sol:`SELECT employee_id, last_name, salary,\n       ROUND(salary * 1.155, 0) "New Salary",\n       ROUND(salary * 1.155, 0) - salary "Increase"\nFROM   employees;`},
+  {n:5, txt:'Mostra el cognom (primera lletra majúscula, resta minúscula) i la longitud del cognom dels empleats que comencin per "J", "A" o "M". Ordena per cognom.',
+   sol:`SELECT INITCAP(last_name) "Name", LENGTH(last_name) "Length"\nFROM   employees\nWHERE  UPPER(last_name) LIKE 'J%'\n    OR UPPER(last_name) LIKE 'M%'\n    OR UPPER(last_name) LIKE 'A%'\nORDER BY last_name;\n\n-- Alternativa amb SUBSTR\nSELECT INITCAP(last_name) "Name", LENGTH(last_name) "Length"\nFROM   employees\nWHERE  UPPER(SUBSTR(last_name,1,1)) IN ('J','M','A')\nORDER BY last_name;`,
+   note:'Usa UPPER al WHERE per evitar problemes de majúscules/minúscules independentment de com estiguin emmagatzemats els dades.'},
+  {n:6, txt:'Mostra el cognom i el nombre de mesos treballats (com a <em>MONTHS_WORKED</em>) de cada empleat. Arrodoneix al enter. Ordena per mesos.',
+   sol:`SELECT last_name,\n       ROUND(MONTHS_BETWEEN(SYSDATE, hire_date)) MONTHS_WORKED\nFROM   employees\nORDER BY months_worked;`,
+   note:'El resultat variarà en funció de la data d\'execució de la consulta.'},
+  {n:7, txt:'Mostra el cognom i el salari formatat a 15 caràcters amb relleno "$" per l\'esquerra. Etiqueta la columna SALARY.',
+   sol:`SELECT last_name, LPAD(salary, 15, '$') SALARY\nFROM   employees;`},
+  {n:8, txt:'Mostra els primers 8 caràcters del cognom i el salari representat amb asteriscs (1 asterisc = 1.000). Ordena descendent per salari. Etiqueta EMPLOYEES_AND_THEIR_SALARIES.',
+   sol:`SELECT RPAD(last_name, 8) || ' ' ||\n       RPAD(' ', salary/1000+1, '*') EMPLOYEES_AND_THEIR_SALARIES\nFROM   employees\nORDER BY salary DESC;`},
+  {n:9, txt:'Mostra el cognom i el nombre de setmanes treballades (TENURE, truncat a 0 decimals) dels empleats del departament 90. Ordena per TENURE descendent.',
+   sol:`SELECT last_name,\n       TRUNC((SYSDATE - hire_date) / 7) AS TENURE\nFROM   employees\nWHERE  department_id = 90\nORDER BY TENURE DESC;`,
+   note:'La resta de dates a Oracle retorna el nombre de dies. Dividint per 7 obtenim setmanes.'}
+];
+
+/* ══════════════════════════════════════════════════
+   EXERCICIS T4
+══════════════════════════════════════════════════ */
+const T4=[
+  {n:1, txt:'Genera un informe amb el format: <em>"cognom earns $salari monthly but wants $salari×3."</em> Etiqueta la columna <em>Dream Salaries</em>.',
+   sol:`SELECT last_name || ' earns '\n       || TO_CHAR(salary, 'fm$99,999.00')\n       || ' monthly but wants '\n       || TO_CHAR(salary * 3, 'fm$99,999.00')\n       || '.' "Dream Salaries"\nFROM   employees;`,
+   note:'El prefix fm elimina els espais de relleno que TO_CHAR afegeix per defecte.'},
+  {n:2, txt:'Mostra el cognom, data de contractació i data de revisió (primer dilluns 6 mesos després de la contractació, amb format "Day, the DDth of Month, YYYY"). Etiqueta REVIEW.',
+   sol:`SELECT last_name, hire_date,\n       TO_CHAR(NEXT_DAY(ADD_MONTHS(hire_date, 6), 'MONDAY'),\n               'fmDay, "the" Ddspth "of" Month, YYYY') REVIEW\nFROM   employees;`,
+   note:'NEXT_DAY retorna el proper dia de la setmana especificat. ADD_MONTHS afegeix mesos a una data.'},
+  {n:3, txt:'Mostra el cognom, data de contractació i dia de la setmana en que va començar (com <em>DAY</em>). Ordena per dia de la setmana (dilluns primer).',
+   sol:`SELECT last_name, hire_date,\n       TO_CHAR(hire_date, 'DAY') DAY\nFROM   employees\nORDER BY TO_CHAR(hire_date, 'd');`,
+   note:'El format \'d\' retorna el número del dia de la setmana (1=Diumenge per defecte en Oracle US).'},
+  {n:4, txt:'Mostra el cognom i la comissió dels empleats. Si no en té, mostra "No Commission". Etiqueta COMM.',
+   sol:`SELECT last_name,\n       NVL(TO_CHAR(commission_pct), 'No Commission') COMM\nFROM   employees;`,
+   note:'NVL substitueix el NULL pel segon argument. TO_CHAR converteix el número a text per poder comparar amb la cadena.'},
+  {n:5, txt:'Usant DECODE, mostra el càrrec i el seu grau: AD_PRES→A, ST_MAN→B, IT_PROG→C, SA_REP→D, ST_CLERK→E, resta→0.',
+   sol:`SELECT job_id,\n       DECODE(job_id,\n              'AD_PRES',  'A',\n              'ST_MAN',   'B',\n              'IT_PROG',  'C',\n              'SA_REP',   'D',\n              'ST_CLERK', 'E',\n              '0') GRADE\nFROM   employees;`},
+  {n:6, txt:'Reescriu l\'exercici anterior usant la sintaxi CASE.',
+   sol:`SELECT job_id,\n       CASE job_id\n         WHEN 'AD_PRES'  THEN 'A'\n         WHEN 'ST_MAN'   THEN 'B'\n         WHEN 'IT_PROG'  THEN 'C'\n         WHEN 'SA_REP'   THEN 'D'\n         WHEN 'ST_CLERK' THEN 'E'\n         ELSE '0'\n       END GRADE\nFROM   employees;`,
+   note:'CASE és l\'estàndard SQL i és portable. DECODE és exclusiu d\'Oracle.'}
+];
+
+/* ── Construcció dels blocs d'exercicis ── */
+function buildExercises(data, containerId, topicId) {
+  const solFile = SOL_FILES[topicId];
+  const c = document.getElementById(containerId);
+  data.forEach(ex => {
+    const div = document.createElement('div');
+    div.className = 'exercise';
+    const anchorId = topicId + '-ex' + ex.n;
+    div.innerHTML =
+      '<div class="ex-head">' +
+        '<div class="ex-num">' + ex.n + '</div>' +
+        '<div><div class="ex-name">Exercici ' + ex.n + '</div></div>' +
+      '</div>' +
+      '<div class="ex-enunciat">' + ex.txt + '</div>' +
+      '<div class="sol-link" data-topic="' + topicId + '" id="lnk_' + anchorId + '">' +
+        '<a href="' + solFile + '#' + anchorId + '" target="_blank">&#9654; Veure solució</a>' +
+      '</div>' +
+      '<span class="sol-locked-msg" data-topic="' + topicId + '">Solució no disponible encara.</span>';
+    c.appendChild(div);
+  });
+}
+
+buildExercises(T1, 'ex1-body', 't1');
+buildExercises(T2, 'ex2-body', 't2');
+buildExercises(T3, 'ex3-body', 't3');
+buildExercises(T4, 'ex4-body', 't4');
 </script>
 </body>
 </html>
