@@ -95,8 +95,8 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 .ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; cursor:default; user-select:none; }
 .ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
 .ex-block-sub { font-size:13px; color:#a8a29e; }
-.ex-block-head .unlock-hint { font-size:11px; color:#64748b; font-weight:400; margin-left:10px; font-family:'DM Sans',sans-serif; letter-spacing:0; }
-.ex-block-head.unlocked .unlock-hint { color:#4ade80; }
+
+
 .ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
 .exercise { margin-bottom:32px; padding-bottom:32px; border-bottom:1px solid var(--border); }
 .exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
@@ -105,11 +105,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 .ex-name { font-weight:600; font-size:15px; color:var(--ink); }
 .ex-enunciat { font-size:14px; color:var(--ink); margin-bottom:14px; line-height:1.6; }
 .ex-enunciat code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
-.sol-link { display:none; margin-top:10px; }
-.sol-link.visible { display:inline-flex; }
-.sol-link a { display:inline-flex; align-items:center; gap:6px; padding:6px 15px; border:1.5px solid var(--blue-bdr); border-radius:var(--r-sm); background:var(--blue-bg); color:var(--blue); font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600; text-decoration:none; transition:background .12s,color .12s,border-color .12s; }
-.sol-link a:hover { background:var(--blue); color:#fff; border-color:var(--blue); }
-.sol-locked-msg { font-size:13px; color:var(--ink-3); font-style:italic; margin-top:8px; display:block; }
+
 .doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; flex-wrap:wrap; }
 .doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
 .doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
@@ -159,13 +155,13 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
     <div class="toc-title">Contingut d'aquest document</div>
     <div class="toc-grid">
       <a class="toc-item" href="#s1"><span class="toc-num">1</span>Funcions de grup i GROUP BY</a>
-      <a class="toc-item" href="#ex5"><span class="toc-num">&#9733;</span>Exercicis T5 — GROUP BY</a>
+      <a class="toc-item" href="#ex5"><span class="toc-num">&#9733;</span>Exercicis — Funcions de grup</a>
       <a class="toc-item" href="#s2"><span class="toc-num">2</span>Unions entre taules (JOINs)</a>
-      <a class="toc-item" href="#ex6"><span class="toc-num">&#9733;</span>Exercicis T6 — JOINs</a>
+      <a class="toc-item" href="#ex6"><span class="toc-num">&#9733;</span>Exercicis — Unions entre taules</a>
       <a class="toc-item" href="#s3"><span class="toc-num">3</span>Subconsultes</a>
-      <a class="toc-item" href="#ex7"><span class="toc-num">&#9733;</span>Exercicis T7 — Subconsultes</a>
+      <a class="toc-item" href="#ex7"><span class="toc-num">&#9733;</span>Exercicis — Subconsultes</a>
       <a class="toc-item" href="#s4"><span class="toc-num">4</span>Operadors de conjunt</a>
-      <a class="toc-item" href="#ex8"><span class="toc-num">&#9733;</span>Exercicis T8 — Conjunts</a>
+      <a class="toc-item" href="#ex8"><span class="toc-num">&#9733;</span>Exercicis — Operadors de conjunt</a>
     </div>
   </nav>
 
@@ -195,15 +191,23 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       3. Ordre d'execució: <code>FROM</code> → <code>WHERE</code> → <code>GROUP BY</code> → <code>HAVING</code> → <code>SELECT</code> → <code>ORDER BY</code>
     </div></div>
 
-    <div class="demo"><div class="demo-label">Exemple 1 · Funcions de grup, GROUP BY i HAVING</div>
+    <div class="demo"><div class="demo-label">Exemple 1 · Funcions de grup sense GROUP BY</div>
       <code class="sql-out" id="e1a"></code>
-      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>DECODE</code> dins de <code>SUM</code> permet crear taules de pivot (crosstab): conta o suma valors d'un grup concret. Útil per a informes matricials.</div></div>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Quan s'usen funcions de grup sense <code>GROUP BY</code>, s'apliquen a tota la taula i retornen una sola fila. <code>COUNT(*)</code> compta totes les files incloent NULLs. <code>COUNT(col)</code> ignora els NULLs. <code>AVG</code> també ignora els NULLs: el divisor és el nombre de valors no NULL, no el total de files.</div></div>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 2 · GROUP BY i HAVING</div>
+      <code class="sql-out" id="e1b"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>GROUP BY</code> agrupa les files amb el mateix valor i les funcions de grup calculen un resultat per a cada grup. <code>HAVING</code> filtra els grups (com <code>WHERE</code> però per a grups). Ordre d'execució: <code>FROM</code> → <code>WHERE</code> → <code>GROUP BY</code> → <code>HAVING</code> → <code>SELECT</code> → <code>ORDER BY</code>. <strong>Mai</strong> s'usa una funció de grup al <code>WHERE</code>.</div></div>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 3 · Taula pivot amb DECODE dins SUM</div>
+      <code class="sql-out" id="e1c"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>DECODE</code> dins de <code>SUM</code> o <code>COUNT</code> permet crear taules de pivot (crosstab): per a cada fila, si el departament coincideix aporta el salari, si no aporta NULL (que SUM ignora). El resultat és una fila per càrrec amb una columna per departament.</div></div>
     </div>
   </section>
 
   <!-- EXERCICIS T5 -->
   <div class="ex-block-head" id="ex5" data-topic="t5">
-    <h2 class="ex-block-title" data-topic="t5">Exercicis T5 — Funcions de grup<span class="unlock-hint">[doble clic per activar solucions]</span></h2>
+    <h2 class="ex-block-title" data-topic="t5">Exercicis — Funcions de grup</h2>
     <p class="ex-block-sub">COUNT, SUM, AVG, MAX, MIN, GROUP BY, HAVING · criteri 3.5</p>
   </div>
   <div class="ex-block-body" id="ex5-body"></div>
@@ -223,8 +227,9 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       <div class="cmp"><h4>FULL OUTER JOIN</h4><p>Retorna totes les files de les dues taules, amb NULL on no hi ha coincidència en cap costat.</p></div>
     </div>
 
-    <div class="demo"><div class="demo-label">Exemple 2 · NATURAL JOIN, JOIN USING, JOIN ON</div>
+    <div class="demo"><div class="demo-label">Exemple 4 · NATURAL JOIN, JOIN USING, JOIN ON</div>
       <code class="sql-out" id="e2a"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>NATURAL JOIN</code> uneix automàticament per totes les columnes de nom igual (còmode però perillós si hi ha columnes homònimes no relacionades). <code>JOIN ... USING(col)</code> especifica quina columna comuna usar; la columna <code>USING</code> no s'ha de qualificar amb àlies de taula. <code>JOIN ... ON</code> és la forma més explícita i flexible: permet qualsevol condició d'unió i és la recomanada en producció.</div></div>
     </div>
     <div class="demo"><div class="demo-label">Exemple 3 · JOIN de 3 taules, self-join i LEFT OUTER JOIN</div>
       <code class="sql-out" id="e2b"></code>
@@ -239,7 +244,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 
   <!-- EXERCICIS T6 -->
   <div class="ex-block-head" id="ex6" data-topic="t6">
-    <h2 class="ex-block-title" data-topic="t6">Exercicis T6 — Unions entre taules<span class="unlock-hint"></span></h2>
+    <h2 class="ex-block-title" data-topic="t6">Exercicis — Unions entre taules</h2>
     <p class="ex-block-sub">NATURAL JOIN, JOIN USING, JOIN ON, self-join, LEFT OUTER JOIN · criteris 3.3, 3.4</p>
   </div>
   <div class="ex-block-body" id="ex6-body"></div>
@@ -268,14 +273,19 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       <code>= ANY</code> és equivalent a <code>IN</code>. <code>!= ALL</code> és equivalent a <code>NOT IN</code>.
     </div></div>
 
-    <div class="demo"><div class="demo-label">Exemple 4 · Subconsulta d'una fila, IN i ANY/ALL</div>
+    <div class="demo"><div class="demo-label">Exemple 7 · Subconsulta d'una sola fila</div>
       <code class="sql-out" id="e3a"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">La subconsulta s'executa primer i retorna un sol valor que usa la consulta externa. Si la subconsulta retornés més d'una fila amb l'operador <code>=</code>, Oracle donaria error. En aquest cas cal usar <code>IN</code> o <code>ANY</code>.</div></div>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 8 · Subconsultes de múltiples files: IN i ANY/ALL</div>
+      <code class="sql-out" id="e3b"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>IN</code> comprova si el valor pertany al conjunt retornat per la subconsulta. <code>&gt; ANY</code> significa "major que almenys un valor" (equivalent al mínim del conjunt). <code>&gt; ALL</code> significa "major que tots els valors" (equivalent al màxim). <code>= ANY</code> és equivalent a <code>IN</code>.</div></div>
     </div>
   </section>
 
   <!-- EXERCICIS T7 -->
   <div class="ex-block-head" id="ex7" data-topic="t7">
-    <h2 class="ex-block-title" data-topic="t7">Exercicis T7 — Subconsultes<span class="unlock-hint"></span></h2>
+    <h2 class="ex-block-title" data-topic="t7">Exercicis — Subconsultes</h2>
     <p class="ex-block-sub">Subconsultes d'una fila, IN, ANY/ALL · criteri 3.6</p>
   </div>
   <div class="ex-block-body" id="ex7-body"></div>
@@ -303,14 +313,15 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       Exemple: <code>SELECT last_name, department_id, TO_CHAR(null) dept_name FROM employees</code>
     </div></div>
 
-    <div class="demo"><div class="demo-label">Exemple 5 · UNION, MINUS i INTERSECT</div>
+    <div class="demo"><div class="demo-label">Exemple 9 · UNION, UNION ALL, MINUS i INTERSECT</div>
       <code class="sql-out" id="e4a"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Les dues consultes han de tenir el mateix nombre de columnes i tipus compatibles. <code>UNION</code> elimina duplicats (més lent); <code>UNION ALL</code> els conserva (més ràpid). <code>MINUS</code> retorna les files de la primera consulta que no apareixen a la segona. <code>INTERSECT</code> retorna les files comunes. L'<code>ORDER BY</code> s'escriu al final de l'última consulta i fa referència al nom o posició de la primera.</div></div>
     </div>
   </section>
 
   <!-- EXERCICIS T8 -->
   <div class="ex-block-head" id="ex8" data-topic="t8">
-    <h2 class="ex-block-title" data-topic="t8">Exercicis T8 — Operadors de conjunt<span class="unlock-hint"></span></h2>
+    <h2 class="ex-block-title" data-topic="t8">Exercicis — Operadors de conjunt</h2>
     <p class="ex-block-sub">UNION, UNION ALL, INTERSECT, MINUS · criteri 3.7</p>
   </div>
   <div class="ex-block-body" id="ex8-body"></div>
@@ -350,33 +361,7 @@ Object.keys(SQLS).forEach(id=>{
   if(el) el.innerHTML=cSQL(SQLS[id]);
 });
 
-/* ── Contrasenya professor — per tema independent ── */
-const PROF_PASS='merce2526';
-const SOL_FILES={
-  't5':'AEA1_RA3_sol_T5.html',
-  't6':'AEA1_RA3_sol_T6.html',
-  't7':'AEA1_RA3_sol_T7.html',
-  't8':'AEA1_RA3_sol_T8.html'
-};
-function isUnlocked(tid){return sessionStorage.getItem('prof_unlocked_'+tid)==='1';}
-function applyUnlock(tid){
-  document.querySelectorAll('.sol-link[data-topic="'+tid+'"]').forEach(el=>el.classList.add('visible'));
-  document.querySelectorAll('.sol-locked-msg[data-topic="'+tid+'"]').forEach(el=>el.style.display='none');
-  const head=document.querySelector('.ex-block-head[data-topic="'+tid+'"]');
-  if(head){head.classList.add('unlocked');const h=head.querySelector('.unlock-hint');if(h)h.textContent='[solucions activades]';}
-}
-function tryUnlock(tid){
-  if(isUnlocked(tid))return;
-  const pwd=prompt('Codi d\'accés per activar les solucions del tema '+tid.toUpperCase()+':');
-  if(pwd===PROF_PASS){sessionStorage.setItem('prof_unlocked_'+tid,'1');applyUnlock(tid);}
-  else if(pwd!==null)alert('Codi incorrecte.');
-}
-document.addEventListener('DOMContentLoaded',function(){
-  document.querySelectorAll('.ex-block-title[data-topic]').forEach(el=>{
-    el.addEventListener('dblclick',()=>tryUnlock(el.dataset.topic));
-  });
-  Object.keys(SOL_FILES).forEach(tid=>{if(isUnlocked(tid))applyUnlock(tid);});
-});
+
 
 /* ── Dades exercicis ── */
 const T5=[
@@ -471,22 +456,16 @@ const T8=[
 
 /* ── Build exercicis ── */
 function buildEx(data, containerId, topicId){
-  const solFile=SOL_FILES[topicId];
-  const c=document.getElementById(containerId);
-  data.forEach(ex=>{
-    const div=document.createElement('div');
+  var c=document.getElementById(containerId);
+  data.forEach(function(ex){
+    var div=document.createElement('div');
     div.className='exercise';
-    const aid=topicId+'-ex'+ex.n;
     div.innerHTML=
       '<div class="ex-head">'+
         '<div class="ex-num">'+ex.n+'</div>'+
         '<div><div class="ex-name">Exercici '+ex.n+'</div></div>'+
       '</div>'+
-      '<div class="ex-enunciat">'+ex.txt+'</div>'+
-      '<div class="sol-link" data-topic="'+topicId+'" id="lnk_'+aid+'">'+
-        '<a href="'+solFile+'#'+aid+'" target="_blank">&#9654; Veure solució</a>'+
-      '</div>'+
-      '<span class="sol-locked-msg" data-topic="'+topicId+'">Solució no disponible encara.</span>';
+      '<div class="ex-enunciat">'+ex.txt+'</div>';
     c.appendChild(div);
   });
 }

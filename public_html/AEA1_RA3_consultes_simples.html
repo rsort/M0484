@@ -129,30 +129,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 .doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
 .site-foot { border-top:1px solid var(--border); padding:20px 24px; }
 .foot-inner { max-width:900px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
-/* Botó d'enllaç a la solució — ocult per defecte */
-.sol-link { display:none; margin-top:10px; }
-.sol-link.visible { display:inline-flex; }
-.sol-link a {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:6px 15px; border:1.5px solid var(--blue-bdr);
-  border-radius:var(--r-sm); background:var(--blue-bg);
-  color:var(--blue); font-size:12px; font-family:'DM Sans',sans-serif;
-  font-weight:600; text-decoration:none;
-  transition:background .12s,color .12s,border-color .12s;
-}
-.sol-link a:hover { background:var(--blue); color:#fff; border-color:var(--blue); }
-/* Indicador d'estat al títol del bloc */
-.ex-block-head { cursor:default; user-select:none; }
-.ex-block-head .unlock-hint {
-  font-size:11px; color:#64748b; font-weight:400; margin-left:10px;
-  font-family:'DM Sans',sans-serif; letter-spacing:0;
-}
-.ex-block-head.unlocked .unlock-hint { color:#4ade80; }
-/* Avís visible per l'alumne */
-.sol-locked-msg {
-  font-size:13px; color:var(--ink-3); font-style:italic;
-  margin-top:8px; display:block;
-}
+
 @media (max-width:600px){ .toc-grid { grid-template-columns:1fr; } .schema-grid { grid-template-columns:1fr 1fr; } .doc-nav { flex-direction:column; } }
   </style>
 </head>
@@ -183,7 +160,6 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
         <div class="obj-text">
           <strong>3.1</strong> Identificar eines i sentències per fer consultes ·
           <strong>3.2</strong> Consultes simples sobre una taula ·
-          <strong>3.5</strong> Consultes de resum (GROUP BY / HAVING)
         </div>
       </div>
     </div>
@@ -191,17 +167,19 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 
   <nav class="toc">
     <div class="toc-title">Contingut d'aquest document</div>
-    <div class="toc-grid">
+    <div class="toc-grid" style="grid-template-columns:1fr">
       <a class="toc-item" href="#s0"><span class="toc-num">0</span>Esquema HR d'Oracle</a>
-      <a class="toc-item" href="#s1"><span class="toc-num">1</span>SELECT bàsic · àlies · concatenació</a>
-      <a class="toc-item" href="#ex1"><span class="toc-num">★</span>Exercicis T1 — SELECT bàsic</a>
-      <a class="toc-item" href="#s2"><span class="toc-num">2</span>WHERE, ORDER BY i operadors</a>
-      <a class="toc-item" href="#ex2"><span class="toc-num">★</span>Exercicis T2 — Filtratge i ordenació</a>
+    </div>
+    <div style="height:12px"></div>
+    <div class="toc-grid">
+      <a class="toc-item" href="#s1"><span class="toc-num">1</span>SELECT, àlies, concatenació, DISTINCT</a>
+      <a class="toc-item" href="#ex1"><span class="toc-num">★</span>Exercicis — Recuperació de dades</a>
+      <a class="toc-item" href="#s2"><span class="toc-num">2</span>WHERE, operadors i ORDER BY</a>
+      <a class="toc-item" href="#ex2"><span class="toc-num">★</span>Exercicis — Filtratge i ordenació</a>
       <a class="toc-item" href="#s3"><span class="toc-num">3</span>Funcions d'una sola fila</a>
-      <a class="toc-item" href="#ex3"><span class="toc-num">★</span>Exercicis T3 — Funcions de fila</a>
+      <a class="toc-item" href="#ex3"><span class="toc-num">★</span>Exercicis — Funcions de fila</a>
       <a class="toc-item" href="#s4"><span class="toc-num">4</span>Conversió i expressions condicionals</a>
-      <a class="toc-item" href="#ex4"><span class="toc-num">★</span>Exercicis T4 — Conversió i condicionals</a>
-      <a class="toc-item" href="#s5"><span class="toc-num">5</span>Funcions de grup i GROUP BY</a>
+      <a class="toc-item" href="#ex4"><span class="toc-num">★</span>Exercicis — Conversió i condicionals</a>
     </div>
   </nav>
 
@@ -284,7 +262,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 
   <!-- EXERCICIS T1 -->
   <div class="ex-block-head" id="ex1" data-topic="t1">
-    <h2 class="ex-block-title" data-topic="t1">Exercicis T1<span class="unlock-hint">[doble clic per activar solucions]</span> — Recuperació de dades</h2>
+    <h2 class="ex-block-title" data-topic="t1">Exercicis — Recuperació de dades</h2>
     <p class="ex-block-sub">SELECT bàsic, àlies, concatenació i DISTINCT · criteri 3.1, 3.2</p>
   </div>
   <div class="ex-block-body" id="ex1-body"></div>
@@ -314,11 +292,13 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
     </table></div>
 
     <div class="subhead">Exemples</div>
-    <div class="demo"><div class="demo-label">Exemple 5 · WHERE amb operadors comparatius</div>
+    <div class="demo"><div class="demo-label">Exemple 5 · WHERE amb operadors comparatius i lògics</div>
       <code class="sql-out" id="e2a"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">La clàusula <code>WHERE</code> filtra les files <strong>abans</strong> de mostrar el resultat. Els operadors de comparació (<code>=</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>) s'usen amb números i dates. Les cadenes de text van sempre entre cometes simples i distingeixen majúscules/minúscules. <code>AND</code> requereix que totes les condicions siguin certes; <code>OR</code> n'és suficient amb una.</div></div>
     </div>
-    <div class="demo"><div class="demo-label">Exemple 6 · BETWEEN, IN, LIKE, IS NULL</div>
+    <div class="demo"><div class="demo-label">Exemple 6 · BETWEEN, IN, LIKE i IS NULL</div>
       <code class="sql-out" id="e2b"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>BETWEEN a AND b</code> és inclusiu als dos extrems (equivalent a <code>&gt;= a AND &lt;= b</code>). <code>IN (v1, v2, ...)</code> comprova si el valor pertany a la llista (equivalent a múltiples <code>OR</code>). <code>LIKE</code> usa comodins: <code>%</code> substitueix zero o més caràcters, <code>_</code> substitueix exactament un caràcter. Mai s'usa <code>= NULL</code>: sempre <code>IS NULL</code> o <code>IS NOT NULL</code>.</div></div>
     </div>
     <div class="demo"><div class="demo-label">Exemple 7 · ORDER BY (ASC / DESC / per posició)</div>
       <code class="sql-out" id="e2c"></code>
@@ -328,7 +308,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 
   <!-- EXERCICIS T2 -->
   <div class="ex-block-head" id="ex2" data-topic="t2">
-    <h2 class="ex-block-title" data-topic="t2">Exercicis T2<span class="unlock-hint"></span> — Restricció i ordenació</h2>
+    <h2 class="ex-block-title" data-topic="t2">Exercicis — Filtratge i ordenació</h2>
     <p class="ex-block-sub">WHERE, BETWEEN, IN, LIKE, IS NULL, ORDER BY · criteri 3.2</p>
   </div>
   <div class="ex-block-body" id="ex2-body"></div>
@@ -383,14 +363,19 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       </tbody>
     </table></div>
 
-    <div class="demo"><div class="demo-label">Exemple 8 · Funcions de caràcter i de data combinades</div>
+    <div class="demo"><div class="demo-label">Exemple 8 · Funcions de caràcter</div>
       <code class="sql-out" id="e3a"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>INITCAP</code> posa majúscula a la primera lletra de cada paraula. <code>LENGTH</code> retorna el nombre de caràcters. <code>SUBSTR(cad, inici, longitud)</code> extreu una subcadena: la posició comença a 1. Usar <code>UPPER</code> al <code>WHERE</code> garanteix que la comparació funcioni independentment de com estan emmagatzemades les dades.</div></div>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 9 · Funcions numèriques i de data</div>
+      <code class="sql-out" id="e3b"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>ROUND(n, d)</code> arrodoneix a <em>d</em> decimals; <code>TRUNC(n, d)</code> trunca sense arrodonir. <code>MOD(n, m)</code> retorna el residu de la divisió. <code>SYSDATE</code> és la data i hora actuals del servidor. La resta de dues dates a Oracle retorna el nombre de dies; dividint per 7 s'obtenen setmanes. <code>MONTHS_BETWEEN</code> calcula mesos entre dues dates.</div></div>
     </div>
   </section>
 
   <!-- EXERCICIS T3 -->
   <div class="ex-block-head" id="ex3" data-topic="t3">
-    <h2 class="ex-block-title" data-topic="t3">Exercicis T3<span class="unlock-hint"></span> — Funcions d'una sola fila</h2>
+    <h2 class="ex-block-title" data-topic="t3">Exercicis — Funcions d'una sola fila</h2>
     <p class="ex-block-sub">ROUND, INITCAP, LENGTH, SUBSTR, MONTHS_BETWEEN, LPAD, RPAD · criteri 3.2</p>
   </div>
   <div class="ex-block-body" id="ex3-body"></div>
@@ -440,43 +425,10 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 
   <!-- EXERCICIS T4 -->
   <div class="ex-block-head" id="ex4" data-topic="t4">
-    <h2 class="ex-block-title" data-topic="t4">Exercicis T4<span class="unlock-hint"></span> — Conversió i expressions condicionals</h2>
+    <h2 class="ex-block-title" data-topic="t4">Exercicis — Conversió i expressions condicionals</h2>
     <p class="ex-block-sub">TO_CHAR, NVL, DECODE, CASE · criteri 3.2</p>
   </div>
   <div class="ex-block-body" id="ex4-body"></div>
-
-  <!-- ══════════════════════════════════════════════════ -->
-  <!-- SECCIÓ 5: GROUP BY / HAVING -->
-  <!-- ══════════════════════════════════════════════════ -->
-  <section class="section" id="s5">
-    <div class="sec-head"><span class="sec-num">5</span><div>
-      <h2 class="sec-title">Funcions de grup i agrupaments</h2>
-      <p class="sec-sub">Criteri 3.5 — COUNT, SUM, AVG, MAX, MIN · GROUP BY · HAVING</p>
-    </div></div>
-    <p class="lead">Les funcions de grup operen sobre conjunts de files i retornen <strong>un sol valor</strong>. Amb <code>GROUP BY</code> es calcula un agregat per a cada grup. <code>HAVING</code> filtra els grups resultants.</p>
-
-    <div class="tbl-wrap"><table class="tbl">
-      <thead><tr><th>Funció</th><th>Descripció</th><th>Nota</th></tr></thead>
-      <tbody>
-        <tr><td class="mono">COUNT(*)</td><td>Nombre total de files (inclou NULLs)</td><td>—</td></tr>
-        <tr><td class="mono">COUNT(col)</td><td>Nombre de files amb valor no NULL a col</td><td>Ignora NULLs</td></tr>
-        <tr><td class="mono">SUM(col)</td><td>Suma dels valors de col</td><td>Ignora NULLs</td></tr>
-        <tr><td class="mono">AVG(col)</td><td>Mitjana dels valors de col</td><td>Ignora NULLs</td></tr>
-        <tr><td class="mono">MAX(col)</td><td>Valor màxim de col</td><td>Funciona amb dates i text</td></tr>
-        <tr><td class="mono">MIN(col)</td><td>Valor mínim de col</td><td>Funciona amb dates i text</td></tr>
-      </tbody>
-    </table></div>
-
-    <div class="ibox red"><div class="ibox-label">Regla fonamental</div><div class="ibox-text">
-      Tota columna al <code>SELECT</code> que <strong>no</strong> estigui dins d'una funció de grup <strong>ha d'aparèixer</strong> al <code>GROUP BY</code>. En cas contrari, Oracle retorna un error.<br>
-      <code>WHERE</code> no pot contenir funcions de grup → usar <code>HAVING</code>.
-    </div></div>
-
-    <div class="demo"><div class="demo-label">Exemple 10 · Funcions de grup, GROUP BY i HAVING</div>
-      <code class="sql-out" id="e5a"></code>
-      <div class="exp-box"><div class="exp-label">Ordre d'execució d'una consulta</div><div class="exp-text"><code>FROM</code> → <code>WHERE</code> (filtra files) → <code>GROUP BY</code> (agrupa) → <code>HAVING</code> (filtra grups) → <code>SELECT</code> → <code>ORDER BY</code></div></div>
-    </div>
-  </section>
 
   <nav class="doc-nav">
     <a class="back" href="index.html">&#8592; Índex del mòdul</a>
@@ -513,63 +465,14 @@ const SQLS={
   e2b:`-- BETWEEN (inclusiu)\nSELECT last_name, salary\nFROM   employees\nWHERE  salary BETWEEN 5000 AND 12000;\n\n-- IN\nSELECT last_name, department_id\nFROM   employees\nWHERE  department_id IN (20, 50);\n\n-- LIKE: % = 0 o més caràcters, _ = exactament 1\nSELECT last_name\nFROM   employees\nWHERE  last_name LIKE '__a%';   -- tercera lletra 'a'\n\n-- IS NULL\nSELECT last_name, job_id\nFROM   employees\nWHERE  manager_id IS NULL;`,
   e2c:`SELECT last_name, salary, commission_pct\nFROM   employees\nWHERE  commission_pct IS NOT NULL\nORDER BY 2 DESC, 3 DESC;   -- posició numèrica al SELECT`,
   e3a:`SELECT INITCAP(last_name)              "Name",\n       LENGTH(last_name)               "Length",\n       ROUND(MONTHS_BETWEEN(SYSDATE,\n             hire_date))                "Months Worked"\nFROM   employees\nWHERE  UPPER(last_name) LIKE 'J%'\n    OR UPPER(last_name) LIKE 'M%'\n    OR UPPER(last_name) LIKE 'A%'\nORDER BY last_name;`,
-  e4a:`-- TO_CHAR i NVL\nSELECT last_name,\n       TO_CHAR(salary, 'fm$99,999.00')   AS salary_fmt,\n       NVL(TO_CHAR(commission_pct), 'No Commission') AS comm\nFROM   employees;\n\n-- CASE\nSELECT job_id,\n       CASE job_id\n         WHEN 'AD_PRES'  THEN 'A'\n         WHEN 'ST_MAN'   THEN 'B'\n         WHEN 'IT_PROG'  THEN 'C'\n         WHEN 'SA_REP'   THEN 'D'\n         WHEN 'ST_CLERK' THEN 'E'\n         ELSE '0'\n       END AS grade\nFROM   employees;`,
-  e5a:`-- Funcions de grup bàsiques\nSELECT COUNT(*)              AS total_empleats,\n       ROUND(AVG(salary),2)  AS salari_mig,\n       MAX(salary)           AS salari_max,\n       MIN(salary)           AS salari_min,\n       SUM(salary)           AS suma\nFROM   employees;\n\n-- GROUP BY + HAVING\nSELECT   department_id,\n         COUNT(*)             AS num_emp,\n         ROUND(AVG(salary),2) AS avg_sal\nFROM     employees\nGROUP BY department_id\nHAVING   COUNT(*) > 5\nORDER BY avg_sal DESC;`
+  e4a:`-- TO_CHAR i NVL\nSELECT last_name,\n       TO_CHAR(salary, 'fm$99,999.00')   AS salary_fmt,\n       NVL(TO_CHAR(commission_pct), 'No Commission') AS comm\nFROM   employees;\n\n-- CASE\nSELECT job_id,\n       CASE job_id\n         WHEN 'AD_PRES'  THEN 'A'\n         WHEN 'ST_MAN'   THEN 'B'\n         WHEN 'IT_PROG'  THEN 'C'\n         WHEN 'SA_REP'   THEN 'D'\n         WHEN 'ST_CLERK' THEN 'E'\n         ELSE '0'\n       END AS grade\nFROM   employees;`
 };
 Object.keys(SQLS).forEach(id=>{
   const el=document.getElementById(id);
   if(el) el.innerHTML=cSQL(SQLS[id]);
 });
 
-/* ── Contrasenya professor — per tema independent ── */
-const PROF_PASS = 'merce2526';  // ← canvia cada curs
 
-const SOL_FILES = {
-  't1': 'AEA1_RA3_sol_T1.html',
-  't2': 'AEA1_RA3_sol_T2.html',
-  't3': 'AEA1_RA3_sol_T3.html',
-  't4': 'AEA1_RA3_sol_T4.html'
-};
-
-function isTopicUnlocked(topicId) {
-  return sessionStorage.getItem('prof_unlocked_' + topicId) === '1';
-}
-function applyTopicUnlock(topicId) {
-  const solFile = SOL_FILES[topicId];
-  // Mostrar botons del tema
-  document.querySelectorAll('.sol-link[data-topic="' + topicId + '"]')
-    .forEach(el => el.classList.add('visible'));
-  // Ocultar missatge de bloqueig
-  document.querySelectorAll('.sol-locked-msg[data-topic="' + topicId + '"]')
-    .forEach(el => el.style.display = 'none');
-  // Marcar el bloc com activat
-  const head = document.querySelector('.ex-block-head[data-topic="' + topicId + '"]');
-  if (head) {
-    head.classList.add('unlocked');
-    const hint = head.querySelector('.unlock-hint');
-    if (hint) hint.textContent = '[solucions activades]';
-  }
-}
-function tryUnlock(topicId) {
-  if (isTopicUnlocked(topicId)) return;
-  const pwd = prompt('Codi d\'accés per activar les solucions del tema ' + topicId.toUpperCase() + ':');
-  if (pwd === PROF_PASS) {
-    sessionStorage.setItem('prof_unlocked_' + topicId, '1');
-    applyTopicUnlock(topicId);
-  } else if (pwd !== null) {
-    alert('Codi incorrecte.');
-  }
-}
-document.addEventListener('DOMContentLoaded', function() {
-  // Doble clic a cada títol de bloc
-  document.querySelectorAll('.ex-block-title[data-topic]').forEach(el => {
-    el.addEventListener('dblclick', () => tryUnlock(el.dataset.topic));
-  });
-  // Restaurar estat de sessió per cada tema
-  Object.keys(SOL_FILES).forEach(tid => {
-    if (isTopicUnlocked(tid)) applyTopicUnlock(tid);
-  });
-});
 
 /* ══════════════════════════════════════════════════
    EXERCICIS T1
@@ -703,23 +606,17 @@ const T4=[
 ];
 
 /* ── Construcció dels blocs d'exercicis ── */
-function buildExercises(data, containerId, topicId) {
-  const solFile = SOL_FILES[topicId];
-  const c = document.getElementById(containerId);
-  data.forEach(ex => {
-    const div = document.createElement('div');
-    div.className = 'exercise';
-    const anchorId = topicId + '-ex' + ex.n;
-    div.innerHTML =
-      '<div class="ex-head">' +
-        '<div class="ex-num">' + ex.n + '</div>' +
-        '<div><div class="ex-name">Exercici ' + ex.n + '</div></div>' +
-      '</div>' +
-      '<div class="ex-enunciat">' + ex.txt + '</div>' +
-      '<div class="sol-link" data-topic="' + topicId + '" id="lnk_' + anchorId + '">' +
-        '<a href="' + solFile + '#' + anchorId + '" target="_blank">&#9654; Veure solució</a>' +
-      '</div>' +
-      '<span class="sol-locked-msg" data-topic="' + topicId + '">Solució no disponible encara.</span>';
+function buildExercises(data, containerId, topicId){
+  var c=document.getElementById(containerId);
+  data.forEach(function(ex){
+    var div=document.createElement('div');
+    div.className='exercise';
+    div.innerHTML=
+      '<div class="ex-head">'+
+        '<div class="ex-num">'+ex.n+'</div>'+
+        '<div><div class="ex-name">Exercici '+ex.n+'</div></div>'+
+      '</div>'+
+      '<div class="ex-enunciat">'+ex.txt+'</div>';
     c.appendChild(div);
   });
 }
