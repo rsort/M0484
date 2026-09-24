@@ -145,7 +145,8 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
           <strong>3.3</strong> Composicions internes (JOIN) ·
           <strong>3.4</strong> Composicions externes (OUTER JOIN) ·
           <strong>3.6</strong> Subconsultes ·
-          <strong>3.7</strong> Operadors de conjunt (UNION, INTERSECT, MINUS)
+          <strong>3.7</strong> Operadors de conjunt (UNION, INTERSECT, MINUS) ·
+          <strong>3.8</strong> Optimització de consultes
         </div>
       </div>
     </div>
@@ -162,6 +163,8 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       <a class="toc-item" href="#ex7"><span class="toc-num">&#9733;</span>Exercicis — Subconsultes</a>
       <a class="toc-item" href="#s4"><span class="toc-num">4</span>Operadors de conjunt</a>
       <a class="toc-item" href="#ex8"><span class="toc-num">&#9733;</span>Exercicis — Operadors de conjunt</a>
+      <a class="toc-item" href="#s5"><span class="toc-num">5</span>Bones pràctiques i optimització</a>
+      <a class="toc-item" href="#ex9"><span class="toc-num">&#9733;</span>Exercicis — Optimització</a>
     </div>
   </nav>
 
@@ -326,6 +329,77 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
   </div>
   <div class="ex-block-body" id="ex8-body"></div>
 
+
+  <!-- ══ SECCIÓ 5: OPTIMITZACIÓ ══ -->
+  <section class="section" id="s5">
+    <div class="sec-head"><span class="sec-num">5</span><div>
+      <h2 class="sec-title">Bones pràctiques i optimització</h2>
+      <p class="sec-sub">Criteri 3.8 — Escriure SQL que escala bé</p>
+    </div></div>
+    <p class="lead">Una consulta <strong>correcta</strong> i una consulta <strong>eficient</strong> no sempre és el mateix. Quan les taules creixen a milions de files, certes decisions d'escriptura poden marcar la diferència entre una resposta instantània i una espera de minuts.</p>
+
+    <div class="subhead">El pla d'execució: com llegeix Oracle la consulta</div>
+    <p class="lead">Abans d'executar qualsevol sentència SQL, l'<strong>optimitzador d'Oracle (CBO, Cost-Based Optimizer)</strong> decideix el camí més eficient: quin ordre seguir per unir taules, si usar un índex o llegir tota la taula, etc. Es pot consultar amb <code>EXPLAIN PLAN</code>.</p>
+    <div class="demo"><div class="demo-label">Exemple 10 · Consultar el pla d'execució</div>
+      <code class="sql-out" id="eopt1"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>EXPLAIN PLAN FOR</code> no executa la consulta; només calcula i desa el pla. Després es visualitza amb <code>DBMS_XPLAN.DISPLAY()</code>. Els dos conceptes clau del pla: <strong>Full Table Scan (FTS)</strong> = llegeix tota la taula fila a fila (lent en taules grans); <strong>Index Range Scan</strong> = usa un índex per anar directament a les files que compleixen la condició (molt més ràpid).</div></div>
+    </div>
+
+    <div class="subhead">Índexos: quan ajuden i quan no</div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Situació</th><th>Oracle usa l'índex?</th></tr></thead>
+      <tbody>
+        <tr><td><code>WHERE last_name = 'King'</code></td><td>&#10003; Sí — comparació directa</td></tr>
+        <tr><td><code>WHERE salary BETWEEN 5000 AND 10000</code></td><td>&#10003; Sí — rang sobre columna indexada</td></tr>
+        <tr><td><code>WHERE UPPER(last_name) = 'KING'</code></td><td>&#10007; No — funció sobre columna indexada</td></tr>
+        <tr><td><code>WHERE salary + 1000 &gt; 8000</code></td><td>&#10007; No — operació aritmètica sobre columna</td></tr>
+        <tr><td><code>WHERE TO_CHAR(hire_date,'YYYY') = '2005'</code></td><td>&#10007; No — funció sobre columna indexada</td></tr>
+        <tr><td><code>WHERE hire_date &gt;= TO_DATE('01/01/2005','DD/MM/YYYY')</code></td><td>&#10003; Sí — la funció és sobre el literal, no sobre la columna</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="ibox blue"><div class="ibox-label">Sargability</div><div class="ibox-text">
+      Una condició és <strong>sargable</strong> (<em>Search ARGument ABLE</em>) quan permet usar un índex. La regla principal: <strong>no apliquis funcions a la columna indexada al WHERE</strong>; aplica-les al literal de comparació. Exemples:<br>
+      &#10007; <code>WHERE TRUNC(hire_date) = TRUNC(SYSDATE)</code> → no sargable<br>
+      &#10003; <code>WHERE hire_date &gt;= TRUNC(SYSDATE) AND hire_date &lt; TRUNC(SYSDATE)+1</code> → sargable
+    </div></div>
+
+    <div class="subhead">EXISTS vs IN: quin és més eficient?</div>
+    <div class="demo"><div class="demo-label">Exemple 11 · EXISTS vs IN per a subconsultes correlacionades</div>
+      <code class="sql-out" id="eopt2"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>EXISTS</code> s'atura tan bon punt troba la primera coincidència (<em>short-circuit</em>), mentre que <code>IN</code> carrega tot el conjunt de la subconsulta a memòria i després compara. En taules grans, <code>EXISTS</code> és generalment més eficient quan la subconsulta pot retornar moltes files. <code>NOT EXISTS</code> és preferible a <code>NOT IN</code> perquè <code>NOT IN</code> retorna cap fila si la subconsulta conté algun <code>NULL</code>.</div></div>
+    </div>
+
+    <div class="subhead">Bones pràctiques generals</div>
+    <div class="ibox green"><div class="ibox-label">&#10003; Recomanat</div><div class="ibox-text">
+      Evitar <code>SELECT *</code> en producció — triar només les columnes necessàries.<br>
+      Filtrar amb <code>WHERE</code> el més aviat possible per reduir el nombre de files processades.<br>
+      Usar <code>EXISTS</code> en lloc de <code>IN</code> amb subconsultes grans.<br>
+      Fer que les condicions del <code>WHERE</code> siguin <em>sargables</em>: no aplicar funcions sobre columnes indexades.<br>
+      Usar <code>UNION ALL</code> en lloc de <code>UNION</code> quan se sap que no hi ha duplicats (evita el pas de deduplicació).<br>
+      Limitar el nombre de files amb <code>FETCH FIRST n ROWS ONLY</code> quan no es necessite tot el resultat.
+    </div></div>
+    <div class="ibox red"><div class="ibox-label">&#10007; Errors habituals</div><div class="ibox-text">
+      Usar <code>= NULL</code> en lloc de <code>IS NULL</code> (no retorna mai files).<br>
+      Posar funcions de grup al <code>WHERE</code> en lloc de <code>HAVING</code>.<br>
+      Usar <code>NOT IN (subconsulta)</code> quan la subconsulta pot retornar NULLs (retorna 0 files).<br>
+      Aplicar funcions sobre columnes indexades al <code>WHERE</code> (invalida l'ús de l'índex).<br>
+      Usar <code>UNION</code> quan <code>UNION ALL</code> seria suficient i correcte.
+    </div></div>
+
+    <div class="demo"><div class="demo-label">Exemple 12 · Paginació amb FETCH FIRST (Oracle 12c+)</div>
+      <code class="sql-out" id="eopt3"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>FETCH FIRST n ROWS ONLY</code> és la sintaxi estàndard SQL:2008 per limitar el nombre de files del resultat (equivalent a <code>ROWNUM &lt;= n</code> però més llegible i correcte amb <code>ORDER BY</code>). <code>OFFSET n ROWS</code> permet saltar les primeres n files, útil per a paginació.</div></div>
+    </div>
+  </section>
+
+  <!-- EXERCICIS T9 -->
+  <div class="ex-block-head" id="ex9" data-topic="t9">
+    <h2 class="ex-block-title" data-topic="t9">Exercicis — Bones pràctiques i optimització<span class="unlock-hint"></span></h2>
+    <p class="ex-block-sub">Sargability, índexos, EXISTS vs IN, paginació · criteri 3.8</p>
+  </div>
+  <div class="ex-block-body" id="ex9-body"></div>
+
   <nav class="doc-nav">
     <a class="back" href="AEA1_RA3_consultes_simples.html">&#8592; Consultes simples</a>
     <a href="index.html">&#8594; Índex del mòdul</a>
@@ -454,6 +528,110 @@ const T8=[
    note:'TO_CHAR(null) afegeix una columna NULL amb tipus VARCHAR2 per fer compatibles les dues consultes del UNION.'}
 ];
 
+
+var SQLS_OPT = {
+  eopt1:`-- Desar el pla d'execució (no executa la consulta)
+EXPLAIN PLAN FOR
+  SELECT last_name, salary
+  FROM   employees
+  WHERE  department_id = 80;
+
+-- Visualitzar el pla
+SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY());`,
+  eopt2:`-- IN: carrega tots els department_id a memòria i compara
+SELECT last_name
+FROM   employees
+WHERE  department_id IN (SELECT department_id
+                          FROM   departments
+                          WHERE  location_id = 1700);
+
+-- EXISTS: s'atura a la primera coincidència (short-circuit)
+SELECT last_name
+FROM   employees e
+WHERE  EXISTS (SELECT 1
+               FROM   departments d
+               WHERE  d.department_id = e.department_id
+                 AND  d.location_id = 1700);
+
+-- NOT IN PERILL: si la subconsulta retorna algun NULL → 0 files!
+-- NOT EXISTS és sempre més segur:
+SELECT last_name FROM employees e
+WHERE NOT EXISTS (SELECT 1 FROM job_history jh
+                  WHERE  jh.employee_id = e.employee_id);`,
+  eopt3:`-- Primeres 5 files (Oracle 12c+)
+SELECT last_name, salary
+FROM   employees
+ORDER BY salary DESC
+FETCH FIRST 5 ROWS ONLY;
+
+-- Paginació: files 6 a 10 (pàgina 2)
+SELECT last_name, salary
+FROM   employees
+ORDER BY salary DESC
+OFFSET 5 ROWS FETCH NEXT 5 ROWS ONLY;`
+};
+Object.keys(SQLS_OPT).forEach(function(id){
+  var el = document.getElementById(id);
+  if(el) el.innerHTML = cSQL(SQLS_OPT[id]);
+});
+
+var T9=[
+  {n:1, txt:'Una condició <code>WHERE UPPER(last_name) = \'KING\'</code> sobre una columna indexada. Oracle usarà l\'índex?',
+   sol:`-- NO usarà l'índex perquè hi ha una funció sobre la columna indexada.
+-- La condició NO és sargable.
+
+-- Alternativa sargable:
+SELECT last_name FROM employees
+WHERE  last_name = 'King';   -- Oracle busca exactament 'King'
+
+-- O si es vol insensible a majúscules amb índex:
+-- Cal crear un índex funcional:
+-- CREATE INDEX idx_upper_ln ON employees(UPPER(last_name));
+-- Llavors: WHERE UPPER(last_name) = 'KING' usaria l'índex.`},
+  {n:2, txt:'Reescriu aquesta condició perquè sigui sargable i pugui aprofitar un índex sobre <code>hire_date</code>:<br><code>WHERE TO_CHAR(hire_date, \'YYYY\') = \'2005\'</code>',
+   sol:`-- Original (NO sargable: funció sobre columna indexada):
+-- WHERE TO_CHAR(hire_date, 'YYYY') = '2005'
+
+-- Versió sargable (la funció és sobre el LITERAL, no sobre la columna):
+WHERE hire_date >= TO_DATE('01/01/2005', 'DD/MM/YYYY')
+  AND hire_date <  TO_DATE('01/01/2006', 'DD/MM/YYYY');`,
+   note:'En la versió sargable, hire_date apareix nua al WHERE, de manera que Oracle pot usar directament l\'índex sobre hire_date per localitzar les files de 2005.'},
+  {n:3, txt:'Per què <code>NOT IN</code> pot ser perillós quan la subconsulta pot retornar NULLs? Escriu l\'alternativa recomanada per trobar empleats que no han tingut càrrecs anteriors.',
+   sol:`-- PROBLEMA: si job_history té files amb employee_id NULL,
+-- NOT IN retorna 0 files (cap resultat) perquè:
+-- qualsevol comparació amb NULL dona UNKNOWN (ni true ni false).
+
+-- VERSIÓ PERILLOSA:
+SELECT last_name FROM employees
+WHERE  employee_id NOT IN (SELECT employee_id FROM job_history);
+-- Si hi ha un NULL a job_history.employee_id → retorna 0 files!
+
+-- ALTERNATIVA SEGURA amb NOT EXISTS:
+SELECT last_name FROM employees e
+WHERE NOT EXISTS (SELECT 1 FROM job_history jh
+                  WHERE  jh.employee_id = e.employee_id);`,
+   note:'NOT EXISTS no té el problema dels NULLs: busca si existeix alguna fila correlacionada, i si no n\'existeix cap, inclou l\'empleat al resultat.'},
+  {n:4, txt:'Mostra els 3 empleats amb salari més alt. Usa la sintaxi moderna de paginació (Oracle 12c+).',
+   sol:`SELECT employee_id, last_name, salary
+FROM   employees
+ORDER BY salary DESC
+FETCH FIRST 3 ROWS ONLY;`},
+  {n:5, txt:'Explica per qué cal usar <code>UNION ALL</code> en lloc de <code>UNION</code> en la consulta: càrrecs del mes actual de EMPLOYEES units als mateixos càrrecs de l\'any passat de JOB_HISTORY (pot haver-hi duplicats però no ens importa).',
+   sol:`-- UNION elimina duplicats (ordena i compara totes les files): més lent.
+-- UNION ALL simplement concatena els dos resultats: més ràpid.
+-- Si els duplicats no importa conservar-los o eliminar-los,
+-- i sabem que n'hi haurà, UNION ALL és preferible per rendiment.
+
+SELECT job_id FROM employees
+UNION ALL
+SELECT job_id FROM job_history;
+
+-- Ús correcte de UNION (amb deduplicació) quan sí que importa:
+SELECT job_id FROM employees
+UNION
+SELECT job_id FROM job_history;`}
+];
+
 /* ── Build exercicis ── */
 function buildEx(data, containerId, topicId){
   var c=document.getElementById(containerId);
@@ -474,6 +652,7 @@ buildEx(T5,'ex5-body','t5');
 buildEx(T6,'ex6-body','t6');
 buildEx(T7,'ex7-body','t7');
 buildEx(T8,'ex8-body','t8');
+buildEx(T9,'ex9-body','t9');
 </script>
 </body>
 </html>
