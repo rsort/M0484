@@ -365,11 +365,27 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 
     <div class="demo"><div class="demo-label">Exemple 8 · Funcions de caràcter</div>
       <code class="sql-out" id="e3a"></code>
-      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>INITCAP</code> posa majúscula a la primera lletra de cada paraula. <code>LENGTH</code> retorna el nombre de caràcters. <code>SUBSTR(cad, inici, longitud)</code> extreu una subcadena: la posició comença a 1. Usar <code>UPPER</code> al <code>WHERE</code> garanteix que la comparació funcioni independentment de com estan emmagatzemades les dades.</div></div>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        <strong>UPPER / LOWER / INITCAP</strong>: conversió de majúscules/minúscules. Usar <code>UPPER</code> al <code>WHERE</code> fa la comparació insensible a majúscules.<br>
+        <strong>LENGTH(s)</strong>: nombre de caràcters de la cadena.<br>
+        <strong>SUBSTR(s, inici, longitud)</strong>: extreu una subcadena; la posició comença a 1.<br>
+        <strong>INSTR(s, sub)</strong>: posició de la primera ocurrència de <em>sub</em> dins <em>s</em>; retorna 0 si no es troba.<br>
+        <strong>LPAD(s, n, c) / RPAD(s, n, c)</strong>: omple la cadena per l'esquerra o la dreta fins a longitud <em>n</em> amb el caràcter <em>c</em>.
+      </div></div>
     </div>
     <div class="demo"><div class="demo-label">Exemple 9 · Funcions numèriques i de data</div>
       <code class="sql-out" id="e3b"></code>
-      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>ROUND(n, d)</code> arrodoneix a <em>d</em> decimals; <code>TRUNC(n, d)</code> trunca sense arrodonir. <code>MOD(n, m)</code> retorna el residu de la divisió. <code>SYSDATE</code> és la data i hora actuals del servidor. La resta de dues dates a Oracle retorna el nombre de dies; dividint per 7 s'obtenen setmanes. <code>MONTHS_BETWEEN</code> calcula mesos entre dues dates.</div></div>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        <strong>ROUND(n, d)</strong>: arrodoneix <em>n</em> a <em>d</em> decimals (si <em>d</em> és negatiu, arrodoneix a la dreta del punt decimal).<br>
+        <strong>TRUNC(n, d)</strong>: trunca <em>n</em> a <em>d</em> decimals sense arrodonir.<br>
+        <strong>MOD(n, m)</strong>: residu de la divisió entera de <em>n</em> entre <em>m</em>.<br>
+        <strong>SYSDATE</strong>: data i hora actuals del servidor Oracle. La resta de dues dates retorna dies.<br>
+        <strong>MONTHS_BETWEEN(d1, d2)</strong>: mesos entre dues dates (pot ser decimal).<br>
+        <strong>ADD_MONTHS(d, n)</strong>: afegeix <em>n</em> mesos a la data <em>d</em>.<br>
+        <strong>NEXT_DAY(d, dia)</strong>: primer dia de la setmana indicat, posterior a <em>d</em>.<br>
+        <strong>LAST_DAY(d)</strong>: últim dia del mes de <em>d</em>.<br>
+        <strong>TRUNC(d, 'YEAR'/'MONTH')</strong>: trunca la data al primer dia de l'any o del mes.
+      </div></div>
     </div>
   </section>
 
@@ -417,7 +433,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       </tbody>
     </table></div>
 
-    <div class="demo"><div class="demo-label">Exemple 9 · TO_CHAR, NVL i expressió CASE</div>
+    <div class="demo"><div class="demo-label">Exemple 10 · TO_CHAR, NVL i expressió CASE</div>
       <code class="sql-out" id="e4a"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>CASE WHEN ... THEN ... ELSE ... END</code> és l'expressió condicional estàndard SQL. <code>DECODE</code> és la versió Oracle equivalent però menys portable. Ambdues retornen un valor diferent per a cada condició.</div></div>
     </div>
@@ -465,6 +481,31 @@ const SQLS={
   e2b:`-- BETWEEN (inclusiu)\nSELECT last_name, salary\nFROM   employees\nWHERE  salary BETWEEN 5000 AND 12000;\n\n-- IN\nSELECT last_name, department_id\nFROM   employees\nWHERE  department_id IN (20, 50);\n\n-- LIKE: % = 0 o més caràcters, _ = exactament 1\nSELECT last_name\nFROM   employees\nWHERE  last_name LIKE '__a%';   -- tercera lletra 'a'\n\n-- IS NULL\nSELECT last_name, job_id\nFROM   employees\nWHERE  manager_id IS NULL;`,
   e2c:`SELECT last_name, salary, commission_pct\nFROM   employees\nWHERE  commission_pct IS NOT NULL\nORDER BY 2 DESC, 3 DESC;   -- posició numèrica al SELECT`,
   e3a:`SELECT INITCAP(last_name)              "Name",\n       LENGTH(last_name)               "Length",\n       ROUND(MONTHS_BETWEEN(SYSDATE,\n             hire_date))                "Months Worked"\nFROM   employees\nWHERE  UPPER(last_name) LIKE 'J%'\n    OR UPPER(last_name) LIKE 'M%'\n    OR UPPER(last_name) LIKE 'A%'\nORDER BY last_name;`,
+  e3b:`-- Funcions numèriques: ROUND, TRUNC, MOD
+SELECT ROUND(45.926, 2)   FROM dual;   -- 45.93  (arrodoneix)
+SELECT TRUNC(45.926, 2)   FROM dual;   -- 45.92  (trunca sense arrodonir)
+SELECT MOD(1600, 300)     FROM dual;   -- 100    (residu de la divisió)
+
+-- Aplicades a EMPLOYEES
+SELECT last_name,
+       salary,
+       ROUND(salary / 12, 2)    AS salari_mensual,
+       TRUNC(salary / 12, 0)    AS salari_mensual_enter,
+       MOD(salary, 1000)        AS resta_del_miler
+FROM   employees
+WHERE  department_id = 90;
+
+-- Funcions de data
+SELECT SYSDATE                                     AS avui,
+       TRUNC(MONTHS_BETWEEN(SYSDATE, hire_date))   AS mesos_empresa,
+       ROUND(MONTHS_BETWEEN(SYSDATE, hire_date)/12, 1) AS anys_empresa,
+       TRUNC((SYSDATE - hire_date) / 7)            AS setmanes_empresa,
+       ADD_MONTHS(hire_date, 6)                    AS revisio_6_mesos,
+       NEXT_DAY(hire_date, 'MONDAY')               AS proper_dilluns,
+       LAST_DAY(SYSDATE)                           AS fi_de_mes,
+       TRUNC(hire_date, 'YEAR')                    AS inici_any_contracte
+FROM   employees
+WHERE  department_id = 90;`,
   e4a:`-- TO_CHAR i NVL\nSELECT last_name,\n       TO_CHAR(salary, 'fm$99,999.00')   AS salary_fmt,\n       NVL(TO_CHAR(commission_pct), 'No Commission') AS comm\nFROM   employees;\n\n-- CASE\nSELECT job_id,\n       CASE job_id\n         WHEN 'AD_PRES'  THEN 'A'\n         WHEN 'ST_MAN'   THEN 'B'\n         WHEN 'IT_PROG'  THEN 'C'\n         WHEN 'SA_REP'   THEN 'D'\n         WHEN 'ST_CLERK' THEN 'E'\n         ELSE '0'\n       END AS grade\nFROM   employees;`
 };
 Object.keys(SQLS).forEach(id=>{
