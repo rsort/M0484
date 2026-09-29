@@ -304,6 +304,24 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       <code class="sql-out" id="e2c"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>ORDER BY</code> accepta el nom de la columna, l'àlies o la seva posició numèrica al <code>SELECT</code>. Per defecte ordena ascendent (<code>ASC</code>). Es poden ordenar per diverses columnes separades per comes.</div></div>
     </div>
+    <div class="subhead">Operadors lògics i prioritat</div>
+    <div class="ibox yellow"><div class="ibox-label">Ordre de prioritat dels operadors lògics</div><div class="ibox-text">
+      Sense parèntesis, Oracle avalua en aquest ordre: <strong>1. NOT</strong> → <strong>2. AND</strong> → <strong>3. OR</strong><br>
+      Exemple: <code>WHERE a OR b AND c</code> s'interpreta com <code>WHERE a OR (b AND c)</code>, no com <code>WHERE (a OR b) AND c</code>.<br>
+      <strong>Sempre usa parèntesis</strong> quan combines AND i OR per evitar ambigüitats i errors difícils de detectar.
+    </div></div>
+    <div class="demo"><div class="demo-label">Exemple 8 · AND, OR i NOT — prioritat i parèntesis</div>
+      <code class="sql-out" id="e2d"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        Sense parèntesis a l'exemple 1, <code>AND</code> s'avalua primer: l'Oracle busca empleats que siguin del dept 80 <em>i</em> guanyin més de 10.000, <em>o</em> que treballin com a IT_PROG. Afegint parèntesis canvia radicalment el significat: ara busca empleats de qualsevol departament (80 o IT_PROG) però amb salari superior a 10.000. <code>NOT</code> s'avalua sempre abans que AND i OR.
+      </div></div>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 9 · Condicions complexes amb parèntesis</div>
+      <code class="sql-out" id="e2e"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        Els parèntesis permeten construir condicions tan complexes com calgui. Una bona pràctica és <strong>posar sempre parèntesis</strong> quan hi ha més d'un operador lògic, fins i tot quan no siguin estrictament necessaris, per fer el codi més llegible i evitar errors.
+      </div></div>
+    </div>
   </section>
 
   <!-- EXERCICIS T2 -->
@@ -363,7 +381,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       </tbody>
     </table></div>
 
-    <div class="demo"><div class="demo-label">Exemple 8 · Funcions de caràcter</div>
+    <div class="demo"><div class="demo-label">Exemple 10 · Funcions de caràcter</div>
       <code class="sql-out" id="e3a"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
         <strong>UPPER / LOWER / INITCAP</strong>: conversió de majúscules/minúscules. Usar <code>UPPER</code> al <code>WHERE</code> fa la comparació insensible a majúscules.<br>
@@ -373,7 +391,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
         <strong>LPAD(s, n, c) / RPAD(s, n, c)</strong>: omple la cadena per l'esquerra o la dreta fins a longitud <em>n</em> amb el caràcter <em>c</em>.
       </div></div>
     </div>
-    <div class="demo"><div class="demo-label">Exemple 9 · Funcions numèriques i de data</div>
+    <div class="demo"><div class="demo-label">Exemple 11 · Funcions numèriques i de data</div>
       <code class="sql-out" id="e3b"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
         <strong>ROUND(n, d)</strong>: arrodoneix <em>n</em> a <em>d</em> decimals (si <em>d</em> és negatiu, arrodoneix a la dreta del punt decimal).<br>
@@ -433,19 +451,19 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       </tbody>
     </table></div>
 
-    <div class="demo"><div class="demo-label">Exemple 10 · TO_CHAR amb dates</div>
+    <div class="demo"><div class="demo-label">Exemple 12 · TO_CHAR amb dates</div>
       <code class="sql-out" id="e4a"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
         <code>TO_CHAR(data, 'format')</code> converteix una data a text amb el format indicat. Elements de format habituals: <code>DD</code> dia, <code>MM</code> mes numèric, <code>MON</code> mes abreujat, <code>MONTH</code> mes complet, <code>YYYY</code> any, <code>DAY</code> nom del dia, <code>HH24:MI:SS</code> hora. El prefix <code>fm</code> elimina els espais en blanc de relleno. Els literals de text dins el format van entre cometes dobles.
       </div></div>
     </div>
-    <div class="demo"><div class="demo-label">Exemple 11 · TO_CHAR amb números i TO_DATE</div>
+    <div class="demo"><div class="demo-label">Exemple 13 · TO_CHAR amb números i TO_DATE</div>
       <code class="sql-out" id="e4b"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
         <code>TO_CHAR(número, 'format')</code> formata un número com a text: <code>9</code> representa un dígit (no mostra zeros a l'esquerra), <code>0</code> mostra zeros, <code>,</code> separador de milers, <code>.</code> punt decimal, <code>$</code> símbol moneda, <code>L</code> símbol moneda local. <code>TO_DATE(text, 'format')</code> fa el procés invers: converteix text a data. Útil al <code>WHERE</code> per comparar dates.
       </div></div>
     </div>
-    <div class="demo"><div class="demo-label">Exemple 12 · NVL, NVL2, NULLIF i COALESCE</div>
+    <div class="demo"><div class="demo-label">Exemple 14 · NVL, NVL2, NULLIF i COALESCE</div>
       <code class="sql-out" id="e4c"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
         <code>NVL(expr, subst)</code>: si <em>expr</em> és NULL retorna <em>subst</em>, si no retorna <em>expr</em>.<br>
@@ -454,7 +472,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
         <code>COALESCE(v1, v2, ...)</code>: retorna el primer valor no NULL de la llista. Equivalent a múltiples NVL encadenats.
       </div></div>
     </div>
-    <div class="demo"><div class="demo-label">Exemple 13 · CASE i DECODE</div>
+    <div class="demo"><div class="demo-label">Exemple 15 · CASE i DECODE</div>
       <code class="sql-out" id="e4d"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
         <code>CASE</code> té dues formes: <strong>simple</strong> (compara una expressió amb valors fixos, com un <em>switch</em>) i <strong>cercada</strong> (cada <code>WHEN</code> és una condició independent, com un <em>if-else</em>). La forma cercada és més potent: permet rangs, operadors i condicions complexes. <code>DECODE</code> és l'equivalent Oracle de la <code>CASE</code> simple però menys portable.
@@ -502,6 +520,51 @@ const SQLS={
   e1d:`SELECT DISTINCT job_id\nFROM   employees;\n\n-- Expressió aritmètica\nSELECT employee_id, last_name, salary, salary * 12 AS annual_salary\nFROM   employees;`,
   e2a:`SELECT last_name, salary\nFROM   employees\nWHERE  salary > 12000;\n\n-- Igualtat sobre text (cometes simples)\nSELECT last_name, department_id\nFROM   employees\nWHERE  employee_id = 176;`,
   e2b:`-- BETWEEN (inclusiu)\nSELECT last_name, salary\nFROM   employees\nWHERE  salary BETWEEN 5000 AND 12000;\n\n-- IN\nSELECT last_name, department_id\nFROM   employees\nWHERE  department_id IN (20, 50);\n\n-- LIKE: % = 0 o més caràcters, _ = exactament 1\nSELECT last_name\nFROM   employees\nWHERE  last_name LIKE '__a%';   -- tercera lletra 'a'\n\n-- IS NULL\nSELECT last_name, job_id\nFROM   employees\nWHERE  manager_id IS NULL;`,
+  e2d:`-- Prioritat: AND s'avalua ABANS que OR
+-- Sense parèntesis: (dept=80 AND salary>10000) OR job='IT_PROG'
+SELECT last_name, department_id, job_id, salary
+FROM   employees
+WHERE  department_id = 80 AND salary > 10000
+    OR job_id = 'IT_PROG';
+
+-- AMB parèntesis: (dept=80 OR job='IT_PROG') AND salary>10000
+-- Canvia completament el resultat!
+SELECT last_name, department_id, job_id, salary
+FROM   employees
+WHERE  (department_id = 80 OR job_id = 'IT_PROG')
+  AND  salary > 10000;
+
+-- NOT: inverteix una condició
+SELECT last_name, department_id
+FROM   employees
+WHERE  NOT department_id IN (10, 20, 30)
+ORDER BY department_id;
+
+-- NOT BETWEEN, NOT LIKE, NOT IN
+SELECT last_name, salary, hire_date
+FROM   employees
+WHERE  salary NOT BETWEEN 5000 AND 10000
+  AND  last_name NOT LIKE 'K%'
+ORDER BY salary;`,
+  e2e:`-- Condició complexa: empleats del dept 50 o 80
+-- que guanyin entre 5000 i 12000
+-- i que tinguin comissió o el cognom comenci per 'S'
+SELECT last_name, department_id, salary, commission_pct
+FROM   employees
+WHERE  department_id IN (50, 80)
+  AND  salary BETWEEN 5000 AND 12000
+  AND  (commission_pct IS NOT NULL OR last_name LIKE 'S%')
+ORDER BY department_id, salary DESC;
+
+-- Exemple amb tres nivells de parèntesis
+-- Empleats que: (són del dept 90 O (dept 80 I amb comissió))
+--               I (guanyen >8000 O el cognom conté 'a')
+SELECT last_name, department_id, salary, commission_pct
+FROM   employees
+WHERE  (department_id = 90
+        OR (department_id = 80 AND commission_pct IS NOT NULL))
+  AND  (salary > 8000 OR LOWER(last_name) LIKE '%a%')
+ORDER BY last_name;`,
   e2c:`SELECT last_name, salary, commission_pct\nFROM   employees\nWHERE  commission_pct IS NOT NULL\nORDER BY 2 DESC, 3 DESC;   -- posició numèrica al SELECT`,
   e3a:`SELECT INITCAP(last_name)              "Name",\n       LENGTH(last_name)               "Length",\n       ROUND(MONTHS_BETWEEN(SYSDATE,\n             hire_date))                "Months Worked"\nFROM   employees\nWHERE  UPPER(last_name) LIKE 'J%'\n    OR UPPER(last_name) LIKE 'M%'\n    OR UPPER(last_name) LIKE 'A%'\nORDER BY last_name;`,
   e3b:`-- Funcions numèriques: ROUND, TRUNC, MOD
