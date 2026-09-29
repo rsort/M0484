@@ -324,6 +324,33 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
     </div>
   </section>
 
+  <!-- SUBSECCIÓ: Variables de substitució -->
+    <div class="subhead">Variables de substitució (&amp;)</div>
+    <p class="lead">A SQL*Plus i SQL Developer es poden crear consultes interactives amb <strong>variables de substitució</strong>. Quan Oracle troba un <code>&amp;</code> davant d'un nom, atura l'execució, mostra una finestra emergent demanant el valor, i substitueix la variable pel valor introduït abans d'executar la consulta.</p>
+
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Sintaxi</th><th>Comportament</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">&amp;variable</td><td>Demana el valor cada vegada que s'executa la consulta</td><td><code>WHERE department_id = &amp;dept_id</code></td></tr>
+        <tr><td class="mono">&amp;&amp;variable</td><td>Demana el valor la primera vegada i el reutilitza les vegades següents</td><td><code>WHERE last_name = '&amp;&amp;nom'</code></td></tr>
+        <tr><td class="mono">DEFINE var = val</td><td>Defineix la variable amb un valor fix (sense diàleg)</td><td><code>DEFINE dept = 80</code></td></tr>
+        <tr><td class="mono">UNDEFINE var</td><td>Esborra la variable perquè torni a demanar-la</td><td><code>UNDEFINE dept</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="ibox yellow"><div class="ibox-label">Variables de text vs. variables numèriques</div><div class="ibox-text">
+      Per a valors <strong>numèrics</strong> la variable va sense cometes: <code>WHERE salary &gt; &amp;salari</code><br>
+      Per a valors de <strong>text o data</strong> la variable ha d'anar entre cometes simples: <code>WHERE last_name = '&amp;cognom'</code><br>
+      Si no es posen les cometes en un valor de text, Oracle donarà error de tipus.
+    </div></div>
+
+    <div class="demo"><div class="demo-label">Exemple 10 · Variables de substitució amb &amp;</div>
+      <code class="sql-out" id="e2f"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
+        Quan s'executa la consulta, SQL*Plus o SQL Developer mostren un diàleg <em>"Enter value for dept_id:"</em>. L'usuari introdueix el valor (ex: 80) i Oracle substitueix <code>&amp;dept_id</code> per <code>80</code> i executa la consulta. Amb <code>&amp;&amp;</code> (doble ampersand) el valor es desa i es reutilitza sense tornar a preguntar dins la mateixa sessió. <code>UNDEFINE</code> esborra el valor desat perquè torni a preguntar-lo.
+      </div></div>
+    </div>
+
   <!-- EXERCICIS T2 -->
   <div class="ex-block-head" id="ex2" data-topic="t2">
     <h2 class="ex-block-title" data-topic="t2">Exercicis — Filtratge i ordenació</h2>
@@ -381,7 +408,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       </tbody>
     </table></div>
 
-    <div class="demo"><div class="demo-label">Exemple 10 · Funcions de caràcter</div>
+    <div class="demo"><div class="demo-label">Exemple 11 · Funcions de caràcter</div>
       <code class="sql-out" id="e3a"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
         <strong>UPPER / LOWER / INITCAP</strong>: conversió de majúscules/minúscules. Usar <code>UPPER</code> al <code>WHERE</code> fa la comparació insensible a majúscules.<br>
@@ -391,7 +418,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
         <strong>LPAD(s, n, c) / RPAD(s, n, c)</strong>: omple la cadena per l'esquerra o la dreta fins a longitud <em>n</em> amb el caràcter <em>c</em>.
       </div></div>
     </div>
-    <div class="demo"><div class="demo-label">Exemple 11 · Funcions numèriques i de data</div>
+    <div class="demo"><div class="demo-label">Exemple 12 · Funcions numèriques i de data</div>
       <code class="sql-out" id="e3b"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
         <strong>ROUND(n, d)</strong>: arrodoneix <em>n</em> a <em>d</em> decimals (si <em>d</em> és negatiu, arrodoneix a la dreta del punt decimal).<br>
@@ -451,19 +478,19 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       </tbody>
     </table></div>
 
-    <div class="demo"><div class="demo-label">Exemple 12 · TO_CHAR amb dates</div>
+    <div class="demo"><div class="demo-label">Exemple 13 · TO_CHAR amb dates</div>
       <code class="sql-out" id="e4a"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
         <code>TO_CHAR(data, 'format')</code> converteix una data a text amb el format indicat. Elements de format habituals: <code>DD</code> dia, <code>MM</code> mes numèric, <code>MON</code> mes abreujat, <code>MONTH</code> mes complet, <code>YYYY</code> any, <code>DAY</code> nom del dia, <code>HH24:MI:SS</code> hora. El prefix <code>fm</code> elimina els espais en blanc de relleno. Els literals de text dins el format van entre cometes dobles.
       </div></div>
     </div>
-    <div class="demo"><div class="demo-label">Exemple 13 · TO_CHAR amb números i TO_DATE</div>
+    <div class="demo"><div class="demo-label">Exemple 14 · TO_CHAR amb números i TO_DATE</div>
       <code class="sql-out" id="e4b"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
         <code>TO_CHAR(número, 'format')</code> formata un número com a text: <code>9</code> representa un dígit (no mostra zeros a l'esquerra), <code>0</code> mostra zeros, <code>,</code> separador de milers, <code>.</code> punt decimal, <code>$</code> símbol moneda, <code>L</code> símbol moneda local. <code>TO_DATE(text, 'format')</code> fa el procés invers: converteix text a data. Útil al <code>WHERE</code> per comparar dates.
       </div></div>
     </div>
-    <div class="demo"><div class="demo-label">Exemple 14 · NVL, NVL2, NULLIF i COALESCE</div>
+    <div class="demo"><div class="demo-label">Exemple 15 · NVL, NVL2, NULLIF i COALESCE</div>
       <code class="sql-out" id="e4c"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
         <code>NVL(expr, subst)</code>: si <em>expr</em> és NULL retorna <em>subst</em>, si no retorna <em>expr</em>.<br>
@@ -472,7 +499,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
         <code>COALESCE(v1, v2, ...)</code>: retorna el primer valor no NULL de la llista. Equivalent a múltiples NVL encadenats.
       </div></div>
     </div>
-    <div class="demo"><div class="demo-label">Exemple 15 · CASE i DECODE</div>
+    <div class="demo"><div class="demo-label">Exemple 16 · CASE i DECODE</div>
       <code class="sql-out" id="e4d"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">
         <code>CASE</code> té dues formes: <strong>simple</strong> (compara una expressió amb valors fixos, com un <em>switch</em>) i <strong>cercada</strong> (cada <code>WHEN</code> és una condició independent, com un <em>if-else</em>). La forma cercada és més potent: permet rangs, operadors i condicions complexes. <code>DECODE</code> és l'equivalent Oracle de la <code>CASE</code> simple però menys portable.
@@ -520,6 +547,30 @@ const SQLS={
   e1d:`SELECT DISTINCT job_id\nFROM   employees;\n\n-- Expressió aritmètica\nSELECT employee_id, last_name, salary, salary * 12 AS annual_salary\nFROM   employees;`,
   e2a:`SELECT last_name, salary\nFROM   employees\nWHERE  salary > 12000;\n\n-- Igualtat sobre text (cometes simples)\nSELECT last_name, department_id\nFROM   employees\nWHERE  employee_id = 176;`,
   e2b:`-- BETWEEN (inclusiu)\nSELECT last_name, salary\nFROM   employees\nWHERE  salary BETWEEN 5000 AND 12000;\n\n-- IN\nSELECT last_name, department_id\nFROM   employees\nWHERE  department_id IN (20, 50);\n\n-- LIKE: % = 0 o més caràcters, _ = exactament 1\nSELECT last_name\nFROM   employees\nWHERE  last_name LIKE '__a%';   -- tercera lletra 'a'\n\n-- IS NULL\nSELECT last_name, job_id\nFROM   employees\nWHERE  manager_id IS NULL;`,
+  e2f:`-- Variable numèrica: sense cometes
+SELECT last_name, department_id, salary
+FROM   employees
+WHERE  department_id = &dept_id;
+
+-- Variable de text: amb cometes simples al voltant
+SELECT last_name, job_id, salary
+FROM   employees
+WHERE  last_name = '&cognom';
+
+-- Diverses variables en una mateixa consulta
+SELECT employee_id, last_name, salary, department_id
+FROM   employees
+WHERE  manager_id = &num_cap
+ORDER BY &columna_ordre;
+
+-- Doble ampersand: demana el valor una sola vegada i el reutilitza
+UNDEFINE nom_emp
+SELECT last_name, hire_date
+FROM   employees
+WHERE  last_name = '&&nom_emp'
+  AND  department_id = (SELECT department_id
+                        FROM   employees
+                        WHERE  last_name = '&&nom_emp');`,
   e2d:`-- Prioritat: AND s'avalua ABANS que OR
 -- Sense parèntesis: (dept=80 AND salary>10000) OR job='IT_PROG'
 SELECT last_name, department_id, job_id, salary
