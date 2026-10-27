@@ -234,7 +234,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       <code class="sql-out" id="e2a"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>NATURAL JOIN</code> uneix automàticament per totes les columnes de nom igual (còmode però perillós si hi ha columnes homònimes no relacionades). <code>JOIN ... USING(col)</code> especifica quina columna comuna usar; la columna <code>USING</code> no s'ha de qualificar amb àlies de taula. <code>JOIN ... ON</code> és la forma més explícita i flexible: permet qualsevol condició d'unió i és la recomanada en producció.</div></div>
     </div>
-    <div class="demo"><div class="demo-label">Exemple 3 · JOIN de 3 taules, self-join i LEFT OUTER JOIN</div>
+    <div class="demo"><div class="demo-label">Exemple 5 · JOIN de 3 taules, self-join i LEFT OUTER JOIN</div>
       <code class="sql-out" id="e2b"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">El <strong>self-join</strong> uneix la taula amb ella mateixa amb àlies diferents. Imprescindible per a jerarquies (empleat–cap). <code>LEFT OUTER JOIN</code> inclou el president (sense cap): la seva fila tindria NULL a la columna del gestor.</div></div>
     </div>
@@ -276,11 +276,11 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       <code>= ANY</code> és equivalent a <code>IN</code>. <code>!= ALL</code> és equivalent a <code>NOT IN</code>.
     </div></div>
 
-    <div class="demo"><div class="demo-label">Exemple 7 · Subconsulta d'una sola fila</div>
+    <div class="demo"><div class="demo-label">Exemple 6 · Subconsulta d'una sola fila</div>
       <code class="sql-out" id="e3a"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">La subconsulta s'executa primer i retorna un sol valor que usa la consulta externa. Si la subconsulta retornés més d'una fila amb l'operador <code>=</code>, Oracle donaria error. En aquest cas cal usar <code>IN</code> o <code>ANY</code>.</div></div>
     </div>
-    <div class="demo"><div class="demo-label">Exemple 8 · Subconsultes de múltiples files: IN i ANY/ALL</div>
+    <div class="demo"><div class="demo-label">Exemple 7 · Subconsultes de múltiples files: IN i ANY/ALL</div>
       <code class="sql-out" id="e3b"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>IN</code> comprova si el valor pertany al conjunt retornat per la subconsulta. <code>&gt; ANY</code> significa "major que almenys un valor" (equivalent al mínim del conjunt). <code>&gt; ALL</code> significa "major que tots els valors" (equivalent al màxim). <code>= ANY</code> és equivalent a <code>IN</code>.</div></div>
     </div>
@@ -316,7 +316,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       Exemple: <code>SELECT last_name, department_id, TO_CHAR(null) dept_name FROM employees</code>
     </div></div>
 
-    <div class="demo"><div class="demo-label">Exemple 9 · UNION, UNION ALL, MINUS i INTERSECT</div>
+    <div class="demo"><div class="demo-label">Exemple 8 · UNION, UNION ALL, MINUS i INTERSECT</div>
       <code class="sql-out" id="e4a"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Les dues consultes han de tenir el mateix nombre de columnes i tipus compatibles. <code>UNION</code> elimina duplicats (més lent); <code>UNION ALL</code> els conserva (més ràpid). <code>MINUS</code> retorna les files de la primera consulta que no apareixen a la segona. <code>INTERSECT</code> retorna les files comunes. L'<code>ORDER BY</code> s'escriu al final de l'última consulta i fa referència al nom o posició de la primera.</div></div>
     </div>
@@ -340,7 +340,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 
     <div class="subhead">El pla d'execució: com llegeix Oracle la consulta</div>
     <p class="lead">Abans d'executar qualsevol sentència SQL, l'<strong>optimitzador d'Oracle (CBO, Cost-Based Optimizer)</strong> decideix el camí més eficient: quin ordre seguir per unir taules, si usar un índex o llegir tota la taula, etc. Es pot consultar amb <code>EXPLAIN PLAN</code>.</p>
-    <div class="demo"><div class="demo-label">Exemple 10 · Consultar el pla d'execució</div>
+    <div class="demo"><div class="demo-label">Exemple 9 · Consultar el pla d'execució</div>
       <code class="sql-out" id="eopt1"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>EXPLAIN PLAN FOR</code> no executa la consulta; només calcula i desa el pla. Després es visualitza amb <code>DBMS_XPLAN.DISPLAY()</code>. Els dos conceptes clau del pla: <strong>Full Table Scan (FTS)</strong> = llegeix tota la taula fila a fila (lent en taules grans); <strong>Index Range Scan</strong> = usa un índex per anar directament a les files que compleixen la condició (molt més ràpid).</div></div>
     </div>
@@ -365,7 +365,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
     </div></div>
 
     <div class="subhead">EXISTS vs IN: quin és més eficient?</div>
-    <div class="demo"><div class="demo-label">Exemple 11 · EXISTS vs IN per a subconsultes correlacionades</div>
+    <div class="demo"><div class="demo-label">Exemple 10 · EXISTS vs IN per a subconsultes correlacionades</div>
       <code class="sql-out" id="eopt2"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>EXISTS</code> s'atura tan bon punt troba la primera coincidència (<em>short-circuit</em>), mentre que <code>IN</code> carrega tot el conjunt de la subconsulta a memòria i després compara. En taules grans, <code>EXISTS</code> és generalment més eficient quan la subconsulta pot retornar moltes files. <code>NOT EXISTS</code> és preferible a <code>NOT IN</code> perquè <code>NOT IN</code> retorna cap fila si la subconsulta conté algun <code>NULL</code>.</div></div>
     </div>
@@ -387,7 +387,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       Usar <code>UNION</code> quan <code>UNION ALL</code> seria suficient i correcte.
     </div></div>
 
-    <div class="demo"><div class="demo-label">Exemple 12 · Paginació amb FETCH FIRST (Oracle 12c+)</div>
+    <div class="demo"><div class="demo-label">Exemple 11 · Paginació amb FETCH FIRST (Oracle 12c+)</div>
       <code class="sql-out" id="eopt3"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>FETCH FIRST n ROWS ONLY</code> és la sintaxi estàndard SQL:2008 per limitar el nombre de files del resultat (equivalent a <code>ROWNUM &lt;= n</code> però més llegible i correcte amb <code>ORDER BY</code>). <code>OFFSET n ROWS</code> permet saltar les primeres n files, útil per a paginació.</div></div>
     </div>
