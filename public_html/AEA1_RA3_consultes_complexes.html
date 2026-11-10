@@ -284,12 +284,25 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       <code class="sql-out" id="e3b"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>IN</code> comprova si el valor pertany al conjunt retornat per la subconsulta. <code>&gt; ANY</code> significa "major que almenys un valor" (equivalent al mínim del conjunt). <code>&gt; ALL</code> significa "major que tots els valors" (equivalent al màxim). <code>= ANY</code> és equivalent a <code>IN</code>.</div></div>
     </div>
+
+    <div class="subhead">L'operador EXISTS</div>
+    <p class="lead"><code>EXISTS (subconsulta)</code> és cert si la subconsulta retorna <strong>com a mínim una fila</strong>, i fals si no en retorna cap. No compara cap valor: només comprova si hi ha files. Per això la subconsulta s'escriu habitualment amb <code>SELECT 1</code> (o <code>SELECT *</code>): les columnes que retorna no importen. <code>NOT EXISTS</code> és cert quan la subconsulta no retorna cap fila.</p>
+
+    <div class="ibox blue"><div class="ibox-label">Subconsulta correlacionada</div><div class="ibox-text">
+      <code>EXISTS</code> s'usa gairebé sempre amb una subconsulta <strong>correlacionada</strong>: la subconsulta fa referència a una columna de la consulta externa (per exemple <code>e.department_id = d.department_id</code>). A diferència de les subconsultes anteriors, no s'executa una sola vegada al principi, sinó que s'avalua <strong>per a cada fila</strong> de la consulta externa.<br>
+      Per a cada departament <code>d</code>: <em>hi ha algun empleat amb aquest <code>department_id</code>?</em> → Sí: la fila es mostra. No: es descarta.
+    </div></div>
+
+    <div class="demo"><div class="demo-label">Exemple 8 · EXISTS i NOT EXISTS</div>
+      <code class="sql-out" id="e3c"></code>
+      <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">La primera consulta mostra els departaments on <strong>existeix</strong> algun empleat; la segona, amb <code>NOT EXISTS</code>, els departaments on <strong>no existeix</strong> cap empleat (no es poden trobar fàcilment amb un <code>INNER JOIN</code>). La tercera correlaciona la taula <code>employees</code> amb ella mateixa: un empleat <code>m</code> és cap si existeix algun empleat <code>e</code> amb <code>e.manager_id = m.employee_id</code>. Cada departament o cap surt <strong>una sola vegada</strong>, encara que tingui molts empleats: amb un <code>JOIN</code> caldria afegir <code>DISTINCT</code>. Recorda que <code>NOT EXISTS</code> és més segur que <code>NOT IN</code> quan la subconsulta pot retornar <code>NULL</code> (vegeu la secció d'optimització).</div></div>
+    </div>
   </section>
 
   <!-- EXERCICIS T7 -->
   <div class="ex-block-head" id="ex7" data-topic="t7">
     <h2 class="ex-block-title" data-topic="t7">Exercicis — Subconsultes</h2>
-    <p class="ex-block-sub">Subconsultes d'una fila, IN, ANY/ALL · criteri 3.6</p>
+    <p class="ex-block-sub">Subconsultes d'una fila, IN, ANY/ALL, EXISTS · criteri 3.6</p>
   </div>
   <div class="ex-block-body" id="ex7-body"></div>
 
@@ -316,7 +329,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       Exemple: <code>SELECT last_name, department_id, TO_CHAR(null) dept_name FROM employees</code>
     </div></div>
 
-    <div class="demo"><div class="demo-label">Exemple 8 · UNION, UNION ALL, MINUS i INTERSECT</div>
+    <div class="demo"><div class="demo-label">Exemple 9 · UNION, UNION ALL, MINUS i INTERSECT</div>
       <code class="sql-out" id="e4a"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Les dues consultes han de tenir el mateix nombre de columnes i tipus compatibles. <code>UNION</code> elimina duplicats (més lent); <code>UNION ALL</code> els conserva (més ràpid). <code>MINUS</code> retorna les files de la primera consulta que no apareixen a la segona. <code>INTERSECT</code> retorna les files comunes. L'<code>ORDER BY</code> s'escriu al final de l'última consulta i fa referència al nom o posició de la primera.</div></div>
     </div>
@@ -340,7 +353,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
 
     <div class="subhead">El pla d'execució: com llegeix Oracle la consulta</div>
     <p class="lead">Abans d'executar qualsevol sentència SQL, l'<strong>optimitzador d'Oracle (CBO, Cost-Based Optimizer)</strong> decideix el camí més eficient: quin ordre seguir per unir taules, si usar un índex o llegir tota la taula, etc. Es pot consultar amb <code>EXPLAIN PLAN</code>.</p>
-    <div class="demo"><div class="demo-label">Exemple 9 · Consultar el pla d'execució</div>
+    <div class="demo"><div class="demo-label">Exemple 10 · Consultar el pla d'execució</div>
       <code class="sql-out" id="eopt1"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>EXPLAIN PLAN FOR</code> no executa la consulta; només calcula i desa el pla. Després es visualitza amb <code>DBMS_XPLAN.DISPLAY()</code>. Els dos conceptes clau del pla: <strong>Full Table Scan (FTS)</strong> = llegeix tota la taula fila a fila (lent en taules grans); <strong>Index Range Scan</strong> = usa un índex per anar directament a les files que compleixen la condició (molt més ràpid).</div></div>
     </div>
@@ -365,7 +378,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
     </div></div>
 
     <div class="subhead">EXISTS vs IN: quin és més eficient?</div>
-    <div class="demo"><div class="demo-label">Exemple 10 · EXISTS vs IN per a subconsultes correlacionades</div>
+    <div class="demo"><div class="demo-label">Exemple 11 · EXISTS vs IN per a subconsultes correlacionades</div>
       <code class="sql-out" id="eopt2"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>EXISTS</code> s'atura tan bon punt troba la primera coincidència (<em>short-circuit</em>), mentre que <code>IN</code> carrega tot el conjunt de la subconsulta a memòria i després compara. En taules grans, <code>EXISTS</code> és generalment més eficient quan la subconsulta pot retornar moltes files. <code>NOT EXISTS</code> és preferible a <code>NOT IN</code> perquè <code>NOT IN</code> retorna cap fila si la subconsulta conté algun <code>NULL</code>.</div></div>
     </div>
@@ -387,7 +400,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       Usar <code>UNION</code> quan <code>UNION ALL</code> seria suficient i correcte.
     </div></div>
 
-    <div class="demo"><div class="demo-label">Exemple 11 · Paginació amb FETCH FIRST (Oracle 12c+)</div>
+    <div class="demo"><div class="demo-label">Exemple 12 · Paginació amb FETCH FIRST (Oracle 12c+)</div>
       <code class="sql-out" id="eopt3"></code>
       <div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>FETCH FIRST n ROWS ONLY</code> és la sintaxi estàndard SQL:2008 per limitar el nombre de files del resultat (equivalent a <code>ROWNUM &lt;= n</code> però més llegible i correcte amb <code>ORDER BY</code>). <code>OFFSET n ROWS</code> permet saltar les primeres n files, útil per a paginació.</div></div>
     </div>
@@ -429,7 +442,9 @@ const SQLS={
   e1c:`-- Taula pivot amb DECODE dins SUM\nSELECT   job_id "Job",\n         SUM(DECODE(department_id, 20, salary)) "Dept 20",\n         SUM(DECODE(department_id, 50, salary)) "Dept 50",\n         SUM(DECODE(department_id, 80, salary)) "Dept 80",\n         SUM(salary) "Total"\nFROM     employees\nGROUP BY job_id;`,
   e2a:`-- NATURAL JOIN: uneix per les columnes de nom igual\nSELECT location_id, street_address, city, country_name\nFROM   locations\nNATURAL JOIN countries;\n\n-- JOIN USING: columna de nom comú\nSELECT last_name, department_id, department_name\nFROM   employees\nJOIN   departments USING (department_id);\n\n-- JOIN ON: condició explícita (necessari quan els noms difereixen)\nSELECT e.last_name, e.job_id, d.department_name\nFROM   employees   e\nJOIN   departments d ON (e.department_id = d.department_id)\nWHERE  d.department_name = 'Sales';`,
   e2b:`-- JOIN de 3 taules: empleat → departament → ubicació\nSELECT e.last_name, e.job_id, d.department_name\nFROM   employees   e\nJOIN   departments d ON (e.department_id = d.department_id)\nJOIN   locations   l ON (d.location_id   = l.location_id)\nWHERE  LOWER(l.city) = 'toronto';\n\n-- Self-join: empleat i el seu cap\nSELECT w.last_name "Employee", w.employee_id "Emp#",\n       m.last_name "Manager",  m.employee_id "Mgr#"\nFROM   employees w\nJOIN   employees m ON (w.manager_id = m.employee_id);\n\n-- LEFT OUTER JOIN: inclou King (sense cap)\nSELECT w.last_name "Employee", w.employee_id "Emp#",\n       m.last_name "Manager",  m.employee_id "Mgr#"\nFROM   employees w\nLEFT OUTER JOIN employees m ON (w.manager_id = m.employee_id)\nORDER BY 2;`,
-  e3a:`-- Subconsulta d'una sola fila\nSELECT employee_id, last_name, salary\nFROM   employees\nWHERE  salary > (SELECT AVG(salary) FROM employees)\nORDER BY salary;\n\n-- Subconsulta amb IN (múltiples files)\nSELECT employee_id, last_name\nFROM   employees\nWHERE  department_id IN (SELECT department_id\n                          FROM   employees\n                          WHERE  last_name LIKE '%u%');\n\n-- > ALL: major que tots els salaris del dept 60\nSELECT last_name\nFROM   employees\nWHERE  salary > ALL (SELECT salary\n                     FROM   employees\n                     WHERE  department_id = 60);`,
+  e3a:`-- Subconsulta d'una sola fila\nSELECT employee_id, last_name, salary\nFROM   employees\nWHERE  salary > (SELECT AVG(salary) FROM employees)\nORDER BY salary;`,
+  e3b:`-- Subconsulta amb IN (múltiples files)\nSELECT employee_id, last_name\nFROM   employees\nWHERE  department_id IN (SELECT department_id\n                          FROM   employees\n                          WHERE  last_name LIKE '%u%');\n\n-- > ALL: major que tots els salaris del dept 60\nSELECT last_name\nFROM   employees\nWHERE  salary > ALL (SELECT salary\n                     FROM   employees\n                     WHERE  department_id = 60);`,
+  e3c:`-- EXISTS: departaments que tenen almenys un empleat\nSELECT d.department_id, d.department_name\nFROM   departments d\nWHERE  EXISTS (SELECT 1\n               FROM   employees e\n               WHERE  e.department_id = d.department_id);\n\n-- NOT EXISTS: departaments sense cap empleat\nSELECT d.department_id, d.department_name\nFROM   departments d\nWHERE  NOT EXISTS (SELECT 1\n                   FROM   employees e\n                   WHERE  e.department_id = d.department_id);\n\n-- EXISTS amb self-join: empleats que són caps d'algú\nSELECT m.employee_id, m.last_name, m.job_id\nFROM   employees m\nWHERE  EXISTS (SELECT 1\n               FROM   employees e\n               WHERE  e.manager_id = m.employee_id);`,
   e4a:`-- MINUS: departaments sense ST_CLERK\nSELECT department_id FROM departments\nMINUS\nSELECT department_id FROM employees\nWHERE  job_id = 'ST_CLERK';\n\n-- INTERSECT: empleats que han tornat al càrrec original\nSELECT employee_id, job_id FROM employees\nINTERSECT\nSELECT employee_id, job_id FROM job_history;\n\n-- UNION amb TO_CHAR(null) per alinear columnes\nSELECT last_name, department_id, TO_CHAR(null) department_name\nFROM   employees\nUNION\nSELECT TO_CHAR(null), department_id, department_name\nFROM   departments;`
 };
 Object.keys(SQLS).forEach(id=>{
@@ -510,7 +525,19 @@ const T7=[
    sol:`SELECT last_name\nFROM   employees\nWHERE  salary > ALL (SELECT salary\n                     FROM   employees\n                     WHERE  department_id = 60);`,
    note:'> ALL significa "major que tots els valors", equivalent a "major que el màxim". > ANY significaria "major que almenys un", equivalent a "major que el mínim".'},
   {n:8,txt:'Mostra el número d\'empleat, cognom i salari dels empleats que guanyen més del salari mig I treballen en un departament amb algun empleat el cognom del qual contingui una "u".',
-   sol:`SELECT employee_id, last_name, salary\nFROM   employees\nWHERE  department_id IN (SELECT department_id\n                          FROM   employees\n                          WHERE  last_name LIKE '%u%')\n  AND  salary > (SELECT AVG(salary)\n                 FROM   employees);`}
+   sol:`SELECT employee_id, last_name, salary\nFROM   employees\nWHERE  department_id IN (SELECT department_id\n                          FROM   employees\n                          WHERE  last_name LIKE '%u%')\n  AND  salary > (SELECT AVG(salary)\n                 FROM   employees);`},
+  {n:9,txt:'Mostra el número i el nom dels departaments que no tenen cap empleat assignat. Utilitza <code>NOT EXISTS</code>.',
+   sol:`SELECT d.department_id, d.department_name\nFROM   departments d\nWHERE  NOT EXISTS (SELECT 1\n                   FROM   employees e\n                   WHERE  e.department_id = d.department_id);`,
+   note:'La subconsulta està correlacionada amb la consulta externa per d.department_id. Per a cada departament es comprova si hi ha algun empleat; si no n\'hi ha cap, el departament surt al resultat.'},
+  {n:10,txt:'Mostra el número d\'empleat, el cognom i el JOB_ID dels empleats que són caps d\'algun altre empleat. Utilitza <code>EXISTS</code>.',
+   sol:`SELECT m.employee_id, m.last_name, m.job_id\nFROM   employees m\nWHERE  EXISTS (SELECT 1\n               FROM   employees e\n               WHERE  e.manager_id = m.employee_id);`,
+   note:'Cada cap apareix una sola vegada, encara que en depenguin molts empleats. Amb un JOIN caldria DISTINCT per evitar duplicats.'},
+  {n:11,txt:'Mostra el número i el nom dels departaments que tenen algun empleat que guanya més de 10.000. Utilitza <code>EXISTS</code>.',
+   sol:`SELECT d.department_id, d.department_name\nFROM   departments d\nWHERE  EXISTS (SELECT 1\n               FROM   employees e\n               WHERE  e.department_id = d.department_id\n                 AND  e.salary > 10000);`,
+   note:'A la subconsulta s\'hi poden afegir altres condicions a més de la correlació: aquí, que l\'empleat guanyi més de 10.000.'},
+  {n:12,txt:'Mostra el cognom, el salari i el número de departament dels empleats que tenen el salari més alt del seu departament. Utilitza <code>NOT EXISTS</code>: no ha d\'existir cap company del mateix departament que guanyi més.',
+   sol:`SELECT e.last_name, e.salary, e.department_id\nFROM   employees e\nWHERE  NOT EXISTS (SELECT 1\n                   FROM   employees c\n                   WHERE  c.department_id = e.department_id\n                     AND  c.salary > e.salary)\nORDER BY e.department_id;`,
+   note:'Si dos empleats empaten amb el salari màxim del departament, surten tots dos. L\'empleat sense departament (department_id NULL) també surt, perquè la condició c.department_id = e.department_id mai és certa amb NULL.'}
 ];
 
 const T8=[
