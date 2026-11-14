@@ -165,6 +165,7 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
       <a class="toc-item" href="#ex8"><span class="toc-num">&#9733;</span>Exercicis — Operadors de conjunt</a>
       <a class="toc-item" href="#s5"><span class="toc-num">5</span>Bones pràctiques i optimització</a>
       <a class="toc-item" href="#ex9"><span class="toc-num">&#9733;</span>Exercicis — Optimització</a>
+      <a class="toc-item" href="#ex10"><span class="toc-num">&#9733;</span>Exercicis — Repàs consultes complexes</a>
     </div>
   </nav>
 
@@ -412,6 +413,119 @@ body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:v
     <p class="ex-block-sub">Sargability, índexos, EXISTS vs IN, paginació · criteri 3.8</p>
   </div>
   <div class="ex-block-body" id="ex9-body"></div>
+
+  <!-- EXERCICIS REPÀS -->
+  <div class="ex-block-head" id="ex10" data-topic="t10">
+    <h2 class="ex-block-title" data-topic="t10">Exercicis — Repàs consultes complexes</h2>
+    <p class="ex-block-sub">Joins, funcions de grup, subconsultes i operadors SET · criteris 3.3–3.7</p>
+  </div>
+  <div class="ex-block-body" id="ex10-body">
+    <p class="lead">Exercicis orientatius per preparar la prova, sobre la base de dades HR (EMPLOYEES, DEPARTMENTS, JOBS, JOB_HISTORY, LOCATIONS, COUNTRIES, REGIONS i JOB_GRADES amb les columnes GRADE_LEVEL, LOWEST_SAL i HIGHEST_SAL).</p>
+    <div class="subhead">Joins</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Exercici 1</div></div></div>
+      <div class="ex-enunciat">Mostreu el nom del departament, la ciutat i el nom del país (COUNTRY_NAME) de tots els departaments. Ordenats per país i ciutat.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Exercici 2</div></div></div>
+      <div class="ex-enunciat">Mostreu el cognom i el nom separats per una coma i un espai (àlies: Empleat; per exemple King, Steven) i el títol de l'ofici dels empleats que cobren més de 9000 €. Ordenats per títol d'ofici i cognom.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Exercici 3</div></div></div>
+      <div class="ex-enunciat">Mostreu el cognom, el salari, la comissió i la categoria salarial (GRADE_LEVEL de JOB_GRADES) dels empleats que tenen comissió. Ordenats per categoria i, dins de cada categoria, per salari descendent.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">4</div><div><div class="ex-name">Exercici 4</div></div></div>
+      <div class="ex-enunciat">Mostreu el cognom, el nom del departament i la categoria salarial dels empleats dels departaments 50 i 60 que pertanyen a les categories 'B' o 'C'. Ordenats per nom de departament i cognom.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">5</div><div><div class="ex-name">Exercici 5</div></div></div>
+      <div class="ex-enunciat">Mostreu el nom de tots els països (COUNTRY_NAME) i les ciutats que hi tenen ubicació (LOCATIONS). Han d'aparèixer també els països que no tenen cap ubicació; en aquest cas, la ciutat ha de mostrar el text Sense ubicació. Àlies: País, Ciutat. Ordenats per país.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">6</div><div><div class="ex-name">Exercici 6</div></div></div>
+      <div class="ex-enunciat">Mostreu el cognom de tots els empleats i el cognom del seu cap. Han d'aparèixer tots els empleats; si no tenen cap, ha d'aparèixer el text Sense cap. Àlies: Empleat, Cap. Ordenats per cognom de l'empleat.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">7</div><div><div class="ex-name">Exercici 7</div></div></div>
+      <div class="ex-enunciat">Mostreu el cognom i el salari de l'empleat, i el cognom i el salari del seu cap, dels empleats que cobren més que el seu cap. Àlies: Empleat, Salari Empleat, Cap, Salari Cap.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">8</div><div><div class="ex-name">Exercici 8</div></div></div>
+      <div class="ex-enunciat">Mostreu el cognom de l'empleat, el títol de l'ofici que va tenir (JOB_HISTORY), la data d'inici i la data de finalització, de tots els registres de l'historial de feines. Ordenats per cognom i data d'inici.</div>
+    </div>
+    <div class="subhead">Funcions de grup</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">9</div><div><div class="ex-name">Exercici 9</div></div></div>
+      <div class="ex-enunciat">Mostreu per cada categoria salarial (GRADE_LEVEL) el nombre d'empleats que hi pertanyen. Àlies: Num Empleats. Ordenats per categoria.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">10</div><div><div class="ex-name">Exercici 10</div></div></div>
+      <div class="ex-enunciat">Mostreu el nom de cada país (COUNTRY_NAME) i el nombre d'empleats que hi treballen, només dels països amb més de 2 empleats. Àlies: Num Empleats. Ordenats per nombre d'empleats de forma descendent.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">11</div><div><div class="ex-name">Exercici 11</div></div></div>
+      <div class="ex-enunciat">Mostreu per cada ofici (JOB_ID) el salari màxim, el salari mínim i la diferència entre tots dos, només dels oficis amb una diferència superior a 3000 €. Àlies: Màxim, Mínim, Diferència. Ordenats per diferència de forma descendent.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">12</div><div><div class="ex-name">Exercici 12</div></div></div>
+      <div class="ex-enunciat">Mostreu totes les ciutats (CITY) i el nombre de departaments que hi ha a cadascuna. Han d'aparèixer també les ciutats sense cap departament. Àlies: Num Departaments. Ordenats per nombre de departaments descendent i, en cas d'empat, per ciutat.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">13</div><div><div class="ex-name">Exercici 13</div></div></div>
+      <div class="ex-enunciat">Mostreu el número de departament i el total de salaris que paga, només dels departaments on el total supera els 20000 €, sense tenir en compte els empleats amb ofici SA_REP. Àlies: Total Salaris. Ordenats pel total de forma ascendent.</div>
+    </div>
+    <div class="subhead">Subconsultes</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">14</div><div><div class="ex-name">Exercici 14</div></div></div>
+      <div class="ex-enunciat">Mostreu el cognom, el salari i el departament dels empleats que cobren el salari mínim de tota l'empresa.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">15</div><div><div class="ex-name">Exercici 15</div></div></div>
+      <div class="ex-enunciat">Mostreu, sense repeticions, els oficis (JOB_ID) dels empleats que treballen en algun departament el nom del qual comença per 'S'. Utilitzeu una subconsulta. Ordenats alfabèticament.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">16</div><div><div class="ex-name">Exercici 16</div></div></div>
+      <div class="ex-enunciat">Mostreu el cognom i el salari dels empleats del departament 50 que cobren més que algun dels empleats del departament 30. Ordenats per salari de forma descendent.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">17</div><div><div class="ex-name">Exercici 17</div></div></div>
+      <div class="ex-enunciat">Mostreu el cognom, l'ofici i el salari dels empleats que cobren menys que tots els empleats amb ofici 'IT_PROG'. Ordenats per salari de forma descendent.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">18</div><div><div class="ex-name">Exercici 18</div></div></div>
+      <div class="ex-enunciat">Utilitzant l'operador EXISTS, mostreu el nom de les ciutats (CITY) on hi ha com a mínim un departament. Ordenades alfabèticament.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">19</div><div><div class="ex-name">Exercici 19</div></div></div>
+      <div class="ex-enunciat">Utilitzant l'operador NOT EXISTS, mostreu el cognom i el nom dels empleats que no tenen cap registre a la taula JOB_HISTORY. Ordenats per cognom.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">20</div><div><div class="ex-name">Exercici 20</div></div></div>
+      <div class="ex-enunciat">Mostreu el número de departament i el nombre d'empleats dels departaments que tenen més empleats que el departament 90. Àlies: Num Empleats. Ordenats per número de departament.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">21</div><div><div class="ex-name">Exercici 21</div></div></div>
+      <div class="ex-enunciat">Mostreu el cognom, el salari i el departament dels empleats que cobren el salari més alt del seu propi departament. Ordenats per departament.</div>
+    </div>
+    <div class="subhead">Operadors SET</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">22</div><div><div class="ex-name">Exercici 22</div></div></div>
+      <div class="ex-enunciat">Sense utilitzar l'operador OR, mostreu el cognom i el salari dels empleats que cobren més de 15000 € o que treballen al departament 20, sense repeticions. Utilitzeu un operador SET. Ordenats per cognom.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">23</div><div><div class="ex-name">Exercici 23</div></div></div>
+      <div class="ex-enunciat">Mostreu en dues columnes (Cognom i Tipus) els empleats amb ofici SA_MAN, amb el text Cap de vendes, i els empleats amb ofici ST_MAN, amb el text Cap de magatzem. Ordenats per tipus i cognom.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">24</div><div><div class="ex-name">Exercici 24</div></div></div>
+      <div class="ex-enunciat">Mostreu els números d'empleat que són cap d'algun empleat (EMPLOYEES.MANAGER_ID) i que també són cap d'algun departament (DEPARTMENTS.MANAGER_ID). No ha d'aparèixer cap valor nul. Ordenats per número.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">25</div><div><div class="ex-name">Exercici 25</div></div></div>
+      <div class="ex-enunciat">Mostreu els números d'ubicació (LOCATION_ID) de la taula LOCATIONS que no tenen cap departament. Utilitzeu un operador SET. Ordenats per número.</div>
+    </div>
+  </div>
 
   <nav class="doc-nav">
     <a class="back" href="AEA1_RA3_consultes_simples.html">&#8592; Consultes simples</a>
