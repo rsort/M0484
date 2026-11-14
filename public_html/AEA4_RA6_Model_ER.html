@@ -539,16 +539,16 @@ function buildQI(data,contId,prefix){
 const E2=[
   {t:'Una especialització D,T entre VEHICLE i les subentitats COTXE, MOTO i CAMIÓ significa:',
    opts:['Un vehicle pot ser alhora COTXE i MOTO','Tot vehicle és exactament un dels tres tipus, i no pot ser-ne cap altre simultàniament','Hi pot haver vehicles que no siguin ni COTXE ni MOTO ni CAMIÓ','Les subentitats no hereten els atributs de VEHICLE'],
-   ans:1,exp:'D (disjunta) = no pot pertànyer a més d'una subentitat. T (total) = tota instància de la superentitat pertany a almenys una subentitat. Combinades: cada VEHICLE és exactament un tipus.'},
+   ans:1,exp:'D (disjunta) = no pot pertànyer a més d\'una subentitat. T (total) = tota instància de la superentitat pertany a almenys una subentitat. Combinades: cada VEHICLE és exactament un tipus.'},
   {t:'Tenim PROFESSOR i ALUMNE com a subentitats de PERSONA (E,P). Quina afirmació és correcta?',
    opts:['Tot professor és necessàriament alumne al mateix temps','Tota persona és professor o alumne','Una persona pot ser professor i alumne simultàniament, però també pot no ser cap dels dos','Una persona ha de ser exactament un dels dos'],
-   ans:2,exp:'E (encavalcada) = una instància pot pertànyer a més d'una subentitat. P (parcial) = hi pot haver instàncies de la superentitat que no pertanyin a cap subentitat (ex: personal d'administració).'},
-  {t:'En quina situació cal usar una AGREGACIÓ en lloc d'una relació ternària?',
+   ans:2,exp:'E (encavalcada) = una instància pot pertànyer a més d\'una subentitat. P (parcial) = hi pot haver instàncies de la superentitat que no pertanyin a cap subentitat (ex: personal d\'administració).'},
+  {t:'En quina situació cal usar una AGREGACIÓ en lloc d\'una relació ternària?',
    opts:['Quan tres entitats es relacionen simultàniament','Quan volem relacionar una relació M:N existent amb una tercera entitat, conservant les parelles sense correspondència','Quan dues entitats febles comparteixen la mateixa entitat propietària','Quan la relació té més de dos atributs propis'],
-   ans:1,exp:'L'agregació s'usa quan la relació ternària crearia redundàncies: les parelles de la relació base (M:N) que no tenen la tercera entitat associada desapareixerien. L'agregació les conserva encapsulant la relació base com a entitat.'},
+   ans:1,exp:'L\'agregació s\'usa quan la relació ternària crearia redundàncies: les parelles de la relació base (M:N) que no tenen la tercera entitat associada desapareixerien. L\'agregació les conserva encapsulant la relació base com a entitat.'},
   {t:'INFORMATIC i ADMINISTRATIU són subentitats de PROFESSOR, que és subentitat de PERSONA. Quins atributs hereten INFORMATIC i ADMINISTRATIU?',
    opts:['Només els de PROFESSOR','Només els de PERSONA','Els de PROFESSOR i els de PERSONA (herència múltiple)','Només els seus propis'],
-   ans:2,exp:'En una jerarquia encadenada, les entitats dels nivells inferiors hereten les característiques de tots els nivells superiors dels quals descenden. INFORMATIC hereta de PROFESSOR i de PERSONA, però no d'ALUMNE.'}
+   ans:2,exp:'En una jerarquia encadenada, les entitats dels nivells inferiors hereten les característiques de tots els nivells superiors dels quals descenden. INFORMATIC hereta de PROFESSOR i de PERSONA, però no d\'ALUMNE.'}
 ];
 buildQI(E1,'ex1-cont','G1');
 buildQI(E2,'ex2-cont','G2');
