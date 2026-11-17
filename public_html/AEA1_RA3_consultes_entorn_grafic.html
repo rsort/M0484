@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEA1 · Consultes emprant entorn gràfic — MP0484 Bases de dades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#f7f5f0; --card:#ffffff; --ink:#1c1917; --ink-2:#57534e; --ink-3:#a8a29e;
+  --border:#e7e5e4; --accent:#9a3412; --accent-mid:#c2410c; --accent-bg:#fff7ed; --accent-bdr:#fed7aa;
+  --blue:#1e40af; --blue-bg:#eff6ff; --blue-bdr:#bfdbfe;
+  --green:#166534; --green-bg:#f0fdf4; --green-bdr:#bbf7d0;
+  --red:#991b1b; --red-bg:#fef2f2; --red-bdr:#fecaca;
+  --yellow:#713f12; --yellow-bg:#fefce8; --yellow-bdr:#fef08a;
+  --purple:#5b21b6; --purple-bg:#f5f3ff; --purple-bdr:#ddd6fe;
+  --code-bg:#1e293b; --code-text:#e2e8f0; --r:10px; --r-sm:6px;
+}
+body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+.merce-top { height:5px; background:linear-gradient(90deg,#9a3412 0%,#c2410c 50%,#9a3412 100%); }
+.site-head { background:var(--card); border-bottom:1px solid var(--border); padding:0 24px; }
+.head-inner { max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:56px; }
+.brand { text-decoration:none; display:flex; flex-direction:column; }
+.brand-mark { font-family:'DM Serif Display',serif; font-size:1.1rem; color:var(--ink); }
+.brand-sub { font-size:11px; color:var(--ink-3); letter-spacing:.04em; }
+.head-course { font-size:13px; color:var(--ink-2); }
+.wrap { max-width:900px; margin:0 auto; padding:0 24px 80px; }
+.breadcrumb { font-size:13px; color:var(--ink-3); padding:14px 0 0; }
+.breadcrumb a { color:var(--ink-2); text-decoration:none; }
+.breadcrumb a:hover { color:var(--accent); }
+.breadcrumb span { margin:0 5px; }
+.page-header { padding:40px 0 32px; border-bottom:1.5px solid var(--border); margin-bottom:48px; }
+.meta-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+.badge { font-size:11px; font-weight:600; padding:3px 11px; border-radius:20px; letter-spacing:.05em; text-transform:uppercase; }
+.b-course { background:var(--ink); color:#fff; }
+.b-ra { background:var(--blue-bg); color:var(--blue); border:1px solid var(--blue-bdr); }
+.b-act { background:var(--accent-mid); color:#fff; }
+.b-new { background:var(--green-bg); color:var(--green); border:1px solid var(--green-bdr); }
+.page-title { font-family:'DM Serif Display',Georgia,serif; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.15; margin-bottom:10px; }
+.page-sub { font-size:16px; color:var(--ink-2); margin-bottom:24px; }
+.obj-box { display:flex; gap:14px; align-items:flex-start; background:var(--accent-bg); border:1px solid var(--accent-bdr); border-radius:var(--r); padding:18px 22px; }
+.obj-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+.obj-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--accent-mid); margin-bottom:4px; }
+.obj-text { font-size:14px; color:var(--ink-2); }
+.toc { background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:20px 24px; margin-bottom:52px; }
+.toc-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-3); margin-bottom:14px; }
+.toc-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px 24px; }
+.toc-item { font-size:13px; color:var(--blue); text-decoration:none; padding:3px 0; display:flex; align-items:center; gap:6px; }
+.toc-item:hover { color:var(--accent); }
+.toc-num { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-3); min-width:20px; }
+.section { margin-bottom:64px; }
+.sec-head { display:flex; align-items:flex-start; gap:16px; margin-bottom:28px; }
+.sec-num { font-family:'DM Serif Display',serif; font-size:3rem; color:var(--border); line-height:1; flex-shrink:0; user-select:none; }
+.sec-title { font-family:'DM Serif Display',Georgia,serif; font-size:1.5rem; line-height:1.3; }
+.sec-sub { font-size:13px; color:var(--ink-3); margin-top:3px; }
+.subhead { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin:28px 0 12px; padding-bottom:6px; border-bottom:1px dashed var(--accent-bdr); }
+.lead { font-size:14px; color:var(--ink-2); margin-bottom:18px; line-height:1.6; }
+.lead code, p code, li code, td code, .ibox-text code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+.ibox { border-radius:var(--r); padding:16px 20px; margin-bottom:20px; }
+.ibox-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+.ibox-text { font-size:14px; line-height:1.65; }
+.ibox.blue { background:var(--blue-bg); border:1px solid var(--blue-bdr); }
+.ibox.green { background:var(--green-bg); border:1px solid var(--green-bdr); }
+.ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+.ibox.yellow { background:var(--yellow-bg); border:1px solid var(--yellow-bdr); }
+.ibox.blue .ibox-label, .ibox.blue .ibox-text { color:var(--blue); }
+.ibox.green .ibox-label, .ibox.green .ibox-text { color:var(--green); }
+.ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
+.ibox.yellow .ibox-label, .ibox.yellow .ibox-text { color:var(--yellow); }
+.demo { margin-bottom:24px; }
+.demo-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin-bottom:8px; }
+.sql-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:16px 20px; border-radius:var(--r-sm); line-height:1.8; white-space:pre; margin:0; overflow-x:auto; display:block; }
+.exp-box { background:var(--accent-bg); border:1px solid var(--accent-bdr); border-left:3px solid var(--accent-mid); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 16px; margin-top:10px; }
+.exp-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin-bottom:5px; }
+.exp-text { font-size:13px; color:var(--ink-2); line-height:1.6; }
+.kw { color:#fbbf24; font-weight:500; }
+.fn { color:#a78bfa; }
+.str { color:#4ade80; }
+.num { color:#f472b6; }
+.cmt { color:#64748b; font-style:italic; }
+.tbl-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; margin-bottom:20px; }
+.tbl { width:100%; border-collapse:collapse; font-size:13px; }
+.tbl th { text-align:left; padding:9px 14px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); border-bottom:1.5px solid var(--border); background:#fafaf8; }
+.tbl td { padding:9px 14px; border-bottom:1px solid var(--border); vertical-align:top; font-size:13px; }
+.tbl td.mono { font-family:'JetBrains Mono',monospace; font-size:12px; }
+.tbl tr:last-child td { border-bottom:none; }
+.cmp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+.cmp { background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:14px; }
+.cmp h4 { font-size:12px; font-family:'JetBrains Mono',monospace; color:var(--accent); margin-bottom:8px; }
+.cmp p { font-size:12px; color:var(--ink-2); line-height:1.5; }
+/* EXERCICIS */
+.ex-block-head { background:var(--ink); color:#fff; border-radius:var(--r) var(--r) 0 0; padding:22px 28px; margin-top:56px; cursor:default; user-select:none; }
+.ex-block-title { font-family:'DM Serif Display',serif; font-size:1.5rem; margin-bottom:4px; }
+.ex-block-sub { font-size:13px; color:#a8a29e; }
+
+
+.ex-block-body { background:var(--card); border:1px solid var(--border); border-top:none; border-radius:0 0 var(--r) var(--r); padding:28px; }
+.exercise { margin-bottom:32px; padding-bottom:32px; border-bottom:1px solid var(--border); }
+.exercise:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+.ex-head { display:flex; align-items:flex-start; gap:12px; margin-bottom:12px; }
+.ex-num { min-width:30px; height:30px; background:var(--accent-mid); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; margin-top:2px; }
+.ex-name { font-weight:600; font-size:15px; color:var(--ink); }
+.ex-enunciat { font-size:14px; color:var(--ink); margin-bottom:14px; line-height:1.6; }
+.ex-enunciat code { font-family:'JetBrains Mono',monospace; font-size:12px; background:var(--accent-bg); padding:1px 6px; border-radius:3px; color:var(--accent); }
+
+.doc-nav { display:flex; justify-content:space-between; align-items:center; margin-top:56px; padding-top:24px; border-top:1px solid var(--border); gap:12px; flex-wrap:wrap; }
+.doc-nav a { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; padding:8px 16px; border:1.5px solid var(--accent-bdr); border-radius:var(--r-sm); background:var(--accent-bg); transition:background .12s; }
+.doc-nav a:hover { background:var(--accent-mid); color:#fff; border-color:var(--accent-mid); }
+.doc-nav .back { color:var(--ink-2); background:#fafaf9; border-color:var(--border); }
+.doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+.site-foot { border-top:1px solid var(--border); padding:20px 24px; }
+.foot-inner { max-width:900px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+@media (max-width:600px) { .toc-grid { grid-template-columns:1fr; } .cmp-grid { grid-template-columns:1fr; } .doc-nav { flex-direction:column; } }
+.pre-out { font-family:'JetBrains Mono',monospace; font-size:13px; background:var(--code-bg); color:var(--code-text); padding:14px 18px; border-radius:var(--r-sm); line-height:1.7; white-space:pre; overflow-x:auto; margin:10px 0 4px; }
+.ex-enunciat ul { margin:6px 0 0 20px; }
+.alumnes { font-size:14px; color:var(--ink-2); margin-bottom:24px; }
+.alumnes strong { color:var(--ink); }
+  </style>
+</head>
+<body>
+<div class="merce-top"></div>
+<header class="site-head">
+  <div class="head-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">La Mercè</span><span class="brand-sub">Formació Professional</span></a>
+    <div class="head-course">MP0484 · Bases de dades · DAW</div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="breadcrumb"><a href="index.html">MP0484 Bases de dades</a><span>&#8250;</span><a href="index.html#aea1">AEA1 — Consultes SQL</a><span>&#8250;</span>Consultes emprant entorn gràfic</div>
+
+  <header class="page-header">
+    <div class="meta-row">
+      <span class="badge b-course">DAW · MP0484 Bases de dades</span>
+      <span class="badge b-ra">AEA1 · RA3</span>
+      <span class="badge b-act">Pràctica</span>
+      <span class="badge b-new">Entorn gràfic</span>
+    </div>
+    <h1 class="page-title">Consultes emprant entorn gràfic</h1>
+    <p class="page-sub">Pràctica de consultes amb l'eina gràfica <strong>Query Builder</strong> d'Oracle. Cada grup resol les seves 16 consultes.</p>
+    <div class="obj-box">
+      <div class="obj-icon">&#127919;</div>
+      <div>
+        <div class="obj-label">Criteris d'avaluació · RA3</div>
+        <div class="obj-text">
+          <strong>3.1</strong> Identificar eines i sentències per fer consultes ·
+          <strong>3.2</strong> Consultes simples sobre una taula ·
+          <strong>3.3</strong> Composicions internes (JOIN) ·
+          <strong>3.5</strong> Funcions de grup i agrupaments ·
+          <strong>3.6</strong> Subconsultes
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="toc-title">Contingut d'aquest document</div>
+    <div class="toc-grid">
+      <a class="toc-item" href="#s1"><span class="toc-num">1</span>Entorn gràfic: consultes</a>
+      <a class="toc-item" href="#grupa"><span class="toc-num">1.1</span>Grup A</a>
+      <a class="toc-item" href="#grupb"><span class="toc-num">1.2</span>Grup B</a>
+      <a class="toc-item" href="#grupc"><span class="toc-num">1.3</span>Grup C</a>
+    </div>
+  </nav>
+
+  <section class="section" id="s1">
+    <div class="sec-head"><span class="sec-num">1</span><div>
+      <h2 class="sec-title">Entorn gràfic: consultes</h2>
+      <p class="sec-sub">Lliurament, avaluació i enunciat de la pràctica</p>
+    </div></div>
+
+    <div class="tbl-wrap"><table class="tbl">
+      <tbody>
+        <tr><td><strong>Data límit d'entrega</strong></td><td>16/01/2026</td></tr>
+        <tr><td><strong>Hora</strong></td><td>23:55</td></tr>
+        <tr><td><strong>Nom document</strong></td><td class="mono">Pr_EGC_nom_1rcognom.pdf</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="ibox blue"><div class="ibox-label">Es valorarà</div><div class="ibox-text">
+      <strong>Solució correcte i completa de cada consulta</strong> (ha de ser visible completament en la captura de pantalla): 1/2 punt per consulta. Total: <strong>8 punts</strong>.<br>
+      <strong>Presentació del document.</strong> Guia d'estil: <strong>2 punts</strong>.<br>
+      L'alumne ha de poder explicar totes les consultes que ha lliurat.
+    </div></div>
+
+    <p class="lead">Utilitzant <strong>QUERY BUILDER</strong> d'oracle, resoleu les següents consultes:</p>
+
+    <div class="ibox yellow"><div class="ibox-label">Lliurament</div><div class="ibox-text">
+      Entregar un zip amb el document amb les consultes i el resultat de la seva execució.
+    </div></div>
+  </section>
+
+  <!-- GRUP A -->
+  <div class="ex-block-head" id="grupa">
+    <h2 class="ex-block-title">Grup A</h2>
+    <p class="ex-block-sub">16 consultes · Query Builder d'Oracle</p>
+  </div>
+  <div class="ex-block-body">
+    <p class="alumnes"><strong>Alumnes:</strong> Ayman, Boufessace M., Montserrat, Youcef, Shakir, Hurtado J., Jafjaf, Agus, Demian, Marc</p>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Consulta 1</div></div></div>
+      <div class="ex-enunciat">Llista tots els detalls de l'empleat SMITH</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Consulta 2</div></div></div>
+      <div class="ex-enunciat">Llista el nom i la localització de tots els departaments ordenats per nom de forma ascendent.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Consulta 3</div></div></div>
+      <div class="ex-enunciat">Llista el nom, job, salari dels empleats que estan treballant pel Deptno 20 o 40.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">4</div><div><div class="ex-name">Consulta 4</div></div></div>
+      <div class="ex-enunciat">Compta els empleats que estan treballant pel Deptno 20 or 40.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">5</div><div><div class="ex-name">Consulta 5</div></div></div>
+      <div class="ex-enunciat">Llista tots els empleats que s'han incorporat (hiredate) abans i després del 1982</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">6</div><div><div class="ex-name">Consulta 6</div></div></div>
+      <div class="ex-enunciat">Llista en nom, job i data de tots els empleats que s'han incorporat després del 1985</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">7</div><div><div class="ex-name">Consulta 7</div></div></div>
+      <div class="ex-enunciat">Llista la localització (loc) de l'empleat SMITH.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">8</div><div><div class="ex-name">Consulta 8</div></div></div>
+      <div class="ex-enunciat">Listar els emps que tenen els mateixos jobs que SMITH o ALLEN.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">9</div><div><div class="ex-name">Consulta 9</div></div></div>
+      <div class="ex-enunciat">Llista tots els Grade2 and Grade 3 de la taula emps ordenats per Grade.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">10</div><div><div class="ex-name">Consulta 10</div></div></div>
+      <div class="ex-enunciat">Llista tota la informació de la taula empleatsque treballen al departament DNAME de 'ACCOUNTING' o 'RESEARCH', ordena els resultats pel nom del departament</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">11</div><div><div class="ex-name">Consulta 11</div></div></div>
+      <div class="ex-enunciat">Calcula per cada Job la mitja del salari i la mitja del salari amb les comissions.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">12</div><div><div class="ex-name">Consulta 12</div></div></div>
+      <div class="ex-enunciat">Llista els 5 empleats que cobren menys salari ordenats per salari de menor a major.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">13</div><div><div class="ex-name">Consulta 13</div></div></div>
+      <div class="ex-enunciat">Mostreu tots els noms dels empleats que comencen per ‘S’ o contenen una ‘L’ en la segona lletra. El resultat ha de mostrar la inicial en majúscules i la resta en minúscules.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">14</div><div><div class="ex-name">Consulta 14</div></div></div>
+      <div class="ex-enunciat">Mostreu nom i les dates sis mesos després de la contractació de tots els empleats que porten més de 350 mesos contractats. Ordenats per data de forma descendent. El format del resultat és el següent:<pre class="pre-out">Nom		Data revisió
+King		17 mayo 1982
+Martin		28 marzo 1982</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">15</div><div><div class="ex-name">Consulta 15</div></div></div>
+      <div class="ex-enunciat">Mostreu el següent resultat:<pre class="pre-out">Empleat
+Smith guanya 800 € i és clerk
+Allen guanya 1600 € i és salesman</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">16</div><div><div class="ex-name">Consulta 16</div></div></div>
+      <div class="ex-enunciat">Mostreu tots els oficis dels departaments 10 i 30, sense repeticions. Ordenats per ordre alfabètic.</div>
+    </div>
+  </div>
+  <!-- GRUP B -->
+  <div class="ex-block-head" id="grupb">
+    <h2 class="ex-block-title">Grup B</h2>
+    <p class="ex-block-sub">16 consultes · Query Builder d'Oracle</p>
+  </div>
+  <div class="ex-block-body">
+    <p class="alumnes"><strong>Alumnes:</strong> Marc Ricardo, Kim, El Moden M., Amine M., Alejandro, Adrián, José Arturo, Kenza, Miguel A.</p>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Consulta 1</div></div></div>
+      <div class="ex-enunciat">Mostreu el nom, salari i el salari més 150 € de tots els empleats. La tercera columna anomeneu-la Increment.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Consulta 2</div></div></div>
+      <div class="ex-enunciat">Mostreu el nom, salari i el número de departament dels empleats que cobren més de 2000 €.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Consulta 3</div></div></div>
+      <div class="ex-enunciat">Mostreu el nom, salari del empleats que no cobren comissió.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">4</div><div><div class="ex-name">Consulta 4</div></div></div>
+      <div class="ex-enunciat">Mostreu nom, ofici i salari de tots els empleats que cobren entre 1800 i 2500 €. Ordenats per ofici ascendent i descendent per salari.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">5</div><div><div class="ex-name">Consulta 5</div></div></div>
+      <div class="ex-enunciat">Llista tots els detalls de l'empleat SMITH</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">6</div><div><div class="ex-name">Consulta 6</div></div></div>
+      <div class="ex-enunciat">Llista el nom i la localització de tots els departaments ordenats per nom de forma ascendent.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">7</div><div><div class="ex-name">Consulta 7</div></div></div>
+      <div class="ex-enunciat">Llista el nom, job, salari dels empleats que estan treballant pel Deptno 20 o 40.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">8</div><div><div class="ex-name">Consulta 8</div></div></div>
+      <div class="ex-enunciat">Compta els empleats que estan treballant pel Deptno 20 or 40.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">9</div><div><div class="ex-name">Consulta 9</div></div></div>
+      <div class="ex-enunciat">Llista tots els empleats que s'han incorporat (hiredate) abans i després del 1982</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">10</div><div><div class="ex-name">Consulta 10</div></div></div>
+      <div class="ex-enunciat">Llista en nom, job i data de tots els empleats que s'han incorporat després del 1985</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">11</div><div><div class="ex-name">Consulta 11</div></div></div>
+      <div class="ex-enunciat">Llista la localització (loc) de l'empleat SMITH.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">12</div><div><div class="ex-name">Consulta 12</div></div></div>
+      <div class="ex-enunciat">List the emps whose jobs same as SMITH or ALLEN.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">13</div><div><div class="ex-name">Consulta 13</div></div></div>
+      <div class="ex-enunciat">Llista tots els Grade2 and Grade 3 de la taula emps ordenats per Grade.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">14</div><div><div class="ex-name">Consulta 14</div></div></div>
+      <div class="ex-enunciat">Llista tota la informació de la taula empleatsque treballen al departament DNAME de 'ACCOUNTING' o 'RESEARCH', ordena els resultats pel nom del departament</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">15</div><div><div class="ex-name">Consulta 15</div></div></div>
+      <div class="ex-enunciat">Calcula per cada Job la mitja del salari i la mitja del salari amb les comissions.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">16</div><div><div class="ex-name">Consulta 16</div></div></div>
+      <div class="ex-enunciat">Llista els 5 empleats que cobren menys salari ordenats per salari de menor a major.</div>
+    </div>
+  </div>
+  <!-- GRUP C -->
+  <div class="ex-block-head" id="grupc">
+    <h2 class="ex-block-title">Grup C</h2>
+    <p class="ex-block-sub">16 consultes · Query Builder d'Oracle</p>
+  </div>
+  <div class="ex-block-body">
+    <p class="alumnes"><strong>Alumnes:</strong> Lucas, Yordania, Noel, Emilio, Issac, Alex, Miguel Fabian, Safiullah M., Ronal A., Joan</p>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Consulta 1</div></div></div>
+      <div class="ex-enunciat">Mostreu el nom, salari i salari revisat (nom de columna) de tots els empleats. Cal tenir en compte que la revisió es farà en funció del departament al que pertanyen:<ul><li>10% pel departament 10</li><li>20% pel departament 20</li><li>15% per la resta de departaments.</li></ul></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Consulta 2</div></div></div>
+      <div class="ex-enunciat">Mostreu el número d’empleat, nom, salari i comissió de tots els empleats que tenen una comissió superior al salari.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Consulta 3</div></div></div>
+      <div class="ex-enunciat">Llista tots els detalls de l'empleat SMITH</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">4</div><div><div class="ex-name">Consulta 4</div></div></div>
+      <div class="ex-enunciat">Llista el nom i la localització de tots els departaments ordenats per nom de forma ascendent.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">5</div><div><div class="ex-name">Consulta 5</div></div></div>
+      <div class="ex-enunciat">Llista el nom, job, salari dels empleats que estan treballant pel Deptno 20 o 40.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">6</div><div><div class="ex-name">Consulta 6</div></div></div>
+      <div class="ex-enunciat">Compta els empleats que estan treballant pel Deptno 20 or 40.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">7</div><div><div class="ex-name">Consulta 7</div></div></div>
+      <div class="ex-enunciat">Llista tots els empleats que s'han incorporat (hiredate) abans i després del 1982</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">8</div><div><div class="ex-name">Consulta 8</div></div></div>
+      <div class="ex-enunciat">Llista en nom, job i data de tots els empleats que s'han incorporat després del 1985</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">9</div><div><div class="ex-name">Consulta 9</div></div></div>
+      <div class="ex-enunciat">Llista la localització (loc) de l'empleat SMITH.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">10</div><div><div class="ex-name">Consulta 10</div></div></div>
+      <div class="ex-enunciat">List the emps whose jobs same as SMITH or ALLEN.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">11</div><div><div class="ex-name">Consulta 11</div></div></div>
+      <div class="ex-enunciat">Llista tots els Grade2 and Grade 3 de la taula emps ordenats per Grade.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">12</div><div><div class="ex-name">Consulta 12</div></div></div>
+      <div class="ex-enunciat">Llista tota la informació de la taula empleatsque treballen al departament DNAME de 'ACCOUNTING' o 'RESEARCH', ordena els resultats pel nom del departament</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">13</div><div><div class="ex-name">Consulta 13</div></div></div>
+      <div class="ex-enunciat">Calcula per cada Job la mitja del salari i la mitja del salari amb les comissions.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">14</div><div><div class="ex-name">Consulta 14</div></div></div>
+      <div class="ex-enunciat">Llista els 5 empleats que cobren menys salari ordenats per salari de menor a major.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">15</div><div><div class="ex-name">Consulta 15</div></div></div>
+      <div class="ex-enunciat">Mostreu nom i número de departament de tots els analistes, managers i oficinistes, que guanyin més de 1000 €.</div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">16</div><div><div class="ex-name">Consulta 16</div></div></div>
+      <div class="ex-enunciat">Mostreu el nom i mesos sencers (nom de columna) treballats de tots els empleats que no pertanyen els departaments 10 i 30 . Ordenats per mesos de forma descendent.</div>
+    </div>
+  </div>
+
+  <nav class="doc-nav">
+    <a class="back" href="AEA1_RA3_consultes_complexes.html">&#8592; Consultes complexes</a>
+    <a href="index.html">&#8594; Índex del mòdul</a>
+  </nav>
+</div>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span>Institut La Mercè · Formació Professional</span>
+    <span>Cicle DAW · MP0484 Bases de dades · Curs 2025–2026</span>
+  </div>
+</footer>
+</body>
+</html>
