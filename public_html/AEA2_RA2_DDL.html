@@ -198,17 +198,31 @@
     <div class="sec-head"><span class="sec-num">2</span><div><h2 class="sec-title">Crear taules i restriccions</h2><p class="sec-sub">Criteri 2.2 · 2.4 · 2.5 · 2.8 — CREATE TABLE, ALTER TABLE, DROP TABLE</p></div></div>
     <p class="lead">El <strong>DDL (Data Definition Language)</strong> defineix l'estructura de la base de dades: crear, modificar i eliminar taules, índexs, vistes i altres objectes. Les sentències DDL fan un <code>COMMIT</code> implícit automàtic.</p>
     <div class="ibox blue"><div class="ibox-label">Restriccions (CONSTRAINTS)</div><div class="ibox-text">Les restriccions garanteixen la integritat de les dades. Poden definir-se al nivell de columna (inline) o al nivell de taula (out-of-line). Es recomana donar-los un nom descriptiu per facilitar els missatges d'error.</div></div>
-    <div class="demo"><div class="demo-label">Exemple 1 · CREATE TABLE amb restriccions</div><pre class="sql-out" id="d1"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>PRIMARY KEY</code> identifica de forma única cada fila i implica <code>NOT NULL + UNIQUE</code>.<br><code>NOT NULL</code> impedeix valors buits.<br><code>UNIQUE</code> garanteix que no hi ha valors repetits (permet un NULL).<br><code>CHECK</code> valida que el valor compleixi una condició.<br><code>FOREIGN KEY ... REFERENCES</code> estableix la integritat referencial.<br><code>DEFAULT</code> estableix un valor quan no s'especifica cap a l'INSERT.</div></div></div>
-    <div class="demo"><div class="demo-label">Exemple 2 · ALTER TABLE: afegir, modificar i eliminar</div><pre class="sql-out" id="d2"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>ALTER TABLE ADD</code> afegeix nous elements.<br><code>ALTER TABLE MODIFY</code> canvia el tipus o les propietats d'una columna existent.<br><code>ALTER TABLE DROP COLUMN</code> elimina una columna (irreversible).<br><code>DROP TABLE nom PURGE</code> elimina la taula sense passar per la paperera de reciclatge d'Oracle.</div></div></div>
-    <div class="demo"><div class="demo-label">Exemple 3 · CREATE TABLE AS SELECT (CTAS)</div><pre class="sql-out" id="d3"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>CREATE TABLE ... AS SELECT</code> crea una nova taula a partir del resultat d'una consulta. Copia les dades i l'estructura de columnes però <strong>no</strong> copia les restriccions (PRIMARY KEY, FOREIGN KEY, etc.). Molt útil per crear còpies de seguretat o taules temporals.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 1 · CREATE TABLE amb restriccions</div><pre class="sql-out" id="d1"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>PRIMARY KEY</code> identifica de forma única cada fila i implica <code>NOT NULL + UNIQUE</code>.<br><code>NOT NULL</code> impedeix valors buits.<br><code>UNIQUE</code> garanteix que no hi ha valors repetits (permet un NULL).<br><code>CHECK</code> valida que el valor compleixi una condició.<br><code>FOREIGN KEY ... REFERENCES</code> estableix la integritat referencial.<br><code>DEFAULT</code> estableix un valor quan no s'especifica cap a l'INSERT.<br>La taula <code>categories</code> s'ha de crear <strong>abans</strong> que <code>productes</code>, perquè la FK necessita que la taula referenciada existeixi.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 2 · Clau primària composta i restriccions a nivell de taula</div><pre class="sql-out" id="d1b"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Una línia de comanda s'identifica per la parella <code>(com_id, num_linia)</code>: la línia 1 de la comanda 500 i la línia 1 de la comanda 501 són files diferents. Quan una restricció afecta <strong>més d'una columna</strong> s'ha de definir a nivell de taula, al final del <code>CREATE TABLE</code>, indicant les columnes entre parèntesis. Les columnes d'una PK composta són <code>NOT NULL</code> automàticament.</div></div></div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Restricció</th><th>Nivell de columna (inline)</th><th>Nivell de taula (out-of-line)</th></tr></thead>
+        <tbody>
+          <tr><td>PRIMARY KEY</td><td>prod_id NUMBER(6) CONSTRAINT pk_prod PRIMARY KEY</td><td>CONSTRAINT pk_linia PRIMARY KEY (com_id, num_linia)</td></tr>
+          <tr><td>FOREIGN KEY</td><td>cat_id NUMBER(4) CONSTRAINT fk_prod_cat REFERENCES categories(cat_id)</td><td>CONSTRAINT fk_linia_com FOREIGN KEY (com_id) REFERENCES comandes(com_id)</td></tr>
+          <tr><td>UNIQUE</td><td>codi_barres CHAR(13) CONSTRAINT uq_prod_ean UNIQUE</td><td>CONSTRAINT uq_linia_prod UNIQUE (com_id, prod_id)</td></tr>
+          <tr><td>CHECK</td><td>preu NUMBER(7,2) CONSTRAINT ck_prod_preu CHECK (preu &gt; 0)</td><td>CONSTRAINT ck_linia_dte CHECK (descompte &lt;= preu_unitat)</td></tr>
+          <tr><td>NOT NULL</td><td>nom VARCHAR2(40) NOT NULL</td><td class="desc">No es pot definir a nivell de taula</td></tr>
+          <tr><td class="desc"><strong>Quan s'usa</strong></td><td class="desc">Restriccions sobre una sola columna. Més curt i llegible.</td><td class="desc"><strong>Obligatori</strong> si la restricció afecta diverses columnes (PK o UNIQUE compostes, CHECK que compara columnes). També es pot fer servir per a una sola columna.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="demo"><div class="demo-label">Exemple 3 · ALTER TABLE: afegir, modificar i eliminar</div><pre class="sql-out" id="d2"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>ALTER TABLE ADD</code> afegeix nous elements.<br><code>ALTER TABLE MODIFY</code> canvia el tipus o les propietats d'una columna existent.<br><code>ALTER TABLE DROP COLUMN</code> elimina una columna (irreversible).<br><code>DROP TABLE nom PURGE</code> elimina la taula sense passar per la paperera de reciclatge d'Oracle. Si altres taules hi fan referència amb una FK, cal afegir <code>CASCADE CONSTRAINTS</code>; si no, Oracle dona l'error ORA-02449.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 4 · CREATE TABLE AS SELECT (CTAS)</div><pre class="sql-out" id="d3"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>CREATE TABLE ... AS SELECT</code> crea una nova taula a partir del resultat d'una consulta. Copia les dades i l'estructura de columnes però <strong>no</strong> copia les restriccions (PRIMARY KEY, FOREIGN KEY, etc.). Molt útil per crear còpies de seguretat o taules temporals.</div></div></div>
   </section>
 
   <!-- SECCIÓ 3: VISTES I SEQÜÈNCIES -->
   <section class="section">
     <div class="sec-head"><span class="sec-num">3</span><div><h2 class="sec-title">Vistes, seqüències i índexos</h2><p class="sec-sub">Criteri 2.6 · 2.8 — Objectes addicionals de l'esquema</p></div></div>
     <p class="lead">A més de les taules, Oracle permet crear altres objectes d'esquema: les <strong>vistes</strong> simplifiquen l'accés a dades complexes, les <strong>seqüències</strong> generen valors únics automàtics i els <strong>índexos</strong> acceleren les consultes.</p>
-    <div class="demo"><div class="demo-label">Exemple 4 · Crear i usar vistes</div><pre class="sql-out" id="d4"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Una vista és una consulta emmagatzemada que s'usa com si fos una taula. <strong>No</strong> emmagatzema dades, sinó la definició de la consulta. <code>CREATE OR REPLACE</code> actualitza la vista si ja existeix. <code>WITH CHECK OPTION</code> impedeix modificar files que quedarien fora de la vista. <code>WITH READ ONLY</code> impedeix qualsevol DML a través de la vista.</div></div></div>
-    <div class="demo"><div class="demo-label">Exemple 5 · Seqüències per generar IDs únics</div><pre class="sql-out" id="d5"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>NEXTVAL</code> retorna el proper valor de la seqüència i l'incrementa (irreversible). <code>CURRVAL</code> retorna el darrer valor obtingut per la sessió actual. En Oracle 12c+ es pot usar la sintaxi <code>columna NUMBER GENERATED ALWAYS AS IDENTITY</code>.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 5 · Crear i usar vistes</div><pre class="sql-out" id="d4"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text">Una vista és una consulta emmagatzemada que s'usa com si fos una taula. <strong>No</strong> emmagatzema dades, sinó la definició de la consulta. <code>CREATE OR REPLACE</code> actualitza la vista si ja existeix. <code>WITH CHECK OPTION</code> impedeix modificar files que quedarien fora de la vista. <code>WITH READ ONLY</code> impedeix qualsevol DML a través de la vista.</div></div></div>
+    <div class="demo"><div class="demo-label">Exemple 6 · Seqüències per generar IDs únics</div><pre class="sql-out" id="d5"></pre><div class="exp-box"><div class="exp-label">Explicació</div><div class="exp-text"><code>NEXTVAL</code> retorna el proper valor de la seqüència i l'incrementa (irreversible). <code>CURRVAL</code> retorna el darrer valor obtingut per la sessió actual. En Oracle 12c+ es pot usar la sintaxi <code>columna NUMBER GENERATED ALWAYS AS IDENTITY</code>.</div></div></div>
   </section>
 
   <!-- EXERCICIS -->
@@ -252,7 +266,7 @@ NAME                VARCHAR2(25)</pre></div>
       <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Exercici 3</div></div></div>
       <div class="ex-enunciat"><p>Creeu la taula <code>EMP</code> segons el gràfic d'instàncies de taula següent. Deseu la sentència en un script anomenat <code>lab_10_03.sql</code> i, després, executeu l'script per crear la taula. Confirmeu que s'ha creat la taula.</p><div class="inst-wrap"><table class="inst"><tr><th>Column Name</th><td>ID</td><td>LAST_NAME</td><td>FIRST_NAME</td><td>DEPT_ID</td></tr><tr><th>Key Type</th><td>Primary Key</td><td></td><td></td><td></td></tr><tr><th>Nulls/Unique</th><td></td><td></td><td></td><td></td></tr><tr><th>FK Table</th><td></td><td></td><td></td><td>DEPT</td></tr><tr><th>Fk Column</th><td></td><td></td><td></td><td>ID</td></tr><tr><th>DataType</th><td>NUMBER</td><td>VARCHAR2</td><td>VARCHAR2</td><td>NUMBER</td></tr><tr><th>Length</th><td>7</td><td>25</td><td>25</td><td>7</td></tr></table></div><pre class="pre-out">Name       Null?    Type
 ---------- -------- ------------
-ID                  NUMBER(7)
+ID         NOT NULL NUMBER(7)
 LAST_NAME           VARCHAR2(25)
 FIRST_NAME          VARCHAR2(25)
 DEPT_ID             NUMBER(7)</pre></div>
@@ -380,8 +394,16 @@ DEPTNO            NUMBER(4)</pre><pre class="pre-out">  EMPNO  EMPLOYEE  DEPTNO
 
 <script>
 function colorSQL(t){
-  t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  t=t.replace(/(--[^\n]*)/g,'<span class="cmt">$1</span>');
+  // Els comentaris (--) es pinten a part perquè no s'hi ressaltin paraules clau
+  return t.split('\n').map(function(line){
+    var i=line.indexOf('--');
+    var code=i<0?line:line.slice(0,i), cmt=i<0?'':line.slice(i);
+    return colorCode(code)+(cmt?'<span class="cmt">'+escSQL(cmt)+'</span>':'');
+  }).join('\n');
+}
+function escSQL(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function colorCode(t){
+  t=escSQL(t);
   t=t.replace(/('[^']*')/g,'<span class="str">$1</span>');
   t=t.replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');
   t=t.replace(/\b(SELECT|FROM|WHERE|AND|OR|CREATE|ALTER|DROP|TABLE|VIEW|INDEX|SEQUENCE|CONSTRAINT|PRIMARY\s+KEY|FOREIGN\s+KEY|REFERENCES|NOT\s+NULL|UNIQUE|CHECK|DEFAULT|ADD|MODIFY|RENAME|PURGE|OR\s+REPLACE|READ\s+ONLY|CHECK\s+OPTION|CASCADE|NEXTVAL|CURRVAL|INCREMENT\s+BY|START\s+WITH|MAXVALUE|NOCACHE|NOCYCLE|AS|ON\s+DELETE|SET\s+NULL|WITH)\b/gi,'<span class="kw">$1</span>');
@@ -389,30 +411,63 @@ function colorSQL(t){
   return t;
 }
 const SQLS={
-d1:`CREATE TABLE productes (
-    prod_id       NUMBER(6)       CONSTRAINT pk_prod PRIMARY KEY,
-    nom           VARCHAR2(100)   CONSTRAINT nn_prod_nom NOT NULL,
-    categoria     VARCHAR2(50)    NOT NULL,
-    preu          NUMBER(8,2)     CONSTRAINT ck_preu CHECK (preu > 0),
-    stock         NUMBER(6)       DEFAULT 0,
-    email_prov    VARCHAR2(200)   CONSTRAINT uq_email UNIQUE,
-    data_alta     DATE            DEFAULT SYSDATE,
-    dept_id       NUMBER(4)       CONSTRAINT fk_dept
-                                    REFERENCES departments(department_id)
-                                    ON DELETE SET NULL
+d1:`-- Primer, la taula "pare": la FK de productes hi farà referència
+CREATE TABLE categories (
+    cat_id       NUMBER(4)      CONSTRAINT pk_cat PRIMARY KEY,
+    nom          VARCHAR2(30)   CONSTRAINT nn_cat_nom NOT NULL
+                                CONSTRAINT uq_cat_nom UNIQUE
+);
+
+-- Restriccions a nivell de COLUMNA (inline)
+CREATE TABLE productes (
+    prod_id      NUMBER(6)      CONSTRAINT pk_prod PRIMARY KEY,
+    nom          VARCHAR2(40)   CONSTRAINT nn_prod_nom NOT NULL,
+    codi_barres  CHAR(13)       CONSTRAINT uq_prod_ean UNIQUE,
+    preu         NUMBER(7,2)    CONSTRAINT ck_prod_preu CHECK (preu > 0),
+    stock        NUMBER(5)      DEFAULT 0,
+    data_alta    DATE           DEFAULT SYSDATE,
+    cat_id       NUMBER(4)      CONSTRAINT fk_prod_cat
+                                  REFERENCES categories(cat_id)
+                                  ON DELETE SET NULL
 );`,
+d1b:`CREATE TABLE comandes (
+    com_id       NUMBER(8)      CONSTRAINT pk_com PRIMARY KEY,
+    data_com     DATE           DEFAULT SYSDATE NOT NULL
+);
+
+-- Restriccions a nivell de TAULA (out-of-line)
+CREATE TABLE linies_comanda (
+    com_id       NUMBER(8),
+    num_linia    NUMBER(3),
+    prod_id      NUMBER(6)      NOT NULL,   -- NOT NULL: només a nivell de columna
+    quantitat    NUMBER(4)      DEFAULT 1,
+    preu_unitat  NUMBER(7,2)    NOT NULL,
+    descompte    NUMBER(7,2)    DEFAULT 0,
+    CONSTRAINT pk_linia       PRIMARY KEY (com_id, num_linia),
+    CONSTRAINT fk_linia_com   FOREIGN KEY (com_id)
+                                REFERENCES comandes(com_id) ON DELETE CASCADE,
+    CONSTRAINT fk_linia_prod  FOREIGN KEY (prod_id)
+                                REFERENCES productes(prod_id),
+    CONSTRAINT uq_linia_prod  UNIQUE (com_id, prod_id),
+    CONSTRAINT ck_linia_qty   CHECK (quantitat > 0),
+    CONSTRAINT ck_linia_dte   CHECK (descompte <= preu_unitat)
+);
+
+-- ✗ ERROR: una clau composta NO es pot definir a nivell de columna
+--   com_id    NUMBER(8) PRIMARY KEY,
+--   num_linia NUMBER(3) PRIMARY KEY   → ORA-02260: table can have only one primary key`,
 d2:`-- Afegir una nova columna
-ALTER TABLE productes ADD (descripcio CLOB);
+ALTER TABLE productes ADD (descripcio VARCHAR2(500));
 
 -- Modificar el tipus d'una columna existent
-ALTER TABLE productes MODIFY (nom VARCHAR2(200));
+ALTER TABLE productes MODIFY (nom VARCHAR2(60));
 
 -- Afegir una restricció nova
 ALTER TABLE productes
-    ADD CONSTRAINT ck_stock CHECK (stock >= 0);
+    ADD CONSTRAINT ck_prod_stock CHECK (stock >= 0);
 
 -- Deshabilitar temporalment una restricció
-ALTER TABLE productes DISABLE CONSTRAINT ck_stock;
+ALTER TABLE productes DISABLE CONSTRAINT ck_prod_stock;
 
 -- Eliminar una columna
 ALTER TABLE productes DROP COLUMN descripcio;
@@ -421,7 +476,8 @@ ALTER TABLE productes DROP COLUMN descripcio;
 ALTER TABLE productes RENAME TO articles;
 
 -- Eliminar la taula completament (irreversible)
-DROP TABLE articles PURGE;`,
+-- CASCADE CONSTRAINTS: elimina també la FK de linies_comanda que hi apunta
+DROP TABLE articles CASCADE CONSTRAINTS PURGE;`,
 d3:`-- Crear còpia de la taula d'empleats del dept 90
 CREATE TABLE emp_directius AS
     SELECT employee_id, last_name, salary, hire_date
@@ -460,13 +516,13 @@ d5:`-- Crear una seqüència
 CREATE SEQUENCE seq_prod_id
     START WITH 1000
     INCREMENT BY 1
-    MAXVALUE 9999999
+    MAXVALUE 999999      -- prod_id és NUMBER(6)
     NOCACHE
     NOCYCLE;
 
 -- Usar la seqüència a un INSERT
-INSERT INTO productes (prod_id, nom, categoria, preu)
-VALUES (seq_prod_id.NEXTVAL, 'Teclat mecànic', 'Perifèrics', 89.99);
+INSERT INTO productes (prod_id, nom, preu, cat_id)
+VALUES (seq_prod_id.NEXTVAL, 'Teclat mecànic', 89.99, 10);
 
 -- Veure el darrer valor generat (dins la mateixa sessió)
 SELECT seq_prod_id.CURRVAL FROM dual;`
