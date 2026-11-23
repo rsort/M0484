@@ -114,6 +114,17 @@
     .doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
     .site-foot { border-top:1px solid var(--border); padding:20px 24px; }
     .foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+    /* EXERCICIS PER TEMES */
+    .ex-block-body .subhead { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin:28px 0 16px; padding-bottom:6px; border-bottom:1px dashed var(--accent-bdr); }
+    .ex-block-body .subhead:first-child { margin-top:0; }
+    .ex-block-body > .lead { margin-bottom:18px; }
+    .ex-enunciat { font-size:14px; color:var(--ink); line-height:1.6; }
+    .ex-enunciat p + p { margin-top:8px; }
+    .pre-out { font-family:'JetBrains Mono',monospace; font-size:12.5px; background:var(--code-bg); color:var(--code-text); padding:14px 18px; border-radius:var(--r-sm); line-height:1.65; white-space:pre; overflow-x:auto; margin:10px 0 4px; }
+    .inst-wrap { overflow-x:auto; margin:10px 0 4px; }
+    .inst { border-collapse:collapse; font-size:12.5px; }
+    .inst th, .inst td { border:1px solid var(--border); padding:5px 12px; text-align:left; font-family:'JetBrains Mono',monospace; }
+    .inst th { background:#fafaf8; font-family:'DM Sans',sans-serif; font-weight:600; color:var(--ink-2); }
   </style>
 </head>
 <body>
@@ -201,6 +212,149 @@
       <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Insereix i modifica les dades</div><div class="ex-level">Nivell avançat · criteris 4.2, 4.5, 4.6</div></div></div>
       <p class="ex-intro">Escriu el DML per a cada enunciat i comprova amb la solució.</p>
       <div id="ex4-cont"></div>
+    </div>
+  </div>
+
+
+  <!-- EXERCICIS — MANIPULACIÓ DE DADES I TRANSACCIONS -->
+  <div class="ex-block-head" id="ex-my-employee"><h2 class="ex-block-title">Exercicis — Manipulació de dades i transaccions</h2><p class="ex-block-sub">INSERT, UPDATE, DELETE, COMMIT, SAVEPOINT i ROLLBACK amb la taula MY_EMPLOYEE · criteris 4.1, 4.2, 4.4–4.6</p></div>
+  <div class="ex-block-body">
+    <p class="lead">El departament de recursos humans vol que creeu sentències SQL per inserir, actualitzar i suprimir dades dels empleats. Com a prototip, fareu servir la taula <code>MY_EMPLOYEE</code> abans de proporcionar les sentències al departament.</p>
+    <div class="ibox blue"><div class="ibox-label">Nota</div><div class="ibox-text">Per a totes les sentències DML, utilitzeu la icona <strong>Run Script</strong> (o premeu [F5]) per executar la consulta. D'aquesta manera, veureu els missatges de resposta a la pestanya <strong>Script Output</strong>. Per a les consultes <code>SELECT</code>, continueu utilitzant la icona <strong>Execute Statement</strong> o premeu [F9] per obtenir la sortida amb format a la pestanya <strong>Results</strong>.</div></div>
+    <div class="subhead">Inserir dades a la taula MY_EMPLOYEE</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Exercici 1</div></div></div>
+      <div class="ex-enunciat"><p>Executeu la sentència següent per crear la taula <code>MY_EMPLOYEE</code> que s'utilitza en aquesta pràctica.</p><pre class="pre-out">CREATE TABLE MY_EMPLOYEE (
+     ID NUMBER(4) PRIMARY KEY,
+     LAST_NAME VARCHAR2(25) NOT NULL,
+     FIRST_NAME VARCHAR2(25) NOT NULL,
+     USERID VARCHAR2(8),
+     SALARY NUMBER(9,2));</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Exercici 2</div></div></div>
+      <div class="ex-enunciat"><p>Descriviu l'estructura de la taula <code>MY_EMPLOYEE</code> per identificar els noms de les columnes.</p><pre class="pre-out">DESCRIBE MY_EMPLOYEE;
+
+Nombre          Nulo     Tipo
+--------------- -------- ------------
+ID              NOT NULL NUMBER(4)
+LAST_NAME       NOT NULL VARCHAR2(25)
+FIRST_NAME      NOT NULL VARCHAR2(25)
+USERID                   VARCHAR2(8)
+SALARY                   NUMBER(9,2)</pre><p>Els apartats següents fan referència a les dades de la taula següent:</p><div class="inst-wrap"><table class="inst"><tr><th>ID</th><th>LAST_NAME</th><th>FIRST_NAME</th><th>USERID</th><th>SALARY</th></tr><tr><td>1</td><td>Patel</td><td>Ralph</td><td>rpatel</td><td>895</td></tr><tr><td>2</td><td>Dancs</td><td>Betty</td><td>bdancs</td><td>860</td></tr><tr><td>3</td><td>Biri</td><td>Ben</td><td>bbiri</td><td>1100</td></tr><tr><td>4</td><td>Newman</td><td>Chad</td><td>cnewman</td><td>750</td></tr><tr><td>5</td><td>Ropeburn</td><td>Audrey</td><td>aropebur</td><td>1550</td></tr></table></div></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Exercici 3</div></div></div>
+      <div class="ex-enunciat"><p>Creeu una sentència <code>INSERT</code> per afegir la primera fila de dades a la taula <code>MY_EMPLOYEE</code> a partir de les dades d'exemple anteriors. No indiqueu la llista de columnes a la clàusula <code>INSERT</code>. No introduïu encara totes les files.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">4</div><div><div class="ex-name">Exercici 4</div></div></div>
+      <div class="ex-enunciat"><p>Ompliu la taula <code>MY_EMPLOYEE</code> amb la segona fila de les dades d'exemple anteriors. Aquesta vegada, indiqueu explícitament la llista de columnes a la clàusula <code>INSERT</code>.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">5</div><div><div class="ex-name">Exercici 5</div></div></div>
+      <div class="ex-enunciat"><p>Confirmeu les addicions a la taula.</p><pre class="pre-out">  ID  LAST_NAME  FIRST_NAME  USERID    SALARY
+  --  ---------  ----------  --------  ------
+1   1  Patel      Ralph       rpatel       895
+2   2  Dancs      Betty       bdancs       860</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">6</div><div><div class="ex-name">Exercici 6</div></div></div>
+      <div class="ex-enunciat"><p>Escriviu una sentència <code>INSERT</code> en un fitxer de script reutilitzable per carregar les files restants a la taula <code>MY_EMPLOYEE</code>. L'script ha de demanar el valor de totes les columnes (<code>ID</code>, <code>LAST_NAME</code>, <code>FIRST_NAME</code>, <code>USERID</code> i <code>SALARY</code>).</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">7</div><div><div class="ex-name">Exercici 7</div></div></div>
+      <div class="ex-enunciat"><p>Ompliu la taula amb les dues files d'exemple següents de les dades mostrades al pas 3, executant la sentència <code>INSERT</code> de l'script que heu creat.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">8</div><div><div class="ex-name">Exercici 8</div></div></div>
+      <div class="ex-enunciat"><p>Visualitzeu tots els empleats i comproveu que s'han introduït correctament.</p><pre class="pre-out">  ID  LAST_NAME  FIRST_NAME  USERID    SALARY
+  --  ---------  ----------  --------  ------
+1   1  Patel      Ralph       rpatel       895
+2   2  Dancs      Betty       bdancs       860
+3   3  Biri       Ben         bbiri       1100
+4   4  Newman     Chad        cnewman      750</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">9</div><div><div class="ex-name">Exercici 9</div></div></div>
+      <div class="ex-enunciat"><p>Confirmeu els canvis a la taula.</p></div>
+    </div>
+    <div class="subhead">Actualitzar i suprimir dades de la taula MY_EMPLOYEE</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">10</div><div><div class="ex-name">Exercici 10</div></div></div>
+      <div class="ex-enunciat"><p>Canvieu el cognom de l'empleat 3 a Drexler.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">11</div><div><div class="ex-name">Exercici 11</div></div></div>
+      <div class="ex-enunciat"><p>Canvieu el salari a 1.000 dòlars per a tots els empleats amb un salari inferior a 900.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">12</div><div><div class="ex-name">Exercici 12</div></div></div>
+      <div class="ex-enunciat"><p>Visualitzeu tots els empleats i comproveu que els canvis s'han fet correctament.</p><pre class="pre-out">  ID  LAST_NAME  FIRST_NAME  USERID    SALARY
+  --  ---------  ----------  --------  ------
+1   1  Patel      Ralph       rpatel      1000
+2   2  Dancs      Betty       bdancs      1000
+3   3  Drexler    Ben         bbiri       1100
+4   4  Newman     Chad        cnewman     1000</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">13</div><div><div class="ex-name">Exercici 13</div></div></div>
+      <div class="ex-enunciat"><p>Suprimiu Betty Dancs de la taula <code>MY_EMPLOYEE</code>.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">14</div><div><div class="ex-name">Exercici 14</div></div></div>
+      <div class="ex-enunciat"><p>Visualitzeu tots els empleats i comproveu que els canvis s'han fet correctament.</p><pre class="pre-out">  ID  LAST_NAME  FIRST_NAME  USERID    SALARY
+  --  ---------  ----------  --------  ------
+1   1  Patel      Ralph       rpatel      1000
+2   3  Drexler    Ben         bbiri       1100
+3   4  Newman     Chad        cnewman     1000</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">15</div><div><div class="ex-name">Exercici 15</div></div></div>
+      <div class="ex-enunciat"><p>Confirmeu tots els canvis pendents.</p></div>
+    </div>
+    <div class="subhead">Controlar la transacció de dades de la taula MY_EMPLOYEE</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">16</div><div><div class="ex-name">Exercici 16</div></div></div>
+      <div class="ex-enunciat"><p>Ompliu la taula amb l'última fila de les dades d'exemple mostrades al pas 3, fent servir les sentències de l'script que heu creat al pas 6. Executeu les sentències de l'script.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">17</div><div><div class="ex-name">Exercici 17</div></div></div>
+      <div class="ex-enunciat"><p>Comproveu que les dades s'han introduït correctament.</p><pre class="pre-out">  ID  LAST_NAME  FIRST_NAME  USERID    SALARY
+  --  ---------  ----------  --------  ------
+1   1  Patel      Ralph       rpatel      1000
+2   3  Drexler    Ben         bbiri       1100
+3   4  Newman     Chad        cnewman     1000
+4   5  Ropeburn   Audrey      aropebur    1550</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">18</div><div><div class="ex-name">Exercici 18</div></div></div>
+      <div class="ex-enunciat"><p>Marqueu un punt intermedi en el processament de la transacció.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">19</div><div><div class="ex-name">Exercici 19</div></div></div>
+      <div class="ex-enunciat"><p>Suprimiu totes les files de la taula <code>MY_EMPLOYEE</code>.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">20</div><div><div class="ex-name">Exercici 20</div></div></div>
+      <div class="ex-enunciat"><p>Confirmeu que la taula està buida.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">21</div><div><div class="ex-name">Exercici 21</div></div></div>
+      <div class="ex-enunciat"><p>Descarteu l'operació <code>DELETE</code> més recent sense descartar l'operació <code>INSERT</code> anterior.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">22</div><div><div class="ex-name">Exercici 22</div></div></div>
+      <div class="ex-enunciat"><p>Comproveu que la fila nova està intacta.</p><pre class="pre-out">  ID  LAST_NAME  FIRST_NAME  USERID    SALARY
+  --  ---------  ----------  --------  ------
+1   1  Patel      Ralph       rpatel      1000
+2   3  Drexler    Ben         bbiri       1100
+3   4  Newman     Chad        cnewman     1000
+4   5  Ropeburn   Audrey      aropebur    1550</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">23</div><div><div class="ex-name">Exercici 23</div></div></div>
+      <div class="ex-enunciat"><p>Confirmeu els canvis.</p></div>
     </div>
   </div>
 
