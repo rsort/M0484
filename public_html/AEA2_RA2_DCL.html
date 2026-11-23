@@ -115,6 +115,19 @@
     .doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
     .site-foot { border-top:1px solid var(--border); padding:20px 24px; }
     .foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+    /* EXERCICIS PER TEMES */
+    .ex-block-body .subhead { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin:28px 0 16px; padding-bottom:6px; border-bottom:1px dashed var(--accent-bdr); }
+    .ex-block-body .subhead:first-child { margin-top:0; }
+    .ex-block-body > .lead { margin-bottom:18px; }
+    .ex-enunciat { font-size:14px; color:var(--ink); line-height:1.6; }
+    .ex-enunciat p + p { margin-top:8px; }
+    .pre-out { font-family:'JetBrains Mono',monospace; font-size:12.5px; background:var(--code-bg); color:var(--code-text); padding:14px 18px; border-radius:var(--r-sm); line-height:1.65; white-space:pre; overflow-x:auto; margin:10px 0 4px; }
+    .inst-wrap { overflow-x:auto; margin:10px 0 4px; }
+    .inst { border-collapse:collapse; font-size:12.5px; }
+    .inst th, .inst td { border:1px solid var(--border); padding:5px 12px; text-align:left; font-family:'JetBrains Mono',monospace; }
+    .inst th { background:#fafaf8; font-family:'DM Sans',sans-serif; font-weight:600; color:var(--ink-2); }
+    .ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+    .ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
   </style>
 </head>
 <body>
@@ -209,6 +222,178 @@
       <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Crea usuari i gestiona accés</div><div class="ex-level">Nivell avançat · criteri 2.7, 2.8</div></div></div>
       <p class="ex-intro">Escriu el DCL per a cada enunciat i comprova amb la solució.</p>
       <div id="ex2-cont"></div>
+    </div>
+  </div>
+
+
+  <!-- EXERCICIS — USUARIS I PRIVILEGIS -->
+  <div class="ex-block-head" id="ex-usuaris"><h2 class="ex-block-title">Exercicis — Usuaris i privilegis</h2><p class="ex-block-sub">Usuaris, rols, privilegis de sistema i d'objecte · criteris 2.7, 2.8</p></div>
+  <div class="ex-block-body">
+    <div class="ibox red"><div class="ibox-label">Molt important abans de fer els exercicis · Oracle 21c</div><div class="ibox-text">Executa primer aquesta sentència: <code>alter session set "_ORACLE_SCRIPT"=true;</code></div></div>
+    <div class="subhead">Activitat 1: Creació d'usuaris</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Exercici 1</div></div></div>
+      <div class="ex-enunciat"><p>Crea els usuaris user1, user2 i user3 amb contrasenyes password1, password2 i password3, respectivament.</p></div>
+    </div>
+    <div class="subhead">Activitat 2: Creació de rols</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Exercici 2</div></div></div>
+      <div class="ex-enunciat"><p>Crea els rols role_admin i role_readonly.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Exercici 3</div></div></div>
+      <div class="ex-enunciat"><p>Explica breument la diferència entre rols i privilegis d'objecte i com s'utilitzen en la seguretat de la base de dades.</p></div>
+    </div>
+    <div class="subhead">Activitat 3: Assignació de privilegis de sistema</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">4</div><div><div class="ex-name">Exercici 4</div></div></div>
+      <div class="ex-enunciat"><p>Assigna el privilegi CREATE SESSION a user1, user2 i user3 per permetre'ls connectar-se a la base de dades.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">5</div><div><div class="ex-name">Exercici 5</div></div></div>
+      <div class="ex-enunciat"><p>Assigna els privilegis CREATE TABLE, CREATE VIEW i CREATE SEQUENCE al rol role_admin.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">6</div><div><div class="ex-name">Exercici 6</div></div></div>
+      <div class="ex-enunciat"><p>Assigna-li el rol role_admin al user1.</p></div>
+    </div>
+    <div class="subhead">Activitat 4: Atorgar privilegis de sistema amb capacitat de propagació</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">7</div><div><div class="ex-name">Exercici 7</div></div></div>
+      <div class="ex-enunciat"><p>Atorga el privilegi CREATE SESSION a user2 amb l'opció de propagar-lo a altres usuaris.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">8</div><div><div class="ex-name">Exercici 8</div></div></div>
+      <div class="ex-enunciat"><p>Inicia sessió com user2 i concedeix el privilegi CREATE SESSION a user3.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">9</div><div><div class="ex-name">Exercici 9</div></div></div>
+      <div class="ex-enunciat"><p>Comprova els privilegis de sistema concedits a user3 utilitzant la vista DBA_SYS_PRIVS.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">10</div><div><div class="ex-name">Exercici 10</div></div></div>
+      <div class="ex-enunciat"><p>Revoca el privilegi CREATE SESSION de user2 i observa què passa amb user3.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">11</div><div><div class="ex-name">Exercici 11</div></div></div>
+      <div class="ex-enunciat"><p>Comprova si user3 encara té el privilegi CREATE SESSION.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">12</div><div><div class="ex-name">Exercici 12</div></div></div>
+      <div class="ex-enunciat"><p>Explica per què user3 perd el privilegi CREATE SESSION quan aquest es revoca de user2.</p></div>
+    </div>
+    <div class="subhead">Activitat 5: Assignació de privilegis d'objecte</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">13</div><div><div class="ex-name">Exercici 13</div></div></div>
+      <div class="ex-enunciat"><p>Crea una taula employee a l'esquema de user1 i concedeix el privilegi SELECT a user2 i user3 (connecta't com a user1 i crea la taula; després, connecta't com a system i concedeix el privilegi).</p><pre class="pre-out">CREATE TABLE employee (
+    emp_id   NUMBER PRIMARY KEY,
+    emp_name VARCHAR2(50),
+    address  VARCHAR2(25),
+    salary   NUMBER);</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">14</div><div><div class="ex-name">Exercici 14</div></div></div>
+      <div class="ex-enunciat"><p>Assigna el privilegi INSERT a la taula employee al rol role_admin i concedeix aquest rol a user3.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">15</div><div><div class="ex-name">Exercici 15</div></div></div>
+      <div class="ex-enunciat"><p>Atorga a user2 el privilegi SELECT només sobre la columna salary de la taula employee.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">16</div><div><div class="ex-name">Exercici 16</div></div></div>
+      <div class="ex-enunciat"><p>Atorga a user3 el privilegi UPDATE només sobre la columna address de la taula employee.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">17</div><div><div class="ex-name">Exercici 17</div></div></div>
+      <div class="ex-enunciat"><p>Comprova els privilegis concedits sobre la taula employee, incloent-hi columnes específiques, utilitzant la vista DBA_TAB_PRIVS.</p></div>
+    </div>
+    <div class="subhead">Activitat 6: Atorgar el privilegi de donar un privilegi</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">18</div><div><div class="ex-name">Exercici 18</div></div></div>
+      <div class="ex-enunciat"><p>Atorga a user2 el privilegi SELECT sobre la taula employee amb l'opció de concedir aquest privilegi a altres usuaris.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">19</div><div><div class="ex-name">Exercici 19</div></div></div>
+      <div class="ex-enunciat"><p>Inicia sessió com user2 i concedeix el privilegi SELECT sobre la taula employee a user3.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">20</div><div><div class="ex-name">Exercici 20</div></div></div>
+      <div class="ex-enunciat"><p>Comprova els privilegis de user3 sobre la taula employee utilitzant el diccionari de dades.</p></div>
+    </div>
+    <div class="subhead">Activitat 7: Revocació d'un privilegi amb efectes propagats</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">21</div><div><div class="ex-name">Exercici 21</div></div></div>
+      <div class="ex-enunciat"><p>Revoca el privilegi SELECT de user2 sobre la taula employee i observa què passa amb user3.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">22</div><div><div class="ex-name">Exercici 22</div></div></div>
+      <div class="ex-enunciat"><p>Comprova si user3 encara pot accedir a la taula employee.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">23</div><div><div class="ex-name">Exercici 23</div></div></div>
+      <div class="ex-enunciat"><p>Explica per què user3 perd el privilegi SELECT quan aquest es revoca de user2.</p></div>
+    </div>
+    <div class="subhead">Activitat 8: Assignació de privilegis a rols i usuaris</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">24</div><div><div class="ex-name">Exercici 24</div></div></div>
+      <div class="ex-enunciat"><p>Concedeix el rol role_readonly a user2 i assigna-li els privilegis SELECT i UPDATE en la taula employee.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">25</div><div><div class="ex-name">Exercici 25</div></div></div>
+      <div class="ex-enunciat"><p>Crea una vista view_employee_salary per a user1 que mostri només l'emp_id i el salary de la taula employee. Concedeix el privilegi SELECT en aquesta vista a user3.</p></div>
+    </div>
+    <div class="subhead">Activitat 9: Modificació d'usuaris i rols</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">26</div><div><div class="ex-name">Exercici 26</div></div></div>
+      <div class="ex-enunciat"><p>Canvia la contrasenya de user1 a newpassword1 i afegeix el privilegi DROP TABLE al rol role_admin.</p></div>
+    </div>
+    <div class="subhead">Activitat 10: Revocació de privilegis a usuaris i rols</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">27</div><div><div class="ex-name">Exercici 27</div></div></div>
+      <div class="ex-enunciat"><p>Revoca el privilegi UPDATE de la taula employee del rol role_readonly.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">28</div><div><div class="ex-name">Exercici 28</div></div></div>
+      <div class="ex-enunciat"><p>Revoca el rol role_admin de user3.</p></div>
+    </div>
+    <div class="subhead">Activitat 11: Consultes sobre privilegis al diccionari de dades</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">29</div><div><div class="ex-name">Exercici 29</div></div></div>
+      <div class="ex-enunciat"><p>Consulta el diccionari de dades per llistar tots els privilegis de sistema assignats a user2.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">30</div><div><div class="ex-name">Exercici 30</div></div></div>
+      <div class="ex-enunciat"><p>Llista tots els privilegis d'objecte assignats al rol role_admin.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">31</div><div><div class="ex-name">Exercici 31</div></div></div>
+      <div class="ex-enunciat"><p>Llista tots els usuaris i rols que tenen el privilegi SELECT sobre la taula employee.</p></div>
+    </div>
+    <div class="subhead">Activitat 12: Bloqueig i desbloqueig d'usuaris</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">32</div><div><div class="ex-name">Exercici 32</div></div></div>
+      <div class="ex-enunciat"><p>Bloqueja l'usuari user1 per evitar que es pugui connectar a la base de dades.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">33</div><div><div class="ex-name">Exercici 33</div></div></div>
+      <div class="ex-enunciat"><p>Comprova l'estat de l'usuari user1 utilitzant la vista DBA_USERS.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">34</div><div><div class="ex-name">Exercici 34</div></div></div>
+      <div class="ex-enunciat"><p>Desbloqueja l'usuari user1 per permetre-li connectar-se novament.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">35</div><div><div class="ex-name">Exercici 35</div></div></div>
+      <div class="ex-enunciat"><p>Fes una consulta que llisti tots els usuaris bloquejats en la base de dades.</p></div>
+    </div>
+    <div class="subhead">Activitat 13: Eliminació d'usuaris i rols</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">36</div><div><div class="ex-name">Exercici 36</div></div></div>
+      <div class="ex-enunciat"><p>Elimina el rol role_readonly i els usuaris user2 i user3.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">37</div><div><div class="ex-name">Exercici 37</div></div></div>
+      <div class="ex-enunciat"><p>Elimina la taula employee i la vista view_employee_salary de l'esquema user1 (connecta't com user1).</p></div>
     </div>
   </div>
 

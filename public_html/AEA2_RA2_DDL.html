@@ -117,6 +117,19 @@
     .doc-nav .back:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
     .site-foot { border-top:1px solid var(--border); padding:20px 24px; }
     .foot-inner { max-width:860px; margin:0 auto; display:flex; justify-content:space-between; font-size:12px; color:var(--ink-3); flex-wrap:wrap; gap:8px; }
+    /* EXERCICIS PER TEMES */
+    .ex-block-body .subhead { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-mid); margin:28px 0 16px; padding-bottom:6px; border-bottom:1px dashed var(--accent-bdr); }
+    .ex-block-body .subhead:first-child { margin-top:0; }
+    .ex-block-body > .lead { margin-bottom:18px; }
+    .ex-enunciat { font-size:14px; color:var(--ink); line-height:1.6; }
+    .ex-enunciat p + p { margin-top:8px; }
+    .pre-out { font-family:'JetBrains Mono',monospace; font-size:12.5px; background:var(--code-bg); color:var(--code-text); padding:14px 18px; border-radius:var(--r-sm); line-height:1.65; white-space:pre; overflow-x:auto; margin:10px 0 4px; }
+    .inst-wrap { overflow-x:auto; margin:10px 0 4px; }
+    .inst { border-collapse:collapse; font-size:12.5px; }
+    .inst th, .inst td { border:1px solid var(--border); padding:5px 12px; text-align:left; font-family:'JetBrains Mono',monospace; }
+    .inst th { background:#fafaf8; font-family:'DM Sans',sans-serif; font-weight:600; color:var(--ink-2); }
+    .ibox.red { background:var(--red-bg); border:1px solid var(--red-bdr); }
+    .ibox.red .ibox-label, .ibox.red .ibox-text { color:var(--red); }
   </style>
 </head>
 <body>
@@ -215,6 +228,140 @@
       <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Crea l'estructura de la taula</div><div class="ex-level">Nivell avançat · criteris 2.2, 2.4, 2.5, 2.6</div></div></div>
       <p class="ex-intro">Escriu el DDL per a cada enunciat i comprova amb la solució.</p>
       <div id="ex3-cont"></div>
+    </div>
+  </div>
+
+
+  <!-- EXERCICIS — CREAR I GESTIONAR TAULES -->
+  <div class="ex-block-head" id="ex-taules"><h2 class="ex-block-title">Exercicis — Crear i gestionar taules</h2><p class="ex-block-sub">CREATE TABLE, CTAS, READ ONLY / READ WRITE i DROP TABLE · criteris 2.2–2.5, 2.8</p></div>
+  <div class="ex-block-body">
+    <p class="lead">Creeu taules noves amb la sentència <code>CREATE TABLE</code>. Confirmeu que la taula nova s'ha afegit a la base de dades. També aprendreu a definir l'estat d'una taula com a <code>READ ONLY</code> i, després, a tornar-la a <code>READ/WRITE</code>.</p>
+    <div class="ibox blue"><div class="ibox-label">Nota</div><div class="ibox-text">Per a totes les sentències DDL i DML, feu clic a la icona <strong>Run Script</strong> (o premeu [F5]) per executar la consulta a SQL Developer. D'aquesta manera, veureu els missatges de resposta a la pestanya <strong>Script Output</strong>. Per a les consultes <code>SELECT</code>, continueu fent clic a la icona <strong>Execute Statement</strong> o premeu [F9] per obtenir la sortida amb format a la pestanya <strong>Results</strong>.</div></div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Exercici 1</div></div></div>
+      <div class="ex-enunciat"><p>Creeu la taula <code>DEPT</code> segons el gràfic d'instàncies de taula següent. Deseu la sentència en un script anomenat <code>lab_10_01.sql</code> i, després, executeu l'script per crear la taula. Confirmeu que s'ha creat la taula.</p><div class="inst-wrap"><table class="inst"><tr><th>Column Name</th><td>ID</td><td>Name</td></tr><tr><th>Key Type</th><td>Primary Key</td><td></td></tr><tr><th>Nulls/Unique</th><td></td><td></td></tr><tr><th>FK Table</th><td></td><td></td></tr><tr><th>Fk Column</th><td></td><td></td></tr><tr><th>DataType</th><td>Number</td><td>Varchar2</td></tr><tr><th>Length</th><td>7</td><td>25</td></tr></table></div><pre class="pre-out">Name       Null?    Type
+---------- -------- ------------
+ID         NOT NULL NUMBER(7)
+NAME                VARCHAR2(25)</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Exercici 2</div></div></div>
+      <div class="ex-enunciat"><p>Ompliu la taula <code>DEPT</code> amb dades de la taula <code>DEPARTMENTS</code>. Incloeu només les columnes que necessiteu.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Exercici 3</div></div></div>
+      <div class="ex-enunciat"><p>Creeu la taula <code>EMP</code> segons el gràfic d'instàncies de taula següent. Deseu la sentència en un script anomenat <code>lab_10_03.sql</code> i, després, executeu l'script per crear la taula. Confirmeu que s'ha creat la taula.</p><div class="inst-wrap"><table class="inst"><tr><th>Column Name</th><td>ID</td><td>LAST_NAME</td><td>FIRST_NAME</td><td>DEPT_ID</td></tr><tr><th>Key Type</th><td>Primary Key</td><td></td><td></td><td></td></tr><tr><th>Nulls/Unique</th><td></td><td></td><td></td><td></td></tr><tr><th>FK Table</th><td></td><td></td><td></td><td>DEPT</td></tr><tr><th>Fk Column</th><td></td><td></td><td></td><td>ID</td></tr><tr><th>DataType</th><td>NUMBER</td><td>VARCHAR2</td><td>VARCHAR2</td><td>NUMBER</td></tr><tr><th>Length</th><td>7</td><td>25</td><td>25</td><td>7</td></tr></table></div><pre class="pre-out">Name       Null?    Type
+---------- -------- ------------
+ID                  NUMBER(7)
+LAST_NAME           VARCHAR2(25)
+FIRST_NAME          VARCHAR2(25)
+DEPT_ID             NUMBER(7)</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">4</div><div><div class="ex-name">Exercici 4</div></div></div>
+      <div class="ex-enunciat"><p>Creeu la taula <code>EMPLOYEES2</code> a partir de l'estructura de la taula <code>EMPLOYEES</code>. Incloeu només les columnes <code>EMPLOYEE_ID</code>, <code>FIRST_NAME</code>, <code>LAST_NAME</code>, <code>SALARY</code> i <code>DEPARTMENT_ID</code>. Anomeneu les columnes de la taula nova <code>ID</code>, <code>FIRST_NAME</code>, <code>LAST_NAME</code>, <code>SALARY</code> i <code>DEPT_ID</code>, respectivament.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">5</div><div><div class="ex-name">Exercici 5</div></div></div>
+      <div class="ex-enunciat"><p>Canvieu l'estat de la taula <code>EMPLOYEES2</code> a només lectura. Tingueu en compte que aquesta opció està disponible a partir d'Oracle Database 11g.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">6</div><div><div class="ex-name">Exercici 6</div></div></div>
+      <div class="ex-enunciat"><p>Intenteu inserir la fila següent a la taula <code>EMPLOYEES2</code>:</p><div class="inst-wrap"><table class="inst"><tr><th>ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>SALARY</th><th>DEPT_ID</th></tr><tr><td>34</td><td>Grant</td><td>Marcie</td><td>5678</td><td>10</td></tr></table></div><p>Apareixerà el missatge d'error següent:</p><pre class="pre-out">Error que empieza en la línea: 3 del comando -
+INSERT INTO employees2
+VALUES (34,'Grant','Marcie',5678,10)
+Error en la línea de comandos : 3 Columna : 13
+Informe de error -
+Error SQL: ORA-12081: update operation not allowed on table "HR"."EMPLOYEES2"
+12081. 00000 -  "update operation not allowed on table \"%s\".\"%s\""
+*Cause:    An attempt was made to update a read-only materialized view.
+*Action:   No action required. Only Oracle is allowed to update a
+           read-only materialized view.</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">7</div><div><div class="ex-name">Exercici 7</div></div></div>
+      <div class="ex-enunciat"><p>Torneu la taula <code>EMPLOYEES2</code> a l'estat de lectura/escriptura. Ara, torneu a intentar inserir la mateixa fila. Tingueu en compte que aquesta opció està disponible a partir d'Oracle Database 11g.</p><p>Han d'aparèixer els missatges següents:</p><pre class="pre-out">Table EMPLOYEES2 alterado.
+
+1 fila insertadas.</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">8</div><div><div class="ex-name">Exercici 8</div></div></div>
+      <div class="ex-enunciat"><p>Elimineu la taula <code>EMPLOYEES2</code>.</p></div>
+    </div>
+  </div>
+
+  <!-- EXERCICIS — CREACIÓ D'ALTRES OBJECTES D'ESQUEMA -->
+  <div class="ex-block-head" id="ex-objectes"><h2 class="ex-block-title">Exercicis — Creació d'altres objectes d'esquema</h2><p class="ex-block-sub">Vistes, seqüències, índexs i sinònims · criteris 2.6, 2.8</p></div>
+  <div class="ex-block-body">
+    <p class="lead">La <strong>part 1</strong> ofereix diversos exercicis de creació, ús i eliminació de vistes: completeu les preguntes de l'1 a la 6. La <strong>part 2</strong> ofereix diversos exercicis de creació i ús d'una seqüència, un índex i un sinònim: completeu les preguntes de la 7 a la 10.</p>
+    <div class="subhead">Part 1 · Vistes</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">1</div><div><div class="ex-name">Exercici 1</div></div></div>
+      <div class="ex-enunciat"><p>El personal del departament de recursos humans vol ocultar algunes de les dades de la taula <code>EMPLOYEES</code>. Creeu una vista anomenada <code>EMPLOYEES_VU</code> basada en els números i els cognoms dels empleats i en els números de departament de la taula <code>EMPLOYEES</code>. La capçalera del nom de l'empleat ha de ser <code>EMPLOYEE</code>.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">2</div><div><div class="ex-name">Exercici 2</div></div></div>
+      <div class="ex-enunciat"><p>Confirmeu que la vista funciona. Visualitzeu el contingut de la vista <code>EMPLOYEES_VU</code>.</p><pre class="pre-out">  EMPLOYEE_ID  EMPLOYEE  DEPARTMENT_ID
+  -----------  --------  -------------
+1         100  King                 90
+2         101  Kochhar              90
+3         102  De Haan              90
+4         103  Hunold               60
+5         104  Ernst                60
+...</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">3</div><div><div class="ex-name">Exercici 3</div></div></div>
+      <div class="ex-enunciat"><p>Amb la vista <code>EMPLOYEES_VU</code>, escriviu una consulta per al departament de recursos humans que mostri tots els noms d'empleats i els números de departament.</p><pre class="pre-out">  EMPLOYEE  DEPARTMENT_ID
+  --------  -------------
+1 King                 90
+2 Kochhar              90
+3 De Haan              90
+4 Hunold               60
+5 Ernst                60
+...</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">4</div><div><div class="ex-name">Exercici 4</div></div></div>
+      <div class="ex-enunciat"><p>El departament 50 necessita accés a les dades dels seus empleats. Creeu una vista anomenada <code>DEPT50</code> que contingui els números i els cognoms dels empleats i els números de departament de tots els empleats del departament 50. Us han demanat que etiqueteu les columnes de la vista com a <code>EMPNO</code>, <code>EMPLOYEE</code> i <code>DEPTNO</code>.</p><p>Per motius de seguretat, no permeteu reassignar un empleat a un altre departament a través de la vista.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">5</div><div><div class="ex-name">Exercici 5</div></div></div>
+      <div class="ex-enunciat"><p>Visualitzeu l'estructura i el contingut de la vista <code>DEPT50</code>.</p><pre class="pre-out">DESCRIBE dept50
+
+Nombre   Nulo     Tipo
+-------- -------- ------------
+EMPNO    NOT NULL NUMBER(6)
+EMPLOYEE NOT NULL VARCHAR2(25)
+DEPTNO            NUMBER(4)</pre><pre class="pre-out">  EMPNO  EMPLOYEE  DEPTNO
+  -----  --------  ------
+1   120  Weiss         50
+2   121  Fripp         50
+3   122  Kaufling      50
+4   123  Vollman       50
+5   124  Mourgos       50
+...</pre></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">6</div><div><div class="ex-name">Exercici 6</div></div></div>
+      <div class="ex-enunciat"><p>Proveu la vista. Intenteu reassignar Matos al departament 80.</p></div>
+    </div>
+    <div class="subhead">Part 2 · Seqüències, índexs i sinònims</div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">7</div><div><div class="ex-name">Exercici 7</div></div></div>
+      <div class="ex-enunciat"><p>Necessiteu una seqüència que es pugui utilitzar amb la columna de clau primària de la taula <code>DEPT</code>. La seqüència ha de començar en 280 i tenir un valor màxim de 1.000. Apliqueu increments de 10 a la seqüència. Anomeneu la seqüència <code>DEPT_ID_SEQ</code>.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">8</div><div><div class="ex-name">Exercici 8</div></div></div>
+      <div class="ex-enunciat"><p>Per provar la seqüència, escriviu un script per inserir dues files a la taula <code>DEPT</code>. Anomeneu l'script <code>lab_11_08.sql</code>. Assegureu-vos d'utilitzar la seqüència que heu creat per a la columna <code>ID</code>. Afegiu dos departaments: Education i Administration. Confirmeu les addicions. Executeu les ordres de l'script.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">9</div><div><div class="ex-name">Exercici 9</div></div></div>
+      <div class="ex-enunciat"><p>Creeu un índex no únic a la columna <code>NAME</code> de la taula <code>DEPT</code>.</p></div>
+    </div>
+    <div class="exercise">
+      <div class="ex-head"><div class="ex-num">10</div><div><div class="ex-name">Exercici 10</div></div></div>
+      <div class="ex-enunciat"><p>Creeu un sinònim per a la taula <code>EMPLOYEES</code>. Anomeneu-lo <code>EMP2</code>.</p></div>
     </div>
   </div>
 
